@@ -93,11 +93,11 @@ function isActionNeeded(booking: AdminBooking) {
   return booking.status === "paid" || (booking.status === "confirmed" && !booking.meet_link_sent_at);
 }
 
-export default function ConnectAdmin() {
+export default function ConnectAdmin({ embedded = false }: { embedded?: boolean }) {
   const navigate = useNavigate();
   const [secret, setSecret] = useState(getAdminSecret);
   const [password, setPassword] = useState("");
-  const [authenticated, setAuthenticated] = useState(false);
+  const [authenticated, setAuthenticated] = useState(() => Boolean(getAdminSecret()));
   const [bookings, setBookings] = useState<AdminBooking[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [filter, setFilter] = useState<Filter>("action");
@@ -332,8 +332,8 @@ export default function ConnectAdmin() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f7f7f5] text-stone-900">
-      <header className="sticky top-0 z-30 bg-[#f7f7f5]/90 backdrop-blur-xl border-b border-stone-200">
+    <div className={embedded ? "text-stone-900" : "min-h-screen bg-[#f7f7f5] text-stone-900"}>
+      {!embedded && <header className="sticky top-0 z-30 bg-[#f7f7f5]/90 backdrop-blur-xl border-b border-stone-200">
         <div className="max-w-[1500px] mx-auto h-16 px-4 sm:px-6 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <button onClick={() => navigate("/admin")} className="w-9 h-9 rounded-xl hover:bg-stone-200 flex items-center justify-center" aria-label="Back to admin">
@@ -356,9 +356,18 @@ export default function ConnectAdmin() {
             </button>
           </div>
         </div>
-      </header>
+      </header>}
 
-      <main className="max-w-[1500px] mx-auto p-4 sm:p-6">
+      <main className={embedded ? "" : "max-w-[1500px] mx-auto p-4 sm:p-6"}>
+        {embedded && (
+          <div className="mb-6">
+            <div className="flex items-center gap-2">
+              <h1 className="font-['Merriweather'] text-2xl text-stone-900">Connect Operations</h1>
+              <span className="text-[9px] uppercase tracking-widest px-2 py-0.5 bg-stone-900 text-white rounded-full">V1</span>
+            </div>
+            <p className="text-sm text-stone-400 mt-1">Review bookings, arrange calls, and send meeting details from one queue.</p>
+          </div>
+        )}
         <section className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-5">
           {[
             { label: "Needs action", value: metrics.action, icon: Inbox },

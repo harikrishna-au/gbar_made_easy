@@ -11,9 +11,10 @@ import { AdminBlogRow } from '@/components/blog/AdminBlogRow';
 import { useAdminBlogs } from '@/hooks/useBlogs';
 import { isAdminAuthenticated, loginAdmin, logoutAdmin } from '@/lib/admin-auth';
 import type { BlogStatus } from '@/lib/blog-utils';
+import ConnectAdmin from './ConnectAdmin';
 
 type BlogTabFilter = BlogStatus | 'all';
-type MainTab = 'blog' | 'experts' | 'jobs';
+type MainTab = 'blog' | 'experts' | 'jobs' | 'connect';
 
 /* ── Job type ── */
 type Job = {
@@ -716,7 +717,9 @@ function JobsSection() {
 /* ─────────────────── Main admin dashboard ─────────────────── */
 function AdminDashboard() {
   const [authed, setAuthed] = useState(true);
-  const [mainTab, setMainTab] = useState<MainTab>('blog');
+  const [mainTab, setMainTab] = useState<MainTab>(() =>
+    new URLSearchParams(window.location.search).get('tab') === 'connect' ? 'connect' : 'blog'
+  );
 
   if (!authed) return <AdminLogin onLogin={() => setAuthed(true)} />;
 
@@ -730,7 +733,7 @@ function AdminDashboard() {
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50 border-b border-stone-200/70"
         style={{ background: 'rgba(252,252,249,0.94)', backdropFilter: 'blur(14px)' }}>
-        <div className="container mx-auto px-6 py-3.5 flex items-center justify-between max-w-5xl">
+        <div className="container mx-auto px-4 sm:px-6 py-3 flex flex-wrap sm:flex-nowrap items-center justify-between gap-2 max-w-[1500px]">
           <div className="flex items-center gap-3">
             <div className="w-7 h-7 rounded-lg flex items-center justify-center"
               style={{ background: 'linear-gradient(135deg, #1c1c1e 0%, #3d3d40 100%)' }}>
@@ -746,7 +749,7 @@ function AdminDashboard() {
           </div>
 
           {/* Main tabs in header */}
-          <div className="flex items-center gap-1 bg-stone-100 rounded-xl p-1">
+          <div className="order-3 sm:order-none w-full sm:w-auto flex items-center gap-1 bg-stone-100 rounded-xl p-1 overflow-x-auto">
             <button onClick={() => setMainTab('blog')}
               className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-[12px] font-semibold font-['Inter'] transition-all ${mainTab === 'blog' ? 'bg-white text-stone-900 shadow-sm' : 'text-stone-500 hover:text-stone-700'}`}>
               <BookOpen className="w-3.5 h-3.5" /> Blog
@@ -759,23 +762,24 @@ function AdminDashboard() {
               className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-[12px] font-semibold font-['Inter'] transition-all ${mainTab === 'jobs' ? 'bg-white text-stone-900 shadow-sm' : 'text-stone-500 hover:text-stone-700'}`}>
               <Briefcase className="w-3.5 h-3.5" /> Jobs
             </button>
-            <a href="/admin/connect"
-              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-[12px] font-semibold font-['Inter'] text-stone-500 hover:text-stone-700 transition-all">
+            <button onClick={() => setMainTab('connect')}
+              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-[12px] font-semibold font-['Inter'] transition-all whitespace-nowrap ${mainTab === 'connect' ? 'bg-white text-stone-900 shadow-sm' : 'text-stone-500 hover:text-stone-700'}`}>
               <CalendarDays className="w-3.5 h-3.5" /> Connect Ops
-            </a>
+            </button>
           </div>
 
           <button onClick={() => { logoutAdmin(); setAuthed(false); }}
             className="flex items-center gap-1.5 px-3 py-2 text-stone-500 hover:text-stone-800 hover:bg-stone-100 rounded-lg text-[13px] font-['Inter'] font-medium transition-all">
-            <LogOut className="w-4 h-4" /> Logout
+            <LogOut className="w-4 h-4" /> <span className="hidden sm:inline">Logout</span>
           </button>
         </div>
       </header>
 
-      <main className="relative z-10 container mx-auto px-6 pt-24 pb-20 max-w-5xl">
+      <main className={`relative z-10 container mx-auto px-4 sm:px-6 pt-32 sm:pt-24 pb-20 ${mainTab === 'connect' ? 'max-w-[1500px]' : 'max-w-5xl'}`}>
         {mainTab === 'blog'    && <BlogSection />}
         {mainTab === 'experts' && <ExpertsSection />}
         {mainTab === 'jobs'    && <JobsSection />}
+        {mainTab === 'connect' && <ConnectAdmin embedded />}
       </main>
     </div>
   );

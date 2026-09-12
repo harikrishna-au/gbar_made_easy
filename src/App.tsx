@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { ClerkProvider } from "@clerk/clerk-react";
 import Landing from "./pages/Landing";
 import Guidelines from "./pages/Guidelines";
@@ -32,7 +32,6 @@ import BlogPost from "./pages/BlogPost";
 import BlogWrite from "./pages/BlogWrite";
 import BlogMyPosts from "./pages/BlogMyPosts";
 import BlogAdmin from "./pages/BlogAdmin";
-import ConnectAdmin from "./pages/ConnectAdmin";
 import HackWithInfyLanding from "./pages/hackwithinfy/HackWithInfyLanding";
 import HackWithInfySyllabus from "./pages/hackwithinfy/HackWithInfySyllabus";
 import HackWithInfyResources from "./pages/hackwithinfy/HackWithInfyResources";
@@ -196,7 +195,7 @@ const App = () => {
               {/* Admin */}
               <Route path="/admin" element={<BlogAdmin />} />
               <Route path="/admin/blog" element={<BlogAdmin />} />
-              <Route path="/admin/connect" element={<ConnectAdmin />} />
+              <Route path="/admin/connect" element={<Navigate to="/admin?tab=connect" replace />} />
 
               <Route path="*" element={<NotFound />} />
             </Routes>
