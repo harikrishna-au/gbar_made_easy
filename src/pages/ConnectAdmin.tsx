@@ -25,6 +25,7 @@ import {
 import { format, parseISO } from "date-fns";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { getAdminSecret, logoutAdmin, saveAdminSession } from "@/lib/admin-auth";
 
 type Priority = "low" | "normal" | "high" | "urgent";
 type Filter = "action" | "upcoming" | "completed" | "all";
@@ -72,7 +73,6 @@ interface BookingEvent {
   created_at: string;
 }
 
-const SESSION_KEY = "connect_admin_secret";
 const API_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/connect-admin`;
 
 const statusStyle: Record<string, string> = {
@@ -95,7 +95,7 @@ function isActionNeeded(booking: AdminBooking) {
 
 export default function ConnectAdmin() {
   const navigate = useNavigate();
-  const [secret, setSecret] = useState(() => sessionStorage.getItem(SESSION_KEY) ?? "");
+  const [secret, setSecret] = useState(getAdminSecret);
   const [password, setPassword] = useState("");
   const [authenticated, setAuthenticated] = useState(false);
   const [bookings, setBookings] = useState<AdminBooking[]>([]);
@@ -131,7 +131,7 @@ export default function ConnectAdmin() {
       setLoginError("");
     } catch (error) {
       setAuthenticated(false);
-      sessionStorage.removeItem(SESSION_KEY);
+      logoutAdmin();
       setSecret("");
       if (error instanceof Error && error.message !== "Unauthorized") toast.error(error.message);
     } finally {
@@ -164,7 +164,7 @@ export default function ConnectAdmin() {
     try {
       const key = password.trim();
       const data = await request({ action: "list" }, key);
-      sessionStorage.setItem(SESSION_KEY, key);
+      saveAdminSession(key);
       setSecret(key);
       setBookings(data.bookings ?? []);
       setAuthenticated(true);
@@ -178,7 +178,7 @@ export default function ConnectAdmin() {
   };
 
   const logout = () => {
-    sessionStorage.removeItem(SESSION_KEY);
+    logoutAdmin();
     setSecret("");
     setAuthenticated(false);
     setBookings([]);

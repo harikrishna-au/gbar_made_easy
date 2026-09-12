@@ -135,6 +135,10 @@ serve(async (req: Request) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
     );
 
+    if (action === "authenticate") {
+      return json({ authenticated: true });
+    }
+
     if (action === "list") {
       const { data, error } = await supabase
         .from("bookings")

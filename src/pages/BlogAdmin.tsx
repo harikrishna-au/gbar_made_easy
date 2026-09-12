@@ -48,10 +48,12 @@ function AdminLogin({ onLogin }: { onLogin: () => void }) {
   const [showPw, setShowPw] = useState(false);
   const [error, setError] = useState('');
   const [shake, setShake] = useState(false);
+  const [checking, setChecking] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (loginAdmin(password)) {
+    setChecking(true);
+    if (await loginAdmin(password)) {
       onLogin();
     } else {
       setError('Incorrect password. Try again.');
@@ -59,6 +61,7 @@ function AdminLogin({ onLogin }: { onLogin: () => void }) {
       setShake(true);
       setTimeout(() => setShake(false), 500);
     }
+    setChecking(false);
   };
 
   return (
@@ -110,10 +113,10 @@ function AdminLogin({ onLogin }: { onLogin: () => void }) {
                   </p>
                 )}
               </div>
-              <button type="submit" disabled={!password}
+              <button type="submit" disabled={!password || checking}
                 className="w-full py-3 rounded-xl font-semibold text-[14px] font-['Inter'] text-white disabled:opacity-40 transition-all duration-200 hover:opacity-90 active:scale-95"
                 style={{ background: 'linear-gradient(135deg, #1c1c1e 0%, #3d3d40 100%)', boxShadow: '0 2px 8px rgba(0,0,0,0.18)' }}>
-                Access Admin Panel
+                {checking ? 'Checking…' : 'Access Admin Panel'}
               </button>
             </form>
           </div>
