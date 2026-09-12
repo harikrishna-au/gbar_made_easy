@@ -97,8 +97,8 @@ const DMModal = ({ expert, onClose }: DMModalProps) => {
         <div className="flex-1 overflow-y-auto px-5 py-5">
           {sent ? (
             <div className="flex flex-col items-center text-center py-8 space-y-4">
-              <div className="w-16 h-16 bg-emerald-50 border border-emerald-100 rounded-full flex items-center justify-center">
-                <CheckCircle2 className="w-8 h-8 text-emerald-600" />
+              <div className="w-16 h-16 bg-stone-100 border border-stone-200 rounded-full flex items-center justify-center">
+                <CheckCircle2 className="w-8 h-8 text-stone-700" />
               </div>
               <div>
                 <h3 className="text-lg font-['Merriweather'] text-stone-900 mb-1">Message Sent!</h3>

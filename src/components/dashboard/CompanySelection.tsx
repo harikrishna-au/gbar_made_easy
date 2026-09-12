@@ -40,8 +40,8 @@ const CognitiveViz = () => {
             height: 15,
             borderRadius: 4,
             background: lit.has(i)
-              ? "rgba(124,58,237,0.42)"
-              : "rgba(124,58,237,0.07)",
+              ? "rgba(28,25,23,0.72)"
+              : "rgba(28,25,23,0.08)",
           }}
         />
       ))}
@@ -60,7 +60,7 @@ const CommViz = () => {
             width: 5,
             height: `${h}%`,
             borderRadius: 3,
-            background: `rgba(8,145,178,${0.22 + (h / 100) * 0.48})`,
+            background: `rgba(28,25,23,${0.18 + (h / 100) * 0.42})`,
             animation: `waveBar ${0.38 + (i % 4) * 0.13}s ease-in-out ${i * 0.055}s infinite alternate`,
             transformOrigin: "bottom",
           }}
@@ -83,7 +83,7 @@ const AIViz = () => (
           width: sz,
           height: sz,
           borderRadius: "50%",
-          border: `1.5px solid rgba(5,150,105,${0.55 - i * 0.15})`,
+          border: `1.5px solid rgba(28,25,23,${0.45 - i * 0.12})`,
           animation: `pulseRing ${0.9 + i * 0.45}s ease-in-out ${i * 0.28}s infinite`,
         }}
       />
@@ -97,7 +97,7 @@ const AIViz = () => (
         width: 11,
         height: 11,
         borderRadius: "50%",
-        background: "rgba(5,150,105,0.78)",
+        background: "rgba(28,25,23,0.72)",
         animation: "pulseDot 1.3s ease-in-out infinite",
       }}
     />
@@ -139,7 +139,7 @@ const ConnectViz = () => (
         fontFamily: "'Inter', sans-serif",
       }}
     >
-      5000+ users
+      20 min · live senior
     </span>
   </div>
 );
@@ -159,12 +159,12 @@ const DSACheckViz = () => {
         <div key={i} style={{ display: "flex", alignItems: "center", gap: 7 }}>
           <div style={{
             width: 12, height: 12, borderRadius: 3, flexShrink: 0,
-            background: r.checked ? "rgba(220,38,38,0.55)" : "transparent",
-            border: `1.5px solid rgba(220,38,38,${r.checked ? 0.55 : 0.22})`,
+            background: r.checked ? "rgba(28,25,23,0.55)" : "transparent",
+            border: `1.5px solid rgba(28,25,23,${r.checked ? 0.55 : 0.22})`,
           }} />
           <div style={{
             height: 6, borderRadius: 4, width: `${r.w}%`,
-            background: `rgba(220,38,38,${0.1 + (r.w / 100) * 0.18})`,
+            background: `rgba(28,25,23,${0.1 + (r.w / 100) * 0.18})`,
           }} />
         </div>
       ))}
@@ -236,7 +236,7 @@ const TiltCard = ({
         transform: `perspective(1000px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) translateY(${on ? -8 : 0}px)`,
         transition: on
           ? "transform 0.1s ease-out, box-shadow 0.22s ease"
-          : "transform 0.5s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.38s ease",
+          : "transform 0.5s cubic-bezier(0.19, 1, 0.22, 1), box-shadow 0.38s ease",
         boxShadow: on
           ? `0 28px 72px ${glow}, 0 0 0 1.5px ${border}, 0 8px 22px rgba(0,0,0,0.04)`
           : `0 2px 14px rgba(0,0,0,0.04), 0 0 0 1px rgba(0,0,0,0.05)`,
@@ -308,22 +308,14 @@ export const CompanySelection = ({ onSelectCompany }: CompanySelectionProps) => 
         ref={heroRef}
         className="flex flex-col items-center text-center mb-8 sm:mb-12 space-y-3 sm:space-y-4"
       >
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-stone-100 text-stone-500 text-[10.5px] font-semibold tracking-[0.2em] uppercase font-['Inter']">
-          <span className="relative flex h-1.5 w-1.5">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-            <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500" />
-          </span>
-          Interview Prep Platform
-        </div>
-
         <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[3.3rem] font-serif text-stone-800 tracking-tight leading-[1.12] max-w-2xl">
-          Practice what top MNCs
+          Accenture 2026 rounds
           <br />
-          <span className="text-stone-400 font-light italic">actually test.</span>
+          <span className="text-stone-500 font-light">live on this dashboard.</span>
         </h1>
 
-        <p className="text-[0.92rem] text-stone-500 font-light max-w-[440px] leading-relaxed font-['Inter']">
-          Accenture 2026 placements — cognitive games and communication rounds can be practiced here.
+        <p className="text-[0.92rem] text-stone-600 max-w-[460px] leading-relaxed font-['Inter']">
+          Start with cognitive games and communication. When you want a live senior, book Connect 1:1 below.
         </p>
       </div>
 
@@ -338,8 +330,8 @@ export const CompanySelection = ({ onSelectCompany }: CompanySelectionProps) => 
             <TiltCard
               label="Cognitive Puzzles"
               onClick={() => onSelectCompany("accenture")}
-              glow="rgba(124,58,237,0.18)"
-              border="rgba(124,58,237,0.22)"
+              glow="rgba(28,25,23,0.12)"
+              border="rgba(28,25,23,0.18)"
               className="flex-1 rounded-2xl bg-white"
             >
               {/* Top wash */}
@@ -347,7 +339,7 @@ export const CompanySelection = ({ onSelectCompany }: CompanySelectionProps) => 
                 className="absolute inset-0 pointer-events-none"
                 style={{
                   background:
-                    "radial-gradient(ellipse 90% 55% at 25% 0%, rgba(124,58,237,0.09) 0%, transparent 68%)",
+                    "radial-gradient(ellipse 90% 55% at 25% 0%, rgba(28,25,23,0.06) 0%, transparent 68%)",
                   transition: "opacity 0.3s ease",
                 }}
               />
@@ -358,18 +350,18 @@ export const CompanySelection = ({ onSelectCompany }: CompanySelectionProps) => 
                   <div>
                     <div
                       className="text-[9px] font-bold tracking-[0.38em] uppercase font-['Inter'] mb-2"
-                      style={{ color: "#7c3aed" }}
+                      style={{ color: "#78716c" }}
                     >
-                      01
+                      Practice
                     </div>
                     <div
                       className="w-11 h-11 rounded-xl flex items-center justify-center"
                       style={{
-                        background: "rgba(124,58,237,0.09)",
-                        border: "1px solid rgba(124,58,237,0.16)",
+                        background: "rgba(28,25,23,0.06)",
+                        border: "1px solid rgba(28,25,23,0.12)",
                       }}
                     >
-                      <Layers className="w-5 h-5" style={{ color: "#7c3aed" }} />
+                      <Layers className="w-5 h-5" style={{ color: "#1c1917" }} />
                     </div>
                   </div>
                   <CognitiveViz />
@@ -403,9 +395,9 @@ export const CompanySelection = ({ onSelectCompany }: CompanySelectionProps) => 
                   <div
                     className="inline-flex self-start items-center px-2.5 py-1 rounded-full text-[10px] font-semibold tracking-wide border font-['Inter']"
                     style={{
-                      color: "#7c3aed",
-                      background: "rgba(124,58,237,0.07)",
-                      borderColor: "rgba(124,58,237,0.22)",
+                      color: "#44403c",
+                      background: "#f5f5f4",
+                      borderColor: "#e7e5e4",
                     }}
                   >
                     Matrix Flow · Balloon Math · Maze
@@ -413,13 +405,13 @@ export const CompanySelection = ({ onSelectCompany }: CompanySelectionProps) => 
                   <div className="flex items-center gap-1.5 group/cta">
                     <span
                       className="text-[13px] font-semibold font-['Inter']"
-                      style={{ color: "#7c3aed" }}
+                      style={{ color: "#1c1917" }}
                     >
                       Start practicing
                     </span>
                     <ArrowUpRight
                       className="w-3.5 h-3.5 transition-transform duration-300 group-hover/cta:translate-x-0.5 group-hover/cta:-translate-y-0.5"
-                      style={{ color: "#7c3aed" }}
+                      style={{ color: "#1c1917" }}
                     />
                   </div>
                 </div>
@@ -428,7 +420,7 @@ export const CompanySelection = ({ onSelectCompany }: CompanySelectionProps) => 
               {/* Bottom accent */}
               <div
                 className="absolute bottom-0 left-0 right-0 h-[1.5px] opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                style={{ background: "linear-gradient(90deg, #7c3aed, transparent 70%)" }}
+                style={{ background: "linear-gradient(90deg, #1c1917, transparent 70%)" }}
               />
             </TiltCard>
           </div>
@@ -440,15 +432,15 @@ export const CompanySelection = ({ onSelectCompany }: CompanySelectionProps) => 
             <TiltCard
               label="Communication Tests"
               onClick={() => navigate("/game/communication-patterns")}
-              glow="rgba(8,145,178,0.16)"
-              border="rgba(8,145,178,0.22)"
+              glow="rgba(28,25,23,0.12)"
+              border="rgba(28,25,23,0.18)"
               className="flex-1 rounded-2xl bg-white"
             >
               <div
                 className="absolute inset-0 pointer-events-none"
                 style={{
                   background:
-                    "radial-gradient(ellipse 80% 55% at 85% 0%, rgba(8,145,178,0.08) 0%, transparent 68%)",
+                    "radial-gradient(ellipse 80% 55% at 85% 0%, rgba(28,25,23,0.05) 0%, transparent 68%)",
                 }}
               />
 
@@ -457,18 +449,18 @@ export const CompanySelection = ({ onSelectCompany }: CompanySelectionProps) => 
                   <div>
                     <div
                       className="text-[9px] font-bold tracking-[0.38em] uppercase font-['Inter'] mb-2"
-                      style={{ color: "#0891b2" }}
+                      style={{ color: "#78716c" }}
                     >
                       02
                     </div>
                     <div
                       className="w-10 h-10 rounded-xl flex items-center justify-center"
                       style={{
-                        background: "rgba(8,145,178,0.09)",
-                        border: "1px solid rgba(8,145,178,0.16)",
+                        background: "rgba(28,25,23,0.06)",
+                        border: "1px solid rgba(28,25,23,0.12)",
                       }}
                     >
-                      <Mic2 className="w-4.5 h-4.5" style={{ color: "#0891b2" }} />
+                      <Mic2 className="w-4.5 h-4.5" style={{ color: "#1c1917" }} />
                     </div>
                   </div>
                   <CommViz />
@@ -482,7 +474,7 @@ export const CompanySelection = ({ onSelectCompany }: CompanySelectionProps) => 
                     Communication Tests
                   </h3>
                   <p className="text-stone-500 text-[13px] leading-relaxed font-['Inter']">
-                    AI-assessed reading, listening, and speaking simulations from
+                    Reading, listening, and speaking simulations from
                     real MNC assessment rounds.
                   </p>
                 </div>
@@ -491,9 +483,9 @@ export const CompanySelection = ({ onSelectCompany }: CompanySelectionProps) => 
                   <div
                     className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-semibold tracking-wide border font-['Inter']"
                     style={{
-                      color: "#0891b2",
-                      background: "rgba(8,145,178,0.07)",
-                      borderColor: "rgba(8,145,178,0.22)",
+                      color: "#44403c",
+                      background: "#f5f5f4",
+                      borderColor: "#e7e5e4",
                     }}
                   >
                     Reading · Listening · Speaking
@@ -501,13 +493,13 @@ export const CompanySelection = ({ onSelectCompany }: CompanySelectionProps) => 
                   <div className="flex items-center gap-1 group/cta flex-shrink-0">
                     <span
                       className="text-[12px] font-semibold font-['Inter']"
-                      style={{ color: "#0891b2" }}
+                      style={{ color: "#1c1917" }}
                     >
                       Start round
                     </span>
                     <ArrowUpRight
                       className="w-3.5 h-3.5 transition-transform duration-300 group-hover/cta:translate-x-0.5 group-hover/cta:-translate-y-0.5"
-                      style={{ color: "#0891b2" }}
+                      style={{ color: "#1c1917" }}
                     />
                   </div>
                 </div>
@@ -515,7 +507,7 @@ export const CompanySelection = ({ onSelectCompany }: CompanySelectionProps) => 
 
               <div
                 className="absolute bottom-0 left-0 right-0 h-[1.5px] opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                style={{ background: "linear-gradient(90deg, #0891b2, transparent 70%)" }}
+                style={{ background: "linear-gradient(90deg, #1c1917, transparent 70%)" }}
               />
             </TiltCard>
 
@@ -523,15 +515,15 @@ export const CompanySelection = ({ onSelectCompany }: CompanySelectionProps) => 
             <TiltCard
               label="AI Mock Interview"
               onClick={() => navigate("/ai-interview")}
-              glow="rgba(5,150,105,0.15)"
-              border="rgba(5,150,105,0.22)"
+              glow="rgba(28,25,23,0.12)"
+              border="rgba(28,25,23,0.18)"
               className="flex-1 rounded-2xl bg-white"
             >
               <div
                 className="absolute inset-0 pointer-events-none"
                 style={{
                   background:
-                    "radial-gradient(ellipse 80% 55% at 85% 0%, rgba(5,150,105,0.08) 0%, transparent 68%)",
+                    "radial-gradient(ellipse 80% 55% at 85% 0%, rgba(28,25,23,0.05) 0%, transparent 68%)",
                 }}
               />
 
@@ -540,18 +532,18 @@ export const CompanySelection = ({ onSelectCompany }: CompanySelectionProps) => 
                   <div>
                     <div
                       className="text-[9px] font-bold tracking-[0.38em] uppercase font-['Inter'] mb-2"
-                      style={{ color: "#059669" }}
+                      style={{ color: "#78716c" }}
                     >
                       03
                     </div>
                     <div
                       className="w-10 h-10 rounded-xl flex items-center justify-center"
                       style={{
-                        background: "rgba(5,150,105,0.09)",
-                        border: "1px solid rgba(5,150,105,0.16)",
+                        background: "rgba(28,25,23,0.06)",
+                        border: "1px solid rgba(28,25,23,0.12)",
                       }}
                     >
-                      <Bot className="w-4.5 h-4.5" style={{ color: "#059669" }} />
+                      <Bot className="w-4.5 h-4.5" style={{ color: "#1c1917" }} />
                     </div>
                   </div>
                   <AIViz />
@@ -565,7 +557,7 @@ export const CompanySelection = ({ onSelectCompany }: CompanySelectionProps) => 
                     AI Mock Interview
                   </h3>
                   <p className="text-stone-500 text-[13px] leading-relaxed font-['Inter']">
-                    Face a live AI interviewer. Instant feedback on answers,
+                    Face a live interviewer. Instant feedback on answers,
                     confidence, and communication quality.
                   </p>
                 </div>
@@ -574,23 +566,23 @@ export const CompanySelection = ({ onSelectCompany }: CompanySelectionProps) => 
                   <div
                     className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-semibold tracking-wide border font-['Inter']"
                     style={{
-                      color: "#059669",
-                      background: "rgba(5,150,105,0.07)",
-                      borderColor: "rgba(5,150,105,0.22)",
+                      color: "#44403c",
+                      background: "#f5f5f4",
+                      borderColor: "#e7e5e4",
                     }}
                   >
-                    Live AI · Real-time Feedback
+                    Live · Instant feedback
                   </div>
                   <div className="flex items-center gap-1 group/cta flex-shrink-0">
                     <span
                       className="text-[12px] font-semibold font-['Inter']"
-                      style={{ color: "#059669" }}
+                      style={{ color: "#1c1917" }}
                     >
                       Start interview
                     </span>
                     <ArrowUpRight
                       className="w-3.5 h-3.5 transition-transform duration-300 group-hover/cta:translate-x-0.5 group-hover/cta:-translate-y-0.5"
-                      style={{ color: "#059669" }}
+                      style={{ color: "#1c1917" }}
                     />
                   </div>
                 </div>
@@ -598,7 +590,7 @@ export const CompanySelection = ({ onSelectCompany }: CompanySelectionProps) => 
 
               <div
                 className="absolute bottom-0 left-0 right-0 h-[1.5px] opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                style={{ background: "linear-gradient(90deg, #059669, transparent 70%)" }}
+                style={{ background: "linear-gradient(90deg, #1c1917, transparent 70%)" }}
               />
             </TiltCard>
           </div>
@@ -658,8 +650,7 @@ export const CompanySelection = ({ onSelectCompany }: CompanySelectionProps) => 
                   Connect 1:1
                 </h3>
                 <p className="text-stone-500 text-[13px] font-['Inter']">
-                  Book a personal session with a placed expert. Tailored guidance,
-                  real talk, real results.
+                  20 minutes with a recently placed senior. Pay, then we send one meeting link to both of you.
                 </p>
               </div>
             </div>
@@ -689,16 +680,16 @@ export const CompanySelection = ({ onSelectCompany }: CompanySelectionProps) => 
         <TiltCard
           label="Important Coding Questions"
           onClick={() => navigate("/coding-questions")}
-          glow="rgba(220,38,38,0.14)"
-          border="rgba(220,38,38,0.22)"
+          glow="rgba(28,25,23,0.12)"
+          border="rgba(28,25,23,0.22)"
           className="w-full rounded-2xl"
-          style={{ background: "rgba(255,249,249,0.97)" }}
+          style={{ background: "#ffffff" }}
         >
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
               background:
-                "radial-gradient(ellipse 50% 120% at 92% 50%, rgba(220,38,38,0.08) 0%, transparent 65%)",
+                "radial-gradient(ellipse 50% 120% at 92% 50%, rgba(28,25,23,0.05) 0%, transparent 65%)",
             }}
           />
 
@@ -708,26 +699,26 @@ export const CompanySelection = ({ onSelectCompany }: CompanySelectionProps) => 
               <div
                 className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
                 style={{
-                  background: "rgba(220,38,38,0.1)",
-                  border: "1px solid rgba(220,38,38,0.18)",
+                  background: "rgba(28,25,23,0.06)",
+                  border: "1px solid rgba(28,25,23,0.12)",
                 }}
               >
-                <Code2 className="w-5 h-5" style={{ color: "#dc2626" }} />
+                <Code2 className="w-5 h-5" style={{ color: "#1c1917" }} />
               </div>
               <div>
                 <div className="flex items-center gap-2.5 mb-0.5">
                   <div
                     className="text-[9px] font-bold tracking-[0.38em] uppercase font-['Inter']"
-                    style={{ color: "#dc2626" }}
+                    style={{ color: "#78716c" }}
                   >
                     05
                   </div>
                   <span
                     className="inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-bold tracking-wide border font-['Inter']"
                     style={{
-                      color: "#dc2626",
-                      background: "rgba(220,38,38,0.09)",
-                      borderColor: "rgba(220,38,38,0.22)",
+                      color: "#44403c",
+                      background: "#f5f5f4",
+                      borderColor: "#e7e5e4",
                     }}
                   >
                     DSA
@@ -753,8 +744,7 @@ export const CompanySelection = ({ onSelectCompany }: CompanySelectionProps) => 
               <span
                 className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-white text-[13px] font-semibold font-['Inter'] group/btn"
                 style={{
-                  background: "linear-gradient(135deg, #dc2626, #991b1b)",
-                  boxShadow: "0 4px 16px rgba(220,38,38,0.28)",
+                  background: "#1c1917",
                 }}
               >
                 Open Checklist
@@ -765,7 +755,7 @@ export const CompanySelection = ({ onSelectCompany }: CompanySelectionProps) => 
 
           <div
             className="absolute bottom-0 left-0 right-0 h-[1.5px] opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-            style={{ background: "linear-gradient(90deg, #dc2626, transparent 70%)" }}
+            style={{ background: "linear-gradient(90deg, #1c1917, transparent 70%)" }}
           />
         </TiltCard>
 

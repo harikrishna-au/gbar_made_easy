@@ -27,12 +27,12 @@ const STATUS_CONFIG: Record<string, { label: string; icon: React.ReactNode; cls:
   paid: {
     label: 'Awaiting Confirmation',
     icon: <Hourglass className="w-3 h-3" />,
-    cls: 'bg-amber-50 text-amber-700 border border-amber-100',
+    cls: 'bg-stone-100 text-stone-700 border border-stone-200',
   },
   confirmed: {
     label: 'Confirmed',
     icon: <CheckCircle2 className="w-3 h-3" />,
-    cls: 'bg-emerald-50 text-emerald-700 border border-emerald-100',
+    cls: 'bg-stone-900 text-white border border-stone-900',
   },
   declined: {
     label: 'Declined',
@@ -269,7 +269,7 @@ const MyBookingsModal = ({ onClose }: MyBookingsModalProps) => {
                               href={booking.meet_link}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="flex items-center justify-center gap-1.5 w-full py-2 bg-[#1a73e8] hover:bg-[#1557b0] text-white rounded-lg text-xs font-medium font-['Inter'] transition-colors"
+                              className="flex items-center justify-center gap-1.5 w-full py-2 bg-stone-900 hover:bg-stone-700 text-white rounded-lg text-xs font-medium font-['Inter'] transition-colors"
                             >
                               <Video className="w-3 h-3" />
                               Join Google Meet

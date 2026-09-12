@@ -179,9 +179,8 @@ const GuruProfileForm = ({ userId, expertId, initialData, onSuccess, onCancel }:
     return (
       <div className="flex flex-col items-center text-center py-10 space-y-5">
         <div className="relative">
-          <div className="absolute inset-0 bg-emerald-200 rounded-full blur-2xl opacity-60" />
-          <div className="relative w-16 h-16 bg-emerald-50 border border-emerald-100 rounded-full flex items-center justify-center">
-            <CheckCircle2 className="w-8 h-8 text-emerald-600" />
+          <div className="relative w-16 h-16 bg-stone-100 border border-stone-200 rounded-full flex items-center justify-center">
+            <CheckCircle2 className="w-8 h-8 text-stone-700" />
           </div>
         </div>
         <div>

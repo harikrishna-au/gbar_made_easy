@@ -20,14 +20,13 @@ export const LandingBackground = () => (
       }}
     />
 
-    {/* warm gradient orbs */}
     <div
-      className="absolute -top-40 -right-40 w-[640px] h-[640px] blur-[130px] opacity-50"
-      style={{ background: "radial-gradient(ellipse, rgba(201,164,110,0.18) 0%, transparent 70%)" }}
+      className="absolute -top-40 -right-40 w-[640px] h-[640px] blur-[130px] opacity-40"
+      style={{ background: "radial-gradient(ellipse, rgba(28,25,23,0.05) 0%, transparent 70%)" }}
     />
     <div
-      className="absolute -bottom-32 -left-32 w-[500px] h-[500px] blur-[100px] opacity-40"
-      style={{ background: "radial-gradient(ellipse, rgba(168,162,158,0.14) 0%, transparent 70%)" }}
+      className="absolute -bottom-32 -left-32 w-[500px] h-[500px] blur-[100px] opacity-30"
+      style={{ background: "radial-gradient(ellipse, rgba(28,25,23,0.04) 0%, transparent 70%)" }}
     />
 
     {/* 3-D floating glass cubes — desktop only */}
@@ -43,7 +42,7 @@ export const LandingBackground = () => (
           right: (s as any).right,
           rotate: s.rz,
           background: "rgba(255,255,255,0.45)",
-          border: "1px solid rgba(201,164,110,0.22)",
+          border: "1px solid rgba(28,25,23,0.08)",
           backdropFilter: "blur(6px)",
           WebkitBackdropFilter: "blur(6px)",
           boxShadow: "0 8px 32px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.8)",
@@ -76,10 +75,10 @@ export const LandingBackground = () => (
         y: { duration: 4, delay: 0.9, repeat: Infinity, ease: "easeInOut" },
       }}
     >
-      <span className="flex items-center justify-center w-5 h-5 rounded-md bg-amber-50 border border-amber-100">
-        <Zap className="w-3 h-3 text-amber-500 fill-amber-400" />
+      <span className="flex items-center justify-center w-5 h-5 rounded-md bg-stone-100 border border-stone-200">
+        <Zap className="w-3 h-3 text-stone-700" />
       </span>
-      <span className="text-[12px] font-['Inter'] font-semibold text-stone-700">Real-time AI feedback</span>
+      <span className="text-[12px] font-['Inter'] font-semibold text-stone-700">Accenture 2026 rounds</span>
     </motion.div>
   </div>
 );

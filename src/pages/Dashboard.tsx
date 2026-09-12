@@ -155,7 +155,7 @@ const Dashboard = () => {
       subtitle: isPremium ? "" : "Extra Levels : Communication Round",
       path: "#subscribe",
       special: true,
-      icon: isPremium ? <Crown className="w-8 h-8 text-amber-400 fill-amber-400/20" /> : <Lock className="w-8 h-8 text-white drop-shadow-md group-hover:scale-110 transition-transform" />
+      icon: isPremium ? <Crown className="w-8 h-8 text-stone-700 fill-stone-200" /> : <Lock className="w-8 h-8 text-white drop-shadow-md group-hover:scale-110 transition-transform" />
     },
     {
       id: 8,

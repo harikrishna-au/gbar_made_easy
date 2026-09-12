@@ -14,12 +14,12 @@ import { LandingMobile } from "./landing/LandingMobile";
 import { LandingDesktop } from "./landing/LandingDesktop";
 
 const features = [
-  { icon: BarChart2, label: "Company Dashboard", sub: "Top MNCs, IT firms & Fortune 500" },
-  { icon: Brain, label: "AI Mock Interviews", sub: "Real-time adaptive feedback" },
-  { icon: Trophy, label: "Gamified Aptitude", sub: "Learn through engaging games" },
-  { icon: Mic, label: "Communication Rounds", sub: "Speaking, writing & fluency" },
-  { icon: Users, label: "Connect 1:1", sub: "Live call with a recently placed senior", to: "/connect", featured: true },
-  { icon: Radar, label: "Radar — Job Match", sub: "Find roles that fit your skill profile", to: "/radar" },
+  { icon: Brain, label: "Cognitive games", sub: "Accenture-style matrix, balloon math, maze" },
+  { icon: Mic, label: "Communication rounds", sub: "Speaking, writing, and fluency under time" },
+  { icon: Users, label: "Connect 1:1", sub: "20 minutes with a recently placed senior", to: "/connect", featured: true },
+  { icon: Trophy, label: "Gamified aptitude", sub: "Practice the round types MNCs actually run" },
+  { icon: BarChart2, label: "Company dashboard", sub: "Start with Accenture 2026, then other MNCs" },
+  { icon: Radar, label: "Radar — job match", sub: "Find roles that fit your skill profile", to: "/radar" },
 ];
 
 export default function Landing() {

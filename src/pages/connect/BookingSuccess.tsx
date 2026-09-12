@@ -17,9 +17,8 @@ const BookingSuccess = ({ expertName, date, startTime, endTime, userEmail, meetL
     <div className="flex flex-col items-center text-center py-4 space-y-6">
       {/* Icon */}
       <div className="relative mt-2">
-        <div className="absolute inset-0 bg-amber-200 rounded-full blur-2xl opacity-60" />
-        <div className="relative w-20 h-20 bg-amber-50 border border-amber-100 rounded-full flex items-center justify-center">
-          <CheckCircle2 className="w-10 h-10 text-amber-500" />
+        <div className="relative w-20 h-20 bg-stone-100 border border-stone-200 rounded-full flex items-center justify-center">
+          <CheckCircle2 className="w-10 h-10 text-stone-700" />
         </div>
       </div>
 
@@ -68,7 +67,7 @@ const BookingSuccess = ({ expertName, date, startTime, endTime, userEmail, meetL
             href={meetLink}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 w-full py-3 bg-[#1a73e8] hover:bg-[#1557b0] active:scale-95 text-white rounded-xl text-sm font-medium font-['Inter'] transition-all duration-200"
+            className="flex items-center justify-center gap-2 w-full py-3 bg-stone-900 hover:bg-stone-700 active:scale-95 text-white rounded-xl text-sm font-medium font-['Inter'] transition-all duration-200"
           >
             <Video className="w-4 h-4" />
             Join Google Meet

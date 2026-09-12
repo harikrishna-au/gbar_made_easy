@@ -7,7 +7,7 @@ import {
   UserButton,
 } from "@clerk/clerk-react";
 import { Link, NavigateFunction } from "react-router-dom";
-import { ArrowRight, Sparkles, ShieldCheck, Star, Mail, UserPlus, LogIn, Check } from "lucide-react";
+import { ArrowRight, Sparkles, ShieldCheck, Mail, UserPlus, LogIn, Check } from "lucide-react";
 import { AuthView, clerkAppearance, AuthSkeleton } from "./authConfig";
 
 interface Feature {
@@ -68,22 +68,6 @@ export const LandingDesktop = ({
       </motion.div>
 
       <div className="py-2">
-        <motion.div
-          initial={{ opacity: 0, y: 14 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.45, delay: 0.1, ease: "easeOut" }}
-          className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-7 bg-white/70 border border-stone-200 backdrop-blur-sm"
-          style={{ boxShadow: "0 1px 8px rgba(0,0,0,0.03)" }}
-        >
-          <span className="relative flex h-1.5 w-1.5">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-            <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500" />
-          </span>
-          <span className="text-[11px] font-['Inter'] font-semibold text-stone-600 tracking-wide">
-            Campus Placement Accelerator
-          </span>
-        </motion.div>
-
         <motion.h1
           initial={{ opacity: 0, y: 22 }}
           animate={{ opacity: 1, y: 0 }}
@@ -91,71 +75,24 @@ export const LandingDesktop = ({
           className="font-['Merriweather'] font-black text-stone-900 leading-[1.06] tracking-tight mb-5"
           style={{ fontSize: "clamp(2.4rem, 4vw, 4rem)" }}
         >
-          Crack campus
+          Practice the
           <br />
-          placements.
+          Accenture 2026
           <br />
-          <span className="text-stone-400 font-light italic">Faster.</span>
+          rounds. Then talk
+          <br />
+          to someone placed.
         </motion.h1>
 
         <motion.p
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.25, ease: "easeOut" }}
-          className="font-['Inter'] text-stone-500 leading-relaxed mb-2 max-w-md"
+          className="font-['Inter'] text-stone-600 leading-relaxed mb-8 max-w-md"
           style={{ fontSize: "0.96rem" }}
         >
-          AI interviews, gamified aptitude, communication practice — and Connect 1:1 with students who just got placed.
+          Cognitive games and communication rounds live here. When you want a live senior, book a 20-minute Connect 1:1 — we send one meeting link to both of you.
         </motion.p>
-
-        <motion.p
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.45, delay: 0.28, ease: "easeOut" }}
-          className="font-['Inter'] text-[0.88rem] text-stone-700 leading-relaxed mb-7 max-w-md font-medium"
-        >
-          Accenture 2026 placements — cognitive games and communication rounds can be practiced here.
-        </motion.p>
-
-        {/* Trust row — avatars + rating + count */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.32, ease: "easeOut" }}
-          className="flex items-center gap-4 mb-9"
-        >
-          <div className="flex -space-x-2.5">
-            {[
-              { c: "#d6cfc7", l: "A" },
-              { c: "#c4bdb4", l: "R" },
-              { c: "#b8b0a8", l: "K" },
-              { c: "#a8a29e", l: "S" },
-            ].map(({ c, l }, i) => (
-              <div
-                key={i}
-                className="w-8 h-8 rounded-full border-2 border-[#fcfcf9] flex items-center justify-center text-[10px] font-bold text-white"
-                style={{ background: c, boxShadow: "0 2px 6px rgba(0,0,0,0.08)" }}
-              >
-                {l}
-              </div>
-            ))}
-            <div className="w-8 h-8 rounded-full border-2 border-[#fcfcf9] flex items-center justify-center text-[9px] font-bold text-stone-500 bg-white" style={{ boxShadow: "0 2px 6px rgba(0,0,0,0.08)" }}>
-              +
-            </div>
-          </div>
-          <div className="h-8 w-px bg-stone-200" />
-          <div>
-            <div className="flex items-center gap-1 mb-0.5">
-              {[...Array(5)].map((_, i) => (
-                <Star key={i} className="w-3 h-3 text-amber-400 fill-amber-400" />
-              ))}
-              <span className="ml-1 text-[11px] font-['Inter'] font-bold text-stone-700">4.9</span>
-            </div>
-            <p className="font-['Inter'] text-[11.5px] text-stone-500">
-              <span className="font-semibold text-stone-700">500+ students</span> placed at top firms
-            </p>
-          </div>
-        </motion.div>
 
         {/* Interactive feature list */}
         <div className="space-y-1">
@@ -193,10 +130,10 @@ export const LandingDesktop = ({
               onClick={to ? () => navigate(to) : undefined}
             >
               <div
-                className="w-9 h-9 rounded-lg bg-white border border-stone-200 flex items-center justify-center flex-shrink-0 shadow-sm transition-all duration-200 group-hover:border-amber-300/60 group-hover:shadow-md"
+                className="w-9 h-9 rounded-lg bg-white border border-stone-200 flex items-center justify-center flex-shrink-0 shadow-sm transition-all duration-200 group-hover:border-stone-400 group-hover:shadow-md"
                 style={{ transition: "all 0.2s" }}
               >
-                <Icon className="w-4 h-4 text-stone-600 transition-colors duration-200 group-hover:text-amber-600" />
+                <Icon className="w-4 h-4 text-stone-600 transition-colors duration-200 group-hover:text-stone-900" />
               </div>
               <div className="flex-1 min-w-0">
                 <span className="font-['Inter'] text-[13.5px] font-semibold text-stone-800 block leading-tight">{label}</span>
@@ -252,7 +189,7 @@ export const LandingDesktop = ({
           {/* top accent line */}
           <div
             className="absolute top-0 left-0 right-0 h-[3px]"
-            style={{ background: "linear-gradient(90deg, transparent, rgba(201,164,110,0.5), transparent)" }}
+            style={{ background: "linear-gradient(90deg, transparent, rgba(28,25,23,0.18), transparent)" }}
           />
 
           <SignedOut>
@@ -303,7 +240,7 @@ export const LandingDesktop = ({
                           Welcome back
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-['Inter'] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 mb-3">
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-['Inter'] font-semibold bg-stone-100 text-stone-600 border border-stone-200 mb-3">
                           <Sparkles className="w-3 h-3" />
                           Free forever · No credit card
                         </span>
@@ -314,14 +251,14 @@ export const LandingDesktop = ({
                       <p className="font-['Inter'] text-[13px] text-stone-500">
                         {view === "sign-in"
                           ? "Sign in to continue your prep."
-                          : "Join 500+ students. Takes under a minute."}
+                          : "Create an account. Takes under a minute."}
                       </p>
 
                       {view === "sign-up" && (
                         <div className="flex flex-wrap items-center gap-x-3.5 gap-y-1 mt-3">
                           {["Free forever", "No credit card", "Ready in 60s"].map((b) => (
                             <span key={b} className="inline-flex items-center gap-1 text-[11px] font-['Inter'] font-medium text-stone-500">
-                              <Check className="w-3 h-3 text-emerald-500" strokeWidth={3} />
+                              <Check className="w-3 h-3 text-stone-500" strokeWidth={3} />
                               {b}
                             </span>
                           ))}
@@ -332,13 +269,13 @@ export const LandingDesktop = ({
                 )}
 
                 {isClerkVerificationStep && (
-                  <div className="mb-5 flex items-start gap-3 p-3.5 rounded-xl bg-amber-50 border border-amber-200">
-                    <Mail className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
+                  <div className="mb-5 flex items-start gap-3 p-3.5 rounded-xl bg-stone-50 border border-stone-200">
+                    <Mail className="w-4 h-4 text-stone-600 flex-shrink-0 mt-0.5" />
                     <div>
-                      <p className="font-['Inter'] text-[12.5px] font-semibold text-amber-900 leading-snug">
+                      <p className="font-['Inter'] text-[12.5px] font-semibold text-stone-900 leading-snug">
                         Check your email to verify
                       </p>
-                      <p className="font-['Inter'] text-[11.5px] text-amber-700 leading-snug mt-0.5">
+                      <p className="font-['Inter'] text-[11.5px] text-stone-600 leading-snug mt-0.5">
                         We just sent you a verification email. Enter the code below — and check your <span className="font-semibold">spam folder</span> if it's not in your inbox within a minute.
                       </p>
                     </div>
@@ -386,9 +323,9 @@ export const LandingDesktop = ({
                 Welcome back!
               </h2>
               {isPremium ? (
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 border border-amber-200 mb-3">
-                  <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-                  <span className="text-[12px] font-semibold font-['Inter'] text-amber-700">Premium Member</span>
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-stone-900 border border-stone-900 mb-3">
+                  <Sparkles className="w-3.5 h-3.5 text-white" />
+                  <span className="text-[12px] font-semibold font-['Inter'] text-white">Premium Member</span>
                 </div>
               ) : (
                 <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-stone-100 border border-stone-200 mb-3">
@@ -420,7 +357,7 @@ export const LandingDesktop = ({
         {/* card glow */}
         <div
           className="absolute -inset-4 -z-10 blur-[40px] opacity-30 rounded-3xl"
-          style={{ background: "radial-gradient(ellipse, rgba(201,164,110,0.3) 0%, transparent 70%)" }}
+          style={{ background: "radial-gradient(ellipse, rgba(28,25,23,0.08) 0%, transparent 70%)" }}
         />
       </motion.div>
 
@@ -432,7 +369,7 @@ export const LandingDesktop = ({
           transition={{ duration: 0.5, delay: 0.5 }}
           className="flex items-center gap-2 text-stone-400"
         >
-          <ShieldCheck className="w-3.5 h-3.5 text-emerald-500/70" />
+          <ShieldCheck className="w-3.5 h-3.5 text-stone-400" />
           <span className="font-['Inter'] text-[11.5px]">
             Secure sign-in · We never share your data
           </span>

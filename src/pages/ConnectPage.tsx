@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Bot, Sparkles, Lock, Search, Loader2, CalendarDays, UserPlus, ChevronDown } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Search, Loader2, CalendarDays, UserPlus, ChevronDown } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Header from '@/components/Header';
 import { supabase } from '@/integrations/supabase/client';
@@ -18,46 +18,6 @@ const ConnectPage = () => {
     const [showMyBookings, setShowMyBookings] = useState(false);
 
     const COMPANIES = ['All', 'Accenture', 'Infosys', 'Cognizant', 'TCS', 'Wipro', 'IBM'];
-
-    // Smooth ticker scroll — no CSS animation so speed changes never reset position
-    const tickerRef = useRef<HTMLDivElement>(null);
-    const rafRef = useRef<number | null>(null);
-    const posRef = useRef(0);
-    const currentSpeedRef = useRef(1);   // px per frame, interpolated
-    const targetSpeedRef = useRef(1);    // 1 = normal, 0.25 = slow
-    const halfWidthRef = useRef(0);
-
-    useEffect(() => {
-        const el = tickerRef.current;
-        if (!el) return;
-        // Measure after first paint so children have rendered
-        const measure = () => { halfWidthRef.current = el.scrollWidth / 2; };
-        measure();
-        const ro = new ResizeObserver(measure);
-        ro.observe(el);
-
-        const tick = () => {
-            // Smooth lerp toward target speed
-            currentSpeedRef.current += (targetSpeedRef.current - currentSpeedRef.current) * 0.06;
-            posRef.current -= currentSpeedRef.current;
-            if (halfWidthRef.current > 0 && posRef.current <= -halfWidthRef.current) {
-                posRef.current += halfWidthRef.current;
-            }
-            if (tickerRef.current) {
-                tickerRef.current.style.transform = `translateX(${posRef.current}px)`;
-            }
-            rafRef.current = requestAnimationFrame(tick);
-        };
-        rafRef.current = requestAnimationFrame(tick);
-
-        return () => {
-            ro.disconnect();
-            if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
-        };
-    }, []);
-
-    const handleTickerEnter = useCallback(() => { targetSpeedRef.current = 0.25; }, []);
-    const handleTickerLeave = useCallback(() => { targetSpeedRef.current = 1; }, []);
 
     useEffect(() => {
         const fetchExperts = async () => {
@@ -128,70 +88,13 @@ const ConnectPage = () => {
             </div>
 
             <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
-                {/* Hero Header — preserving original design */}
-                <div className="relative flex flex-col items-center justify-center text-center mb-8 md:mb-16 space-y-4 sm:space-y-8 pt-10 sm:pt-16 w-full">
-                    <div className="absolute inset-0 -z-10 flex items-center justify-center opacity-50 pointer-events-none">
-                        <div className="absolute w-64 h-64 md:w-80 md:h-80 bg-emerald-200 rounded-full mix-blend-multiply blur-3xl -translate-x-20 -translate-y-4" />
-                        <div className="absolute w-64 h-64 md:w-80 md:h-80 bg-sky-200 rounded-full mix-blend-multiply blur-3xl translate-x-10 translate-y-10" />
-                        <div className="absolute w-64 h-64 md:w-80 md:h-80 bg-indigo-200 rounded-full mix-blend-multiply blur-3xl translate-x-32 -translate-y-8" />
-                    </div>
-
-                    <div className="relative inline-flex items-center group mt-4 sm:mt-8">
-                        <div className="absolute -inset-8 bg-yellow-400 rounded-full blur-[60px] opacity-40 -z-10 group-hover:opacity-70 transition-opacity duration-700" />
-                        <div className="absolute -inset-4 bg-amber-500 rounded-full blur-[40px] opacity-30 -z-10 group-hover:opacity-60 transition-opacity duration-700" />
-                        <h1 className="text-4xl sm:text-6xl md:text-9xl font-serif tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-stone-800 to-stone-600 z-10 pb-4">
-                            Connect.
-                        </h1>
-                        <Sparkles className="absolute -top-3 -right-8 sm:-top-4 sm:-right-12 w-7 h-7 sm:w-10 sm:h-10 text-emerald-400 animate-pulse opacity-100 transition-opacity duration-700 z-20" />
-                        <Bot className="absolute -bottom-2 -left-7 sm:-left-10 w-6 h-6 sm:w-8 sm:h-8 text-sky-400 opacity-100 group-hover:-translate-y-2 transition-all duration-700 z-20" />
-                    </div>
-
-                    <p className="text-base sm:text-xl md:text-2xl text-stone-500 max-w-2xl font-light leading-relaxed mt-2 sm:mt-4 px-4 sm:px-0">
-                        Learn directly from peers who just cracked the same interviews.
+                <div className="flex flex-col items-start sm:items-center text-left sm:text-center mb-8 md:mb-12 pt-10 sm:pt-16">
+                    <h1 className="font-['Merriweather'] text-4xl sm:text-5xl md:text-6xl font-black tracking-tight text-stone-900">
+                        Connect 1:1
+                    </h1>
+                    <p className="text-[15px] sm:text-lg text-stone-600 max-w-xl leading-relaxed mt-4">
+                        Book 20 minutes with a recently placed senior. You pay first. Our team confirms the slot and emails one meeting link to both of you.
                     </p>
-
-                    {/* Company Filter Scroll */}
-                    <div
-                        className="w-full max-w-4xl mt-6 sm:mt-12 overflow-hidden relative pb-4"
-                        onMouseEnter={handleTickerEnter}
-                        onMouseLeave={handleTickerLeave}
-                    >
-                        <div className="absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-[#fcfcf9] to-transparent z-10" />
-                        <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-[#fcfcf9] to-transparent z-10" />
-                        <div ref={tickerRef} className="flex items-center gap-4 min-w-max px-4">
-                            {[
-                                { name: 'All', locked: false },
-                                { name: 'Accenture', locked: false },
-                                { name: 'Infosys', locked: false },
-                                { name: 'Cognizant', locked: false },
-                                { name: 'TCS', locked: false },
-                                { name: 'Wipro', locked: true },
-                                { name: 'IBM', locked: true },
-                                { name: 'All', locked: false },
-                                { name: 'Accenture', locked: false },
-                                { name: 'Infosys', locked: false },
-                                { name: 'Cognizant', locked: false },
-                                { name: 'TCS', locked: false },
-                                { name: 'Wipro', locked: true },
-                                { name: 'IBM', locked: true }
-                            ].map((company, i) => (
-                                <button
-                                    key={`${company.name}-${i}`}
-                                    disabled={company.locked}
-                                    className={`flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-300 whitespace-nowrap
-                                        ${i === 0
-                                            ? 'bg-stone-900 text-white shadow-md'
-                                            : company.locked
-                                                ? 'bg-stone-100 text-stone-400 border border-stone-200 cursor-not-allowed opacity-70'
-                                                : 'bg-white text-stone-600 border border-stone-200 hover:border-stone-400 hover:text-stone-900 shadow-sm hover:shadow-md hover:-translate-y-0.5'
-                                        }`}
-                                >
-                                    {company.name}
-                                    {company.locked && <Lock className="w-3 h-3 text-stone-400" />}
-                                </button>
-                            ))}
-                        </div>
-                    </div>
                 </div>
 
                 {/* Search + Willing to Share + My Bookings */}
@@ -225,7 +128,7 @@ const ConnectPage = () => {
                     <div className="flex items-center gap-2">
                         <button
                             onClick={() => navigate('/placed-guru')}
-                            className="flex flex-1 sm:flex-none items-center justify-center gap-2 px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white rounded-xl text-sm font-medium font-['Inter'] transition-all shadow-sm hover:shadow-md"
+                            className="flex flex-1 sm:flex-none items-center justify-center gap-2 px-4 py-2.5 bg-stone-900 hover:bg-stone-700 active:scale-95 text-white rounded-xl text-sm font-medium font-['Inter'] transition-all shadow-sm hover:shadow-md"
                         >
                             <UserPlus className="w-4 h-4 flex-shrink-0" />
                             <span className="sm:hidden">Share Experience</span>
@@ -249,7 +152,7 @@ const ConnectPage = () => {
                     </div>
                 ) : filteredExperts.length === 0 ? (
                     <div className="bg-white rounded-3xl p-8 shadow-sm border border-stone-100 text-center py-20">
-                        <Sparkles className="w-12 h-12 text-stone-300 mx-auto mb-6" />
+                        <CalendarDays className="w-12 h-12 text-stone-300 mx-auto mb-6" />
                         {experts.length === 0 ? (
                             <>
                                 <h2 className="text-2xl font-serif text-stone-800 mb-4">Coming Soon</h2>

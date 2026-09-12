@@ -23,39 +23,14 @@ interface ExpertCardProps {
   onBook: (expert: Expert) => void;
 }
 
-const COMPANY_STYLES: Record<string, { pill: string; glow: string; dot: string }> = {
-  Accenture: {
-    pill: 'bg-violet-50 text-violet-700 border border-violet-100',
-    glow: 'from-violet-50 to-transparent',
-    dot: 'bg-violet-500',
-  },
-  Infosys: {
-    pill: 'bg-blue-50 text-blue-700 border border-blue-100',
-    glow: 'from-blue-50 to-transparent',
-    dot: 'bg-blue-500',
-  },
-  TCS: {
-    pill: 'bg-cyan-50 text-cyan-700 border border-cyan-100',
-    glow: 'from-cyan-50 to-transparent',
-    dot: 'bg-cyan-500',
-  },
-  Cognizant: {
-    pill: 'bg-sky-50 text-sky-700 border border-sky-100',
-    glow: 'from-sky-50 to-transparent',
-    dot: 'bg-sky-500',
-  },
-};
-
-const DEFAULT_STYLE = {
-  pill: 'bg-emerald-50 text-emerald-700 border border-emerald-100',
-  glow: 'from-emerald-50 to-transparent',
-  dot: 'bg-emerald-500',
+const STONE_STYLE = {
+  pill: 'bg-stone-100 text-stone-700 border border-stone-200',
+  glow: 'from-stone-50 to-transparent',
+  dot: 'bg-stone-500',
 };
 
 const ExpertCard = ({ expert, onBook }: ExpertCardProps) => {
-  const style = expert.company
-    ? (COMPANY_STYLES[expert.company] ?? DEFAULT_STYLE)
-    : DEFAULT_STYLE;
+  const style = STONE_STYLE;
 
   const placedAgo = expert.interview_date
     ? formatDistanceToNow(parseISO(expert.interview_date), { addSuffix: true })
@@ -73,7 +48,7 @@ const ExpertCard = ({ expert, onBook }: ExpertCardProps) => {
             Placed at {expert.company}
           </div>
           {expert.package_lpa && (
-            <div className="flex items-center gap-1 text-xs font-semibold text-emerald-600 font-['Inter']">
+            <div className="flex items-center gap-1 text-xs font-semibold text-stone-600 font-['Inter']">
               <TrendingUp className="w-3 h-3" />
               ₹{expert.package_lpa} LPA
             </div>
@@ -140,7 +115,7 @@ const ExpertCard = ({ expert, onBook }: ExpertCardProps) => {
 
         {/* Proof badge */}
         {expert.proof_url && (
-          <div className="flex items-center gap-1.5 text-xs text-emerald-600 font-['Inter']">
+          <div className="flex items-center gap-1.5 text-xs text-stone-600 font-['Inter']">
             <BadgeCheck className="w-3.5 h-3.5 flex-shrink-0" />
             <span>Placement verified</span>
           </div>

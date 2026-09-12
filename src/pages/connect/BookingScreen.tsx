@@ -68,33 +68,10 @@ const STEP_SHORT: Record<Step, string> = {
   success: 'Done',
 };
 
-const COMPANY_STYLES: Record<string, { pill: string; dot: string; heroBg: string }> = {
-  Accenture: {
-    pill: 'bg-violet-50 text-violet-700 border border-violet-100',
-    dot: 'bg-violet-500',
-    heroBg: 'from-violet-50/50 via-[#fcfcf9]/30 to-[#fcfcf9]',
-  },
-  Infosys: {
-    pill: 'bg-blue-50 text-blue-700 border border-blue-100',
-    dot: 'bg-blue-500',
-    heroBg: 'from-blue-50/50 via-[#fcfcf9]/30 to-[#fcfcf9]',
-  },
-  TCS: {
-    pill: 'bg-cyan-50 text-cyan-700 border border-cyan-100',
-    dot: 'bg-cyan-500',
-    heroBg: 'from-cyan-50/50 via-[#fcfcf9]/30 to-[#fcfcf9]',
-  },
-  Cognizant: {
-    pill: 'bg-sky-50 text-sky-700 border border-sky-100',
-    dot: 'bg-sky-500',
-    heroBg: 'from-sky-50/50 via-[#fcfcf9]/30 to-[#fcfcf9]',
-  },
-};
-
-const DEFAULT_STYLE = {
-  pill: 'bg-emerald-50 text-emerald-700 border border-emerald-100',
-  dot: 'bg-emerald-500',
-  heroBg: 'from-emerald-50/50 via-[#fcfcf9]/30 to-[#fcfcf9]',
+const STONE_STYLE = {
+  pill: 'bg-stone-100 text-stone-700 border border-stone-200',
+  dot: 'bg-stone-500',
+  heroBg: 'from-stone-50 via-[#fcfcf9]/30 to-[#fcfcf9]',
 };
 
 interface BookingScreenProps {
@@ -113,7 +90,7 @@ const BookingScreen = ({ expert, onClose }: BookingScreenProps) => {
   const [selectedSlot, setSelectedSlot] = useState<TimeSlot | null>(null);
   const [formData, setFormData] = useState<BookingFormData>({ name: '', email: '', message: '' });
 
-  const style = expert.company ? (COMPANY_STYLES[expert.company] ?? DEFAULT_STYLE) : DEFAULT_STYLE;
+  const style = STONE_STYLE;
 
   useEffect(() => {
     const accountEmail = user?.primaryEmailAddress?.emailAddress;
@@ -354,13 +331,13 @@ const BookingScreen = ({ expert, onClose }: BookingScreenProps) => {
                   </div>
                 )}
                 {expert.package_lpa && (
-                  <div className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-100 text-xs font-semibold text-emerald-600 font-['Inter']">
+                  <div className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-stone-100 border border-stone-200 text-xs font-semibold text-stone-600 font-['Inter']">
                     <TrendingUp className="w-3 h-3" />
                     ₹{expert.package_lpa} LPA
                   </div>
                 )}
                 {expert.proof_url && (
-                  <div className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-100 text-xs font-semibold text-emerald-600 font-['Inter']">
+                  <div className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-stone-100 border border-stone-200 text-xs font-semibold text-stone-600 font-['Inter']">
                     <BadgeCheck className="w-3 h-3" />
                     Placement Verified
                   </div>
