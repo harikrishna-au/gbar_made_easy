@@ -1,31 +1,22 @@
 // Polyfill for requestIdleCallback
-if (typeof globalThis !== 'undefined') {
-  if (!globalThis.requestIdleCallback) {
-    globalThis.requestIdleCallback = function (cb: any) {
-      const start = Date.now();
-      return window.setTimeout(function () {
-        cb({
-          didTimeout: false,
-          timeRemaining: function () {
-            return Math.max(0, 50 - (Date.now() - start));
-          },
-        });
-      }, 1);
-    } as any;
-  }
-
-  if (!globalThis.cancelIdleCallback) {
-    globalThis.cancelIdleCallback = function (id: any) {
-      clearTimeout(id);
-    } as any;
-  }
-}
-
 if (!window.requestIdleCallback) {
-  window.requestIdleCallback = (globalThis as any).requestIdleCallback;
+  window.requestIdleCallback = function (cb) {
+    const start = Date.now();
+    return window.setTimeout(function () {
+      cb({
+        didTimeout: false,
+        timeRemaining: function () {
+          return Math.max(0, 50 - (Date.now() - start));
+        },
+      });
+    }, 1);
+  } as any;
 }
+
 if (!window.cancelIdleCallback) {
-  window.cancelIdleCallback = (globalThis as any).cancelIdleCallback;
+  window.cancelIdleCallback = function (id) {
+    clearTimeout(id);
+  } as any;
 }
 
 import { createRoot } from "react-dom/client";
