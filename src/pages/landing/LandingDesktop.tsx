@@ -160,11 +160,10 @@ export const LandingDesktop = ({
         {/* Interactive feature list */}
         <div className="space-y-1">
           {features.filter((f) => f.featured).map(({ icon: Icon, label, sub, to }) => (
-            <motion.a
+            <motion.button
               key={label}
-              href={to}
-              target="_blank"
-              rel="noopener noreferrer"
+              type="button"
+              onClick={() => to && navigate(to)}
               initial={{ opacity: 0, x: -14 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.4, delay: 0.38, ease: "easeOut" }}
@@ -181,7 +180,7 @@ export const LandingDesktop = ({
                 <span className="font-['Inter'] text-[12px] text-stone-500">{sub}</span>
               </div>
               <ArrowRight className="w-4 h-4 text-stone-900 flex-shrink-0" />
-            </motion.a>
+            </motion.button>
           ))}
           {features.filter((f) => !f.featured).map(({ icon: Icon, label, sub, to }, i) => (
             <motion.div

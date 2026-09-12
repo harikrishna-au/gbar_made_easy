@@ -107,6 +107,17 @@ serve(async (req: Request) => {
   if (req.method === 'OPTIONS') return new Response(null, { headers: corsHeaders });
 
   try {
+    // Connect v1 is manually operated. Keep this legacy automation private so
+    // students and experts cannot generate links outside the admin workflow.
+    const serviceRole = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
+    const bearer = (req.headers.get('Authorization') ?? '').replace(/^Bearer\s+/i, '');
+    if (!serviceRole || bearer !== serviceRole) {
+      return new Response(
+        JSON.stringify({ error: 'Meeting links are managed by the Connect team' }),
+        { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     const { booking_id } = await req.json();
     if (!booking_id) throw new Error('booking_id is required');
 

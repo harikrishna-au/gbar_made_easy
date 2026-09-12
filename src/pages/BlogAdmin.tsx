@@ -3,7 +3,7 @@ import {
   Shield, LogOut, RefreshCw, Eye, EyeOff, Hourglass, BookOpen,
   XCircle, LayoutList, Users, Check, Trash2, ExternalLink, UserCheck, UserX,
   Briefcase, Plus, X, MapPin, Package, Link, ToggleLeft, ToggleRight,
-  Sparkles, ClipboardPaste, PenLine, Loader2
+  Sparkles, ClipboardPaste, PenLine, Loader2, CalendarDays
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
@@ -756,6 +756,10 @@ function AdminDashboard() {
               className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-[12px] font-semibold font-['Inter'] transition-all ${mainTab === 'jobs' ? 'bg-white text-stone-900 shadow-sm' : 'text-stone-500 hover:text-stone-700'}`}>
               <Briefcase className="w-3.5 h-3.5" /> Jobs
             </button>
+            <a href="/admin/connect"
+              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-[12px] font-semibold font-['Inter'] text-stone-500 hover:text-stone-700 transition-all">
+              <CalendarDays className="w-3.5 h-3.5" /> Connect Ops
+            </a>
           </div>
 
           <button onClick={() => { logoutAdmin(); setAuthed(false); }}

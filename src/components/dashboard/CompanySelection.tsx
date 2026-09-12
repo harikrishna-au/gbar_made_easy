@@ -607,9 +607,7 @@ export const CompanySelection = ({ onSelectCompany }: CompanySelectionProps) => 
         {/* ── Card 04: Connect 1:1 — full-width banner ── */}
         <TiltCard
           label="Connect 1:1"
-          onClick={() =>
-            window.open("https://topmate.io/hari_krishna_nallana", "_blank", "noopener,noreferrer")
-          }
+          onClick={() => navigate("/connect")}
           glow="rgba(28,25,23,0.12)"
           border="rgba(28,25,23,0.22)"
           className="w-full rounded-2xl"

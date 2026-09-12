@@ -185,15 +185,14 @@ export const LandingMobile = ({
 
         <div className="mt-8 space-y-2.5">
           {features.filter((f) => f.featured).map(({ icon: Icon, label, sub, to }) => (
-            <motion.a
+            <motion.button
               key={label}
-              href={to}
-              target="_blank"
-              rel="noopener noreferrer"
+              type="button"
+              onClick={() => to && navigate(to)}
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: 0.2 }}
-              className="flex items-center gap-3 p-3.5 rounded-2xl border-2 border-stone-900 bg-white active:scale-[0.99] transition-transform"
+              className="flex items-center gap-3 w-full text-left p-3.5 rounded-2xl border-2 border-stone-900 bg-white active:scale-[0.99] transition-transform"
             >
               <div className="w-10 h-10 rounded-xl bg-stone-900 flex items-center justify-center flex-shrink-0">
                 <Icon className="w-5 h-5 text-white" />
@@ -206,7 +205,7 @@ export const LandingMobile = ({
                 <p className="font-['Inter'] text-[12px] text-stone-500">{sub}</p>
               </div>
               <ArrowRight className="w-4 h-4 text-stone-900 flex-shrink-0" />
-            </motion.a>
+            </motion.button>
           ))}
           {features.filter((f) => !f.featured).map(({ icon: Icon, label, sub }, i) => (
             <motion.div

@@ -32,6 +32,7 @@ import BlogPost from "./pages/BlogPost";
 import BlogWrite from "./pages/BlogWrite";
 import BlogMyPosts from "./pages/BlogMyPosts";
 import BlogAdmin from "./pages/BlogAdmin";
+import ConnectAdmin from "./pages/ConnectAdmin";
 import HackWithInfyLanding from "./pages/hackwithinfy/HackWithInfyLanding";
 import HackWithInfySyllabus from "./pages/hackwithinfy/HackWithInfySyllabus";
 import HackWithInfyResources from "./pages/hackwithinfy/HackWithInfyResources";
@@ -195,6 +196,7 @@ const App = () => {
               {/* Admin */}
               <Route path="/admin" element={<BlogAdmin />} />
               <Route path="/admin/blog" element={<BlogAdmin />} />
+              <Route path="/admin/connect" element={<ConnectAdmin />} />
 
               <Route path="*" element={<NotFound />} />
             </Routes>

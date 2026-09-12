@@ -16,6 +16,15 @@ verify_jwt = false
 [functions.generate-meet-link]
 verify_jwt = false
 
+[functions.connect-admin]
+verify_jwt = false
+
+[functions.connect-expert-bookings]
+verify_jwt = false
+
+[functions.connect-my-bookings]
+verify_jwt = false
+
 [functions.google-oauth-exchange]
 verify_jwt = false
 

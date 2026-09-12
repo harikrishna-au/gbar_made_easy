@@ -1,9 +1,7 @@
 import { useState, useEffect } from 'react';
-import { X, Loader2, Search, Calendar, Clock, CheckCircle2, XCircle, Hourglass, Video, CalendarCheck, MessageCircle } from 'lucide-react';
-import { toast } from 'sonner';
+import { X, Loader2, RefreshCw, Calendar, Clock, CheckCircle2, XCircle, Hourglass, Video, MessageCircle, ShieldCheck, Mail } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
-import { useUser } from '@clerk/clerk-react';
-import { supabase } from '@/integrations/supabase/client';
+import { useAuth, useUser } from '@clerk/clerk-react';
 import DMModal from './DMModal';
 
 interface Booking {
@@ -49,25 +47,34 @@ interface MyBookingsModalProps {
 
 const MyBookingsModal = ({ onClose }: MyBookingsModalProps) => {
   const { user: clerkUser } = useUser();
+  const { getToken } = useAuth();
   const clerkEmail = clerkUser?.primaryEmailAddress?.emailAddress ?? '';
 
-  const [email, setEmail] = useState(clerkEmail);
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(false);
   const [fetched, setFetched] = useState(false);
-  const [meetLoading, setMeetLoading] = useState<string | null>(null);
   const [dmExpert, setDmExpert] = useState<Booking['experts'] | null>(null);
 
-  const fetchBookings = async (emailToSearch: string) => {
-    if (!emailToSearch.trim()) return;
+  const fetchBookings = async () => {
     setLoading(true);
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), 10_000);
     try {
-      const { data } = await supabase
-        .rpc('get_bookings_by_email', { p_email: emailToSearch.trim() })
-        .abortSignal(controller.signal);
-      setBookings((data as Booking[]) || []);
+      const token = await getToken();
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/connect-my-bookings`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          signal: controller.signal,
+        }
+      );
+      if (!response.ok) throw new Error('Could not load bookings');
+      const data = await response.json();
+      setBookings((data.bookings as Booking[]) || []);
     } catch {
       setBookings([]);
     } finally {
@@ -80,47 +87,9 @@ const MyBookingsModal = ({ onClose }: MyBookingsModalProps) => {
   // Auto-fetch on open if Clerk email is available
   useEffect(() => {
     if (clerkEmail) {
-      fetchBookings(clerkEmail);
+      fetchBookings();
     }
   }, [clerkEmail]);
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    fetchBookings(email);
-  };
-
-  const requestMeetLink = async (bookingId: string) => {
-    setMeetLoading(bookingId);
-    try {
-      const res = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-meet-link`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
-          },
-          body: JSON.stringify({ booking_id: bookingId }),
-        }
-      );
-      const data = await res.json();
-      if (data.error === 'GOOGLE_NOT_CONNECTED') {
-        toast.error('The expert hasn\'t connected their Google account yet. Please try again later.');
-        return;
-      }
-      if (!res.ok) throw new Error(data.error || 'Failed to generate Meet link');
-
-      // Update the booking in local state with the new meet_link
-      setBookings((prev) =>
-        prev.map((b) => b.id === bookingId ? { ...b, meet_link: data.meet_link } : b)
-      );
-      toast.success('Google Meet link sent to your email!');
-    } catch (err: any) {
-      toast.error(err.message || 'Failed to generate Meet link');
-    } finally {
-      setMeetLoading(null);
-    }
-  };
 
   return (
     <>
@@ -141,23 +110,19 @@ const MyBookingsModal = ({ onClose }: MyBookingsModalProps) => {
           </div>
 
           <div className="flex-1 overflow-y-auto px-5 py-5 space-y-5">
-            {/* Email row — pre-filled from Clerk, still editable */}
-            <form onSubmit={handleSearch} className="flex gap-2">
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="your@email.com"
-                className="flex-1 px-3.5 py-2.5 bg-stone-50 border border-stone-200 rounded-xl text-stone-900 text-sm placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-stone-300 focus:border-transparent transition-all font-['Inter']"
-              />
+            {/* Identity-scoped lookup — the server only returns this Clerk user's bookings */}
+            <div className="flex items-center gap-2 p-2.5 pl-3.5 bg-stone-50 border border-stone-200 rounded-xl">
+              <Mail className="w-3.5 h-3.5 text-stone-400 flex-shrink-0" />
+              <span className="flex-1 truncate text-xs text-stone-600 font-['Inter']">{clerkEmail}</span>
               <button
-                type="submit"
-                disabled={loading || !email.trim()}
-                className="px-4 py-2.5 bg-stone-900 text-white rounded-xl text-sm font-medium font-['Inter'] hover:bg-stone-700 active:scale-95 transition-all disabled:opacity-50 flex items-center gap-1.5"
+                onClick={fetchBookings}
+                disabled={loading}
+                className="w-8 h-8 bg-white border border-stone-200 rounded-lg flex items-center justify-center text-stone-500 disabled:opacity-50"
+                aria-label="Refresh bookings"
               >
-                {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
+                {loading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <RefreshCw className="w-3.5 h-3.5" />}
               </button>
-            </form>
+            </div>
 
             {/* Results */}
             {(() => {
@@ -244,7 +209,7 @@ const MyBookingsModal = ({ onClose }: MyBookingsModalProps) => {
                           </p>
                         )}
 
-                        {/* Meet link / Request Meeting */}
+                        {/* Meet link / managed scheduling state */}
                         {(booking.status === 'paid' || booking.status === 'confirmed') && (
                           booking.meet_link ? (
                             <a
@@ -257,18 +222,12 @@ const MyBookingsModal = ({ onClose }: MyBookingsModalProps) => {
                               Join Google Meet
                             </a>
                           ) : (
-                            <button
-                              onClick={() => requestMeetLink(booking.id)}
-                              disabled={meetLoading === booking.id}
-                              className="flex items-center justify-center gap-1.5 w-full py-2 bg-stone-900 hover:bg-stone-700 active:scale-95 text-white rounded-lg text-xs font-medium font-['Inter'] transition-all disabled:opacity-60 disabled:cursor-not-allowed"
-                            >
-                              {meetLoading === booking.id ? (
-                                <Loader2 className="w-3 h-3 animate-spin" />
-                              ) : (
-                                <CalendarCheck className="w-3 h-3" />
-                              )}
-                              {meetLoading === booking.id ? 'Generating...' : 'Request Meeting'}
-                            </button>
+                            <div className="flex items-center gap-2.5 w-full py-2.5 px-3 bg-stone-50 border border-stone-200 rounded-lg">
+                              <ShieldCheck className="w-3.5 h-3.5 text-stone-500 flex-shrink-0" />
+                              <p className="text-[11px] text-stone-500 font-['Inter'] leading-snug">
+                                Our Connect team is arranging the call. The link will appear here and arrive by email.
+                              </p>
+                            </div>
                           )
                         )}
                       </div>

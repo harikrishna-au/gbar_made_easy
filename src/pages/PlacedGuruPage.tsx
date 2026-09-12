@@ -1,23 +1,14 @@
-import { useUser } from '@clerk/clerk-react';
+import { useAuth, useUser } from '@clerk/clerk-react';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Pencil, BadgeCheck, TrendingUp, Clock, CalendarDays, CheckCircle2, XCircle, Hourglass, Loader2, Calendar, ArrowLeft, X, Video, CalendarCheck, MessageCircle, Mail } from 'lucide-react';
+import { Plus, Pencil, BadgeCheck, TrendingUp, Clock, CalendarDays, CheckCircle2, XCircle, Hourglass, Loader2, Calendar, ArrowLeft, X, Video, MessageCircle, Mail, ShieldCheck } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
-import { toast } from 'sonner';
 import Header from '@/components/Header';
 import GuruProfileForm from './placed-guru/GuruProfileForm';
 import { supabase } from '@/integrations/supabase/client';
 import { Expert } from './connect/ExpertCard';
 
 /* ── Profile mini-card ─────────────────────────────────────────────── */
-
-function startGoogleOAuth(expertId: string) {
-  const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-  const redirectUri = `${window.location.origin}/oauth/google/callback`;
-  const scope = 'https://www.googleapis.com/auth/meetings.space.created';
-  const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=${encodeURIComponent(scope)}&access_type=offline&prompt=consent&state=${expertId}`;
-  window.location.href = url;
-}
 
 const MyExpertCard = ({
   expert,
@@ -95,22 +86,11 @@ const MyExpertCard = ({
         </div>
       )}
 
-      {/* Google Meet connection status */}
       <div className="mt-3 pt-3 border-t border-stone-100">
-        {expert.google_refresh_token ? (
-          <span className="inline-flex items-center gap-1.5 text-xs text-emerald-600 font-['Inter']">
-            <Video className="w-3 h-3" />
-            Google Meet connected
-          </span>
-        ) : (
-          <button
-            onClick={() => startGoogleOAuth(expert.id)}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#1a73e8] hover:bg-[#1557b0] text-white rounded-xl text-xs font-medium font-['Inter'] active:scale-95 transition-all"
-          >
-            <Video className="w-3 h-3" />
-            Connect Google for Meet links
-          </button>
-        )}
+        <span className="inline-flex items-center gap-1.5 text-xs text-stone-500 font-['Inter']">
+          <ShieldCheck className="w-3 h-3" />
+          Calls coordinated by the Connect team
+        </span>
       </div>
     </div>
   </div>
@@ -155,85 +135,36 @@ interface ExpertBooking {
 const isMeetingEnded = (date: string, endTime: string) =>
   new Date(`${date}T${endTime}`) < new Date();
 
-const BookingsPanel = ({ userId }: { userId: string }) => {
+const BookingsPanel = () => {
+  const { getToken } = useAuth();
   const [bookings, setBookings] = useState<ExpertBooking[]>([]);
   const [loading, setLoading] = useState(true);
-  const [updating, setUpdating] = useState<string | null>(null);
-  const [meetLoading, setMeetLoading] = useState<string | null>(null);
 
-  const generateMeetLink = async (bookingId: string) => {
-    setMeetLoading(bookingId);
+  const fetchBookings = async () => {
+    setLoading(true);
     try {
-      const res = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-meet-link`,
+      const token = await getToken();
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/connect-expert-bookings`,
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+            Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ booking_id: bookingId }),
         }
       );
-      const data = await res.json();
-      if (data.error === 'GOOGLE_NOT_CONNECTED') {
-        toast.error('Connect your Google account first — see your profile card.');
-        return;
-      }
-      if (!res.ok) throw new Error(data.error || 'Failed');
-      setBookings((prev) =>
-        prev.map((b) => b.id === bookingId ? { ...b, meet_link: data.meet_link } : b)
-      );
-      toast.success('Meet link generated and emailed to both parties!');
-    } catch (err: any) {
-      toast.error(err.message || 'Failed to generate Meet link');
-    } finally {
-      setMeetLoading(null);
-    }
-  };
-
-  const fetchBookings = async () => {
-    setLoading(true);
-    const { data: myExperts } = await supabase
-      .from('experts')
-      .select('id')
-      .eq('user_id', userId);
-
-    if (!myExperts || myExperts.length === 0) {
+      if (!response.ok) throw new Error('Could not load bookings');
+      const data = await response.json();
+      setBookings((data.bookings as ExpertBooking[]) || []);
+    } catch {
       setBookings([]);
+    } finally {
       setLoading(false);
-      return;
     }
-
-    const ids = myExperts.map((e) => e.id);
-    const { data } = await supabase
-      .from('bookings')
-      .select('*, experts(name, photo_url, price_inr)')
-      .in('expert_id', ids)
-      .order('date', { ascending: true })
-      .order('start_time', { ascending: true });
-
-    setBookings((data as ExpertBooking[]) || []);
-    setLoading(false);
   };
 
   useEffect(() => { fetchBookings(); }, []);
-
-  const updateStatus = async (bookingId: string, status: 'confirmed' | 'declined') => {
-    setUpdating(bookingId);
-    const { error } = await supabase
-      .from('bookings')
-      .update({ status })
-      .eq('id', bookingId);
-
-    if (error) {
-      toast.error('Failed to update booking. Try again.');
-    } else {
-      toast.success(status === 'confirmed' ? 'Booking confirmed!' : 'Booking declined.');
-      fetchBookings();
-    }
-    setUpdating(null);
-  };
 
   if (loading) {
     return (
@@ -352,23 +283,11 @@ const BookingsPanel = ({ userId }: { userId: string }) => {
             )}
 
             {isPending && (
-              <div className="flex gap-2 pt-1">
-                <button
-                  onClick={() => updateStatus(booking.id, 'confirmed')}
-                  disabled={updating === booking.id}
-                  className="flex-1 py-2 bg-emerald-600 text-white rounded-xl text-xs font-medium font-['Inter'] hover:bg-emerald-700 active:scale-95 transition-all disabled:opacity-50 flex items-center justify-center gap-1.5"
-                >
-                  {updating === booking.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <CheckCircle2 className="w-3 h-3" />}
-                  Accept
-                </button>
-                <button
-                  onClick={() => updateStatus(booking.id, 'declined')}
-                  disabled={updating === booking.id}
-                  className="flex-1 py-2 bg-stone-100 text-stone-600 rounded-xl text-xs font-medium font-['Inter'] hover:bg-red-50 hover:text-red-600 active:scale-95 transition-all disabled:opacity-50 flex items-center justify-center gap-1.5"
-                >
-                  <XCircle className="w-3 h-3" />
-                  Decline
-                </button>
+              <div className="flex items-start gap-2.5 p-3 bg-stone-50 border border-stone-200 rounded-xl">
+                <ShieldCheck className="w-3.5 h-3.5 text-stone-500 flex-shrink-0 mt-0.5" />
+                <p className="text-[11px] text-stone-500 font-['Inter'] leading-relaxed">
+                  The Connect team is reviewing this paid booking and will coordinate the schedule and meeting link with both sides.
+                </p>
               </div>
             )}
 
@@ -384,16 +303,10 @@ const BookingsPanel = ({ userId }: { userId: string }) => {
                 Join Google Meet
               </a>
             ) : booking.status !== 'declined' ? (
-              <button
-                onClick={() => generateMeetLink(booking.id)}
-                disabled={meetLoading === booking.id}
-                className="flex items-center justify-center gap-1.5 w-full py-2 bg-stone-900 hover:bg-stone-700 text-white rounded-xl text-xs font-medium font-['Inter'] active:scale-95 transition-all disabled:opacity-60"
-              >
-                {meetLoading === booking.id
-                  ? <Loader2 className="w-3 h-3 animate-spin" />
-                  : <CalendarCheck className="w-3 h-3" />}
-                {meetLoading === booking.id ? 'Generating...' : 'Generate Meet Link'}
-              </button>
+              <div className="flex items-center justify-center gap-1.5 w-full py-2 bg-stone-50 border border-stone-200 text-stone-500 rounded-xl text-xs font-medium font-['Inter']">
+                <Clock className="w-3 h-3" />
+                Meeting link managed by Connect team
+              </div>
             ) : null}
           </div>
         );
@@ -602,7 +515,7 @@ const ManagementPanel = ({ userId }: { userId: string }) => {
         ))}
       </div>
 
-      {tab === 'bookings' && <BookingsPanel userId={userId} />}
+      {tab === 'bookings' && <BookingsPanel />}
       {tab === 'messages' && <MessagesPanel userId={userId} />}
 
       {tab === 'profiles' && view === 'list' && (

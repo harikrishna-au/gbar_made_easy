@@ -1,6 +1,7 @@
 /**
  * verify-booking-payment
- * Verifies Razorpay payment signature and writes a confirmed booking.
+ * Verifies Razorpay payment signature and queues a paid booking for manual
+ * Connect operations.
  * Security: re-validates amount server-side, checks availability windows,
  * validates expert exists, enforces field length limits.
  */
@@ -190,32 +191,18 @@ serve(async (req: Request) => {
 
     if (bookingError) throw bookingError;
 
-    // ── 10. Auto-generate Google Meet link (best-effort, non-blocking) ────────
-    let meetLink: string | null = null;
-    try {
-      const meetRes = await fetch(
-        `${Deno.env.get('SUPABASE_URL')}/functions/v1/generate-meet-link`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')}`,
-          },
-          body: JSON.stringify({ booking_id: booking.id }),
-        }
-      );
-      if (meetRes.ok) {
-        const meetData = await meetRes.json();
-        meetLink = meetData.meet_link ?? null;
-      }
-      // If expert hasn't connected Google (GOOGLE_NOT_CONNECTED), meetLink stays null —
-      // the user can still request it manually via "My Bookings".
-    } catch (meetErr) {
-      console.warn('[verify-booking-payment] Meet link auto-generation skipped:', meetErr);
-    }
+    await supabaseAdmin.from('booking_events').insert({
+      booking_id: booking.id,
+      event_type: 'payment_verified',
+      from_status: null,
+      to_status: 'paid',
+      details: { razorpay_order_id, razorpay_payment_id },
+    }).then(({ error }) => {
+      if (error) console.warn('[verify-booking-payment] Could not record booking event:', error);
+    });
 
     return new Response(
-      JSON.stringify({ success: true, booking_id: booking.id, meet_link: meetLink }),
+      JSON.stringify({ success: true, booking_id: booking.id, meet_link: null }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
 

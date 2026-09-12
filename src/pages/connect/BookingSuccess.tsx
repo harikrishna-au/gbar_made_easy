@@ -25,11 +25,11 @@ const BookingSuccess = ({ expertName, date, startTime, endTime, userEmail, meetL
 
       {/* Title */}
       <div>
-        <h3 className="text-2xl font-['Merriweather'] text-stone-900 mb-2">Booking confirmed!</h3>
+        <h3 className="text-2xl font-['Merriweather'] text-stone-900 mb-2">Booking received!</h3>
         <p className="text-stone-500 text-sm leading-relaxed font-['Inter']">
-          Your session with{' '}
-          <span className="font-semibold text-stone-700">{expertName}</span> is locked in.
-          Check your email for the details.
+          Your payment is verified. Our Connect team will coordinate with{' '}
+          <span className="font-semibold text-stone-700">{expertName}</span>, confirm the session,
+          and email the meeting link to both of you.
         </p>
       </div>
 
@@ -55,7 +55,7 @@ const BookingSuccess = ({ expertName, date, startTime, endTime, userEmail, meetL
             <Mail className="w-3.5 h-3.5 text-stone-500" />
           </div>
           <span className="text-stone-500">
-            Confirmation sent to{' '}
+            Meeting details will be sent to{' '}
             <span className="text-stone-700 font-medium">{userEmail}</span>
           </span>
         </div>
@@ -77,7 +77,7 @@ const BookingSuccess = ({ expertName, date, startTime, endTime, userEmail, meetL
         </div>
       ) : (
         <p className="text-stone-400 text-xs max-w-xs leading-relaxed font-['Inter']">
-          Check "My Bookings" on the connect page anytime to track your booking status.
+          Track the request in "My Bookings." The meeting link will appear there after our team confirms it.
         </p>
       )}
 

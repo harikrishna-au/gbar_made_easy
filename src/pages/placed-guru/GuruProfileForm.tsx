@@ -171,7 +171,7 @@ const GuruProfileForm = ({ userId, expertId, initialData, onSuccess, onCancel }:
           if (availError) throw availError;
         }
 
-        toast.success('Expert profile created and live on /connect!');
+        toast.success('Profile submitted for admin approval!');
         if (onSuccess) {
           onSuccess(expertData.id);
         } else {
@@ -203,10 +203,9 @@ const GuruProfileForm = ({ userId, expertId, initialData, onSuccess, onCancel }:
           </div>
         </div>
         <div>
-          <h2 className="text-xl font-['Merriweather'] text-stone-900 mb-1">Profile Created!</h2>
+          <h2 className="text-xl font-['Merriweather'] text-stone-900 mb-1">Profile Submitted!</h2>
           <p className="text-stone-500 text-sm font-['Inter']">
-            The expert is now live on{' '}
-            <a href="/connect" className="text-stone-700 font-medium hover:underline">/connect</a>.
+            An admin will review it before it appears on Connect.
           </p>
         </div>
         <button

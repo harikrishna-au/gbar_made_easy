@@ -11,7 +11,7 @@ interface PaymentHandlerProps {
   date: Date;
   slot: TimeSlot;
   formData: BookingFormData;
-  onSuccess: (meetLink: string | null) => void;
+  onSuccess: () => void;
   onError: () => void;
 }
 
@@ -119,8 +119,8 @@ const PaymentHandler = ({ expert, date, slot, formData, onSuccess, onError }: Pa
             );
 
             if (verifyRes.ok) {
-              const verifyData = await verifyRes.json();
-              onSuccess(verifyData.meet_link ?? null);
+              await verifyRes.json();
+              onSuccess();
             } else {
               const errData = await verifyRes.json().catch(() => ({}));
               const reason = (errData as any).error || 'Booking creation failed after payment.';

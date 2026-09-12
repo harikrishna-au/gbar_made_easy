@@ -278,6 +278,13 @@ export type Database = {
           meet_link: string | null
           status: string
           created_at: string
+          updated_at: string | null
+          admin_notes: string | null
+          priority: string
+          confirmed_at: string | null
+          completed_at: string | null
+          cancelled_at: string | null
+          meet_link_sent_at: string | null
         }
         Insert: {
           id?: string
@@ -293,6 +300,13 @@ export type Database = {
           meet_link?: string | null
           status?: string
           created_at?: string
+          updated_at?: string | null
+          admin_notes?: string | null
+          priority?: string
+          confirmed_at?: string | null
+          completed_at?: string | null
+          cancelled_at?: string | null
+          meet_link_sent_at?: string | null
         }
         Update: {
           id?: string
@@ -308,6 +322,13 @@ export type Database = {
           meet_link?: string | null
           status?: string
           created_at?: string
+          updated_at?: string | null
+          admin_notes?: string | null
+          priority?: string
+          confirmed_at?: string | null
+          completed_at?: string | null
+          cancelled_at?: string | null
+          meet_link_sent_at?: string | null
         }
         Relationships: [
           {
@@ -315,6 +336,44 @@ export type Database = {
             columns: ["expert_id"]
             isOneToOne: false
             referencedRelation: "experts"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      booking_events: {
+        Row: {
+          id: string
+          booking_id: string
+          event_type: string
+          from_status: string | null
+          to_status: string | null
+          details: Json
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          booking_id: string
+          event_type: string
+          from_status?: string | null
+          to_status?: string | null
+          details?: Json
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          booking_id?: string
+          event_type?: string
+          from_status?: string | null
+          to_status?: string | null
+          details?: Json
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "booking_events_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
             referencedColumns: ["id"]
           }
         ]
@@ -350,6 +409,13 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_booked_slots: {
+        Args: { p_expert_id: string; p_date: string }
+        Returns: {
+          start_time: string
+          end_time: string
+        }[]
+      }
       get_bookings_by_email: {
         Args: { p_email: string }
         Returns: {

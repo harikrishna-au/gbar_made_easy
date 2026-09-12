@@ -21,7 +21,6 @@ import PaymentPopup from "@/components/PaymentPopup";
 import { useSearchParams, useParams, useNavigate } from "react-router-dom";
 
 const EXTERNAL_LINKS = {
-  topmate: "https://topmate.io/hari_krishna_nallana/",
   linkedin: "https://www.linkedin.com/in/hari-krishna-nallana-33949b277/",
   whatsapp: "https://chat.whatsapp.com/CBORD8aR3x91d5rmwo87de",
   googleDrive: "https://drive.google.com/drive/folders/1wepyyapyvzyUR9T26CZJjQE-fGesd3A3?usp=sharing",
@@ -133,8 +132,7 @@ const Dashboard = () => {
       id: 5,
       name: "Connect with me",
       subtitle: `${companyName} Interview Guidance – Paid 1-on-1 Session`,
-      path: EXTERNAL_LINKS.topmate,
-      isExternal: true,
+      path: "/connect",
       typingHighlight: true,
       typingText: "BOOK 1:1 SESSION"
     },
@@ -200,8 +198,7 @@ const Dashboard = () => {
       id: 5,
       name: "Connect with me",
       subtitle: `${companyName} Interview Guidance – Paid 1-on-1 Session`,
-      path: EXTERNAL_LINKS.topmate,
-      isExternal: true,
+      path: "/connect",
       typingHighlight: true,
       typingText: "BOOK 1:1 SESSION"
     },

@@ -137,14 +137,10 @@ const BookingScreen = ({ expert, onClose }: BookingScreenProps) => {
       const allSlots = generateSlots(availabilityWindows, dayOfWeek);
       const dateStr = format(date, 'yyyy-MM-dd');
       const { data: bookings } = await supabase
-        .from('bookings')
-        .select('start_time, end_time')
-        .eq('expert_id', expert.id)
-        .eq('date', dateStr)
-        .in('status', ['confirmed', 'paid']);
-      const bookedIntervals = (bookings || []).map((b: any) => ({
-        start: parseTimeToMinutes(b.start_time as string),
-        end: parseTimeToMinutes(b.end_time as string),
+        .rpc('get_booked_slots', { p_expert_id: expert.id, p_date: dateStr });
+      const bookedIntervals = (bookings || []).map((booking) => ({
+        start: parseTimeToMinutes(booking.start_time),
+        end: parseTimeToMinutes(booking.end_time),
       }));
       const freeSlots = allSlots.filter((slot) => {
         const sStart = parseTimeToMinutes(slot.start);
@@ -498,6 +494,7 @@ const BookingScreen = ({ expert, onClose }: BookingScreenProps) => {
               startTime={selectedSlot.start}
               endTime={selectedSlot.end}
               userEmail={formData.email}
+              meetLink={null}
               onClose={onClose}
             />
           </div>
