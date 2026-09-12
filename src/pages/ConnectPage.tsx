@@ -67,7 +67,7 @@ const ConnectPage = () => {
             try {
                 const { data } = await supabase
                     .from('experts')
-                    .select('*')
+                    .select('id, name, title, bio, skills, photo_url, price_inr, company, interview_date, package_lpa, proof_url, created_at')
                     .eq('approved', true)
                     .order('created_at', { ascending: false })
                     .abortSignal(controller.signal);
@@ -90,8 +90,9 @@ const ConnectPage = () => {
         }
         supabase
             .from('experts')
-            .select('*')
+            .select('id, name, title, bio, skills, photo_url, price_inr, company, interview_date, package_lpa, proof_url, created_at')
             .eq('id', expertId)
+            .eq('approved', true)
             .single()
             .then(({ data }) => {
                 if (data) setSelectedExpert(data as unknown as Expert);

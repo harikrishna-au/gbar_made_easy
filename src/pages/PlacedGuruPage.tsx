@@ -5,7 +5,6 @@ import { Plus, Pencil, BadgeCheck, TrendingUp, Clock, CalendarDays, CheckCircle2
 import { format, parseISO } from 'date-fns';
 import Header from '@/components/Header';
 import GuruProfileForm from './placed-guru/GuruProfileForm';
-import { supabase } from '@/integrations/supabase/client';
 import { Expert } from './connect/ExpertCard';
 
 /* ── Profile mini-card ─────────────────────────────────────────────── */
@@ -100,7 +99,7 @@ const MyExpertCard = ({
 
 const BOOKING_STATUS: Record<string, { label: string; icon: React.ReactNode; cls: string }> = {
   paid: {
-    label: 'Awaiting Acceptance',
+    label: 'Team coordinating',
     icon: <Hourglass className="w-3 h-3" />,
     cls: 'bg-amber-50 text-amber-700 border border-amber-100',
   },
@@ -109,10 +108,30 @@ const BOOKING_STATUS: Record<string, { label: string; icon: React.ReactNode; cls
     icon: <CheckCircle2 className="w-3 h-3" />,
     cls: 'bg-emerald-50 text-emerald-700 border border-emerald-100',
   },
+  completed: {
+    label: 'Completed',
+    icon: <CheckCircle2 className="w-3 h-3" />,
+    cls: 'bg-stone-900 text-white border-stone-900',
+  },
+  cancelled: {
+    label: 'Cancelled',
+    icon: <XCircle className="w-3 h-3" />,
+    cls: 'bg-stone-50 text-stone-500 border border-stone-200',
+  },
   declined: {
     label: 'Declined',
     icon: <XCircle className="w-3 h-3" />,
     cls: 'bg-red-50 text-red-600 border border-red-100',
+  },
+  refunded: {
+    label: 'Refunded',
+    icon: <XCircle className="w-3 h-3" />,
+    cls: 'bg-blue-50 text-blue-700 border border-blue-100',
+  },
+  no_show: {
+    label: 'No show',
+    icon: <XCircle className="w-3 h-3" />,
+    cls: 'bg-orange-50 text-orange-700 border border-orange-100',
   },
 };
 
@@ -174,16 +193,15 @@ const BookingsPanel = () => {
     );
   }
 
-  // Split into active (upcoming) and ended
+  const closed = new Set(['declined', 'cancelled', 'refunded', 'no_show', 'completed']);
   const activeBookings = bookings.filter(
-    (b) => b.status !== 'declined' && !isMeetingEnded(b.date, b.end_time)
+    (b) => !closed.has(b.status) && !isMeetingEnded(b.date, b.end_time)
   );
-  const endedConfirmed = bookings.filter(
-    (b) => b.status === 'confirmed' && isMeetingEnded(b.date, b.end_time)
+  const completedSessions = bookings.filter(
+    (b) => b.status === 'completed' || (b.status === 'confirmed' && isMeetingEnded(b.date, b.end_time))
   );
 
-  // Income = sum of price_inr for every completed confirmed session
-  const totalEarned = endedConfirmed.reduce(
+  const totalEarned = completedSessions.reduce(
     (sum, b) => sum + (b.experts?.price_inr ?? 0), 0
   );
   const upcoming = activeBookings.filter(
@@ -219,7 +237,7 @@ const BookingsPanel = () => {
             <span className="text-xl font-bold font-['Inter'] text-stone-900">
               ₹{totalEarned.toLocaleString('en-IN')}
             </span>
-            <span className="text-[10px] text-stone-400 font-['Inter']">{endedConfirmed.length} session{endedConfirmed.length !== 1 ? 's' : ''} completed</span>
+            <span className="text-[10px] text-stone-400 font-['Inter']">{completedSessions.length} session{completedSessions.length !== 1 ? 's' : ''} completed</span>
           </div>
           <div className="px-5 py-4 flex flex-col gap-0.5">
             <span className="text-[11px] text-stone-400 font-['Inter']">Upcoming</span>
@@ -231,7 +249,7 @@ const BookingsPanel = () => {
             <span className="text-xl font-bold font-['Inter'] text-amber-600">
               {activeBookings.filter((b) => b.status === 'paid').length}
             </span>
-            <span className="text-[10px] text-stone-400 font-['Inter']">awaiting your accept</span>
+            <span className="text-[10px] text-stone-400 font-['Inter']">awaiting Connect team</span>
           </div>
         </div>
       </div>
@@ -251,7 +269,9 @@ const BookingsPanel = () => {
             <div className="flex items-start justify-between gap-2">
               <div>
                 <p className="text-sm font-['Merriweather'] text-stone-900">{booking.user_name}</p>
-                <p className="text-xs text-stone-400 font-['Inter'] mt-0.5">{booking.user_email}</p>
+                {booking.user_email && (
+                  <p className="text-xs text-stone-400 font-['Inter'] mt-0.5">{booking.user_email}</p>
+                )}
               </div>
               <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium font-['Inter'] flex-shrink-0 ${st.cls}`}>
                 {st.icon}
@@ -329,30 +349,49 @@ interface Message {
 }
 
 const MessagesPanel = ({ userId }: { userId: string }) => {
+  const { getToken } = useAuth();
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(true);
   const [expanded, setExpanded] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchMessages = async () => {
-      const { data: myExperts } = await supabase
-        .from('experts').select('id').eq('user_id', userId);
-      if (!myExperts || myExperts.length === 0) { setLoading(false); return; }
-      const ids = myExperts.map((e) => e.id);
-      const { data } = await supabase
-        .from('messages')
-        .select('*, experts(name)')
-        .in('expert_id', ids)
-        .order('created_at', { ascending: false });
-      setMessages((data as unknown as Message[]) || []);
-      setLoading(false);
+      try {
+        const token = await getToken();
+        const response = await fetch(
+          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/connect-expert-profile`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({ action: 'messages' }),
+          }
+        );
+        if (!response.ok) throw new Error('Could not load messages');
+        const data = await response.json();
+        setMessages((data.messages as Message[]) || []);
+      } catch {
+        setMessages([]);
+      } finally {
+        setLoading(false);
+      }
     };
     fetchMessages();
-  }, [userId]);
+  }, [userId, getToken]);
 
   const markRead = async (id: string) => {
     setMessages((prev) => prev.map((m) => m.id === id ? { ...m, is_read: true } : m));
-    await supabase.from('messages').update({ is_read: true }).eq('id', id);
+    const token = await getToken();
+    await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/connect-expert-profile`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ action: 'mark_read', message_id: id }),
+    });
   };
 
   const unreadCount = messages.filter((m) => !m.is_read).length;
@@ -436,6 +475,7 @@ const MessagesPanel = ({ userId }: { userId: string }) => {
 type View = 'list' | 'add' | 'edit';
 
 const ManagementPanel = ({ userId }: { userId: string }) => {
+  const { getToken } = useAuth();
   const [tab, setTab] = useState<'profiles' | 'bookings' | 'messages'>('profiles');
   const [view, setView] = useState<View>('list');
   const [experts, setExperts] = useState<Expert[]>([]);
@@ -445,12 +485,21 @@ const ManagementPanel = ({ userId }: { userId: string }) => {
   const fetchMyExperts = async () => {
     setFetching(true);
     try {
-      const { data } = await supabase
-        .from('experts')
-        .select('*')
-        .eq('user_id', userId)
-        .order('created_at', { ascending: false });
-      setExperts((data as Expert[]) || []);
+      const token = await getToken();
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/connect-expert-profile`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ action: 'list' }),
+        }
+      );
+      if (!response.ok) throw new Error('Could not load profiles');
+      const data = await response.json();
+      setExperts((data.experts as Expert[]) || []);
     } finally {
       setFetching(false);
     }

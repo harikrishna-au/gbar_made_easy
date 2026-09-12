@@ -22,6 +22,9 @@ verify_jwt = false
 [functions.connect-expert-bookings]
 verify_jwt = false
 
+[functions.connect-expert-profile]
+verify_jwt = false
+
 [functions.connect-my-bookings]
 verify_jwt = false
 

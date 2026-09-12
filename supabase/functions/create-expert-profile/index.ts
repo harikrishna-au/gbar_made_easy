@@ -15,6 +15,7 @@
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { verifyClerkToken } from "../_shared/clerk.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -27,6 +28,15 @@ serve(async (req: Request) => {
   }
 
   try {
+    const token = (req.headers.get("Authorization") ?? "").replace(/^Bearer\s+/i, "");
+    const userId = await verifyClerkToken(token);
+    if (!userId) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const { expert: expertData, availability = [] } = await req.json();
 
     // ── Basic validation ──────────────────────────────────────────────────
@@ -56,6 +66,8 @@ serve(async (req: Request) => {
         interview_date: expertData.interview_date || null,
         package_lpa: expertData.package_lpa ?? null,
         proof_url: expertData.proof_url || null,
+        user_id: userId,
+        approved: false,
       })
       .select('id')
       .single();

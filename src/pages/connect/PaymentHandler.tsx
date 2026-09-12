@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Shield, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
+import { useAuth } from '@clerk/clerk-react';
 import { Expert } from './ExpertCard';
 import { TimeSlot } from './TimeSlotPicker';
 import { BookingFormData } from './BookingForm';
@@ -26,6 +27,7 @@ const loadRazorpay = (): Promise<boolean> =>
   });
 
 const PaymentHandler = ({ expert, date, slot, formData, onSuccess, onError }: PaymentHandlerProps) => {
+  const { getToken } = useAuth();
   const [loading, setLoading] = useState(false);
 
   const platformFee = Math.round(expert.price_inr * 0.1);
@@ -44,6 +46,9 @@ const PaymentHandler = ({ expert, date, slot, formData, onSuccess, onError }: Pa
 
     setLoading(true);
     try {
+      const clerkToken = await getToken();
+      if (!clerkToken) throw new Error('Please sign in again before booking');
+
       const loaded = await loadRazorpay();
       if (!loaded) {
         toast.error('Payment SDK failed to load. Check your internet connection.');
@@ -57,12 +62,18 @@ const PaymentHandler = ({ expert, date, slot, formData, onSuccess, onError }: Pa
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+            Authorization: `Bearer ${clerkToken}`,
           },
           body: JSON.stringify({
-            amount: totalAmount,
-            expert_id: expert.id,
-            guest_email: formData.email,
+            booking_data: {
+              expert_id: expert.id,
+              user_name: formData.name,
+              user_email: formData.email,
+              message: formData.message,
+              date: format(date, 'yyyy-MM-dd'),
+              start_time: `${slot.start}:00`,
+              end_time: `${slot.end}:00`,
+            },
           }),
         }
       );
@@ -72,6 +83,8 @@ const PaymentHandler = ({ expert, date, slot, formData, onSuccess, onError }: Pa
         throw new Error(err.error || 'Failed to create order');
       }
       const order = await res.json();
+      const bookingId: string = order.booking_id;
+      if (!bookingId) throw new Error('Booking reservation was not created');
 
       const options = {
         key: import.meta.env.VITE_RAZORPAY_KEY_ID,
@@ -90,36 +103,26 @@ const PaymentHandler = ({ expert, date, slot, formData, onSuccess, onError }: Pa
         handler: async (response: any) => {
           const orderId: string = response.razorpay_order_id;
           try {
-            const bookingData = {
-              expert_id: expert.id,
-              user_name: formData.name,
-              user_email: formData.email,
-              message: formData.message,
-              date: format(date, 'yyyy-MM-dd'),
-              start_time: slot.start + ':00',
-              end_time: slot.end + ':00',
-              razorpay_order_id: orderId,
-            };
-
             const verifyRes = await fetch(
               `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/verify-booking-payment`,
               {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
-                  Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+                  Authorization: `Bearer ${clerkToken}`,
                 },
                 body: JSON.stringify({
+                  booking_id: bookingId,
                   razorpay_order_id: orderId,
                   razorpay_payment_id: response.razorpay_payment_id,
                   razorpay_signature: response.razorpay_signature,
-                  booking_data: bookingData,
                 }),
               }
             );
 
             if (verifyRes.ok) {
               await verifyRes.json();
+              setLoading(false);
               onSuccess();
             } else {
               const errData = await verifyRes.json().catch(() => ({}));
@@ -128,6 +131,7 @@ const PaymentHandler = ({ expert, date, slot, formData, onSuccess, onError }: Pa
                 description: `Your payment was captured. If your booking doesn't appear in "My Bookings" within 5 minutes, contact support with Order ID: ${orderId}`,
                 duration: 12000,
               });
+              setLoading(false);
               onError();
             }
           } catch (err: unknown) {
@@ -136,6 +140,7 @@ const PaymentHandler = ({ expert, date, slot, formData, onSuccess, onError }: Pa
               description: `Contact support with Order ID: ${orderId}`,
               duration: 12000,
             });
+            setLoading(false);
             onError();
           }
         },

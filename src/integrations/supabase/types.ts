@@ -235,6 +235,7 @@ export type Database = {
         Row: {
           id: string
           expert_id: string | null
+          clerk_user_id: string | null
           day_of_week: number | null
           start_time: string
           end_time: string
@@ -275,6 +276,14 @@ export type Database = {
           end_time: string | null
           razorpay_order_id: string | null
           razorpay_payment_id: string | null
+          payment_amount: number | null
+          payment_verified_at: string | null
+          payment_expires_at: string | null
+          payment_failure_reason: string | null
+          refund_reference: string | null
+          refund_amount: number | null
+          refunded_at: string | null
+          cancellation_reason: string | null
           meet_link: string | null
           status: string
           created_at: string
@@ -289,6 +298,7 @@ export type Database = {
         Insert: {
           id?: string
           expert_id?: string | null
+          clerk_user_id?: string | null
           user_name?: string | null
           user_email?: string | null
           message?: string | null
@@ -297,6 +307,14 @@ export type Database = {
           end_time?: string | null
           razorpay_order_id?: string | null
           razorpay_payment_id?: string | null
+          payment_amount?: number | null
+          payment_verified_at?: string | null
+          payment_expires_at?: string | null
+          payment_failure_reason?: string | null
+          refund_reference?: string | null
+          refund_amount?: number | null
+          refunded_at?: string | null
+          cancellation_reason?: string | null
           meet_link?: string | null
           status?: string
           created_at?: string
@@ -311,6 +329,7 @@ export type Database = {
         Update: {
           id?: string
           expert_id?: string | null
+          clerk_user_id?: string | null
           user_name?: string | null
           user_email?: string | null
           message?: string | null
@@ -319,6 +338,14 @@ export type Database = {
           end_time?: string | null
           razorpay_order_id?: string | null
           razorpay_payment_id?: string | null
+          payment_amount?: number | null
+          payment_verified_at?: string | null
+          payment_expires_at?: string | null
+          payment_failure_reason?: string | null
+          refund_reference?: string | null
+          refund_amount?: number | null
+          refunded_at?: string | null
+          cancellation_reason?: string | null
           meet_link?: string | null
           status?: string
           created_at?: string
@@ -414,24 +441,6 @@ export type Database = {
         Returns: {
           start_time: string
           end_time: string
-        }[]
-      }
-      get_bookings_by_email: {
-        Args: { p_email: string }
-        Returns: {
-          id: string
-          expert_id: string
-          user_name: string
-          user_email: string
-          message: string | null
-          date: string
-          start_time: string
-          end_time: string
-          meet_link: string | null
-          status: string
-          created_at: string
-          updated_at: string | null
-          experts: { id: string; name: string; title: string | null; photo_url: string | null } | null
         }[]
       }
     }

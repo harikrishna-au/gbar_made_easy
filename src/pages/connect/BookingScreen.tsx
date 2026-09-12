@@ -12,6 +12,7 @@ import TimeSlotPicker, { TimeSlot } from './TimeSlotPicker';
 import BookingForm, { BookingFormData } from './BookingForm';
 import PaymentHandler from './PaymentHandler';
 import BookingSuccess from './BookingSuccess';
+import { SignInButton, useUser } from '@clerk/clerk-react';
 
 type Step = 'details' | 'date' | 'time' | 'form' | 'payment' | 'success';
 
@@ -102,6 +103,7 @@ interface BookingScreenProps {
 }
 
 const BookingScreen = ({ expert, onClose }: BookingScreenProps) => {
+  const { user } = useUser();
   const [step, setStep] = useState<Step>('details');
   const [availabilityWindows, setAvailabilityWindows] = useState<AvailabilityWindow[]>([]);
   const [availableDays, setAvailableDays] = useState<number[]>([]);
@@ -112,6 +114,15 @@ const BookingScreen = ({ expert, onClose }: BookingScreenProps) => {
   const [formData, setFormData] = useState<BookingFormData>({ name: '', email: '', message: '' });
 
   const style = expert.company ? (COMPANY_STYLES[expert.company] ?? DEFAULT_STYLE) : DEFAULT_STYLE;
+
+  useEffect(() => {
+    const accountEmail = user?.primaryEmailAddress?.emailAddress;
+    setFormData((current) => ({
+      ...current,
+      name: current.name || user?.fullName || '',
+      email: accountEmail || current.email,
+    }));
+  }, [user]);
 
   const placedAgo = expert.interview_date
     ? formatDistanceToNow(parseISO(expert.interview_date), { addSuffix: true })
@@ -410,13 +421,22 @@ const BookingScreen = ({ expert, onClose }: BookingScreenProps) => {
               </div>
 
               {/* CTA */}
-              <button
-                onClick={() => setStep('date')}
-                className="w-full py-4 bg-stone-900 text-white rounded-2xl text-[15px] font-semibold font-['Inter'] hover:bg-stone-700 active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2 shadow-sm"
-              >
-                Book a Session
-                <ArrowRight className="w-4 h-4" />
-              </button>
+              {user ? (
+                <button
+                  onClick={() => setStep('date')}
+                  className="w-full py-4 bg-stone-900 text-white rounded-2xl text-[15px] font-semibold font-['Inter'] hover:bg-stone-700 active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2 shadow-sm"
+                >
+                  Book a Session
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              ) : (
+                <SignInButton mode="modal">
+                  <button className="w-full py-4 bg-stone-900 text-white rounded-2xl text-[15px] font-semibold font-['Inter'] hover:bg-stone-700 active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2 shadow-sm">
+                    Sign in to book
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                </SignInButton>
+              )}
             </div>
           </div>
         )}
@@ -460,7 +480,7 @@ const BookingScreen = ({ expert, onClose }: BookingScreenProps) => {
         {/* ════ FORM STEP ════ */}
         {step === 'form' && (
           <div className="max-w-lg mx-auto px-5 py-6 space-y-5">
-            <BookingForm data={formData} onChange={setFormData} />
+            <BookingForm data={formData} onChange={setFormData} emailLocked={Boolean(user?.primaryEmailAddress?.emailAddress)} />
             <button
               onClick={() => setStep('payment')}
               disabled={!formData.name.trim() || !formData.email.trim() || !formData.message.trim()}

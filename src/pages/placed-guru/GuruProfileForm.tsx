@@ -5,6 +5,7 @@ import { supabase } from '@/integrations/supabase/client';
 import PhotoUploader from './PhotoUploader';
 import AvailabilityScheduler, { WeeklyAvailability } from './AvailabilityScheduler';
 import { Expert } from '../connect/ExpertCard';
+import { useAuth } from '@clerk/clerk-react';
 
 const MAIN_COMPANIES = ['Accenture', 'Infosys', 'TCS', 'Cognizant'] as const;
 const MAIN_COMPANIES_LIST = [...MAIN_COMPANIES] as string[];
@@ -18,6 +19,7 @@ interface GuruProfileFormProps {
 }
 
 const GuruProfileForm = ({ userId, expertId, initialData, onSuccess, onCancel }: GuruProfileFormProps) => {
+  const { getToken } = useAuth();
   const isEdit = Boolean(expertId);
 
   /* ── Core info ──────────────────────────────────────────────────── */
@@ -131,52 +133,32 @@ const GuruProfileForm = ({ userId, expertId, initialData, onSuccess, onCancel }:
 
     setLoading(true);
     try {
-      if (isEdit && expertId) {
-        /* ── UPDATE ── */
-        const { error: expertError } = await supabase
-          .from('experts')
-          .update(payload)
-          .eq('id', expertId);
-        if (expertError) throw expertError;
-
-        // Replace availability: delete old, insert new
-        const { error: delError } = await supabase
-          .from('availability')
-          .delete()
-          .eq('expert_id', expertId);
-        if (delError) throw delError;
-
-        if (availabilityRows.length > 0) {
-          const { error: availError } = await supabase
-            .from('availability')
-            .insert(availabilityRows.map((r) => ({ ...r, expert_id: expertId })));
-          if (availError) throw availError;
+      const token = await getToken();
+      if (!token) throw new Error('Please sign in again');
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/connect-expert-profile`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            action: 'save',
+            expert_id: isEdit ? expertId : undefined,
+            profile: payload,
+            availability: availabilityRows,
+          }),
         }
+      );
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || 'Failed to save profile');
 
-        toast.success('Profile updated!');
-        onSuccess?.(expertId);
+      toast.success(isEdit ? 'Profile updated!' : 'Profile submitted for admin approval!');
+      if (onSuccess) {
+        onSuccess(result.expert_id);
       } else {
-        /* ── INSERT ── */
-        const { data: expertData, error: expertError } = await supabase
-          .from('experts')
-          .insert(payload)
-          .select('id')
-          .single();
-        if (expertError) throw expertError;
-
-        if (availabilityRows.length > 0) {
-          const { error: availError } = await supabase
-            .from('availability')
-            .insert(availabilityRows.map((r) => ({ ...r, expert_id: expertData.id })));
-          if (availError) throw availError;
-        }
-
-        toast.success('Profile submitted for admin approval!');
-        if (onSuccess) {
-          onSuccess(expertData.id);
-        } else {
-          setSuccess(true);
-        }
+        setSuccess(true);
       }
     } catch (err: any) {
       toast.error(err.message || 'Failed to save profile. Please try again.');

@@ -9,12 +9,30 @@ import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { AdminBlogRow } from '@/components/blog/AdminBlogRow';
 import { useAdminBlogs } from '@/hooks/useBlogs';
-import { isAdminAuthenticated, loginAdmin, logoutAdmin } from '@/lib/admin-auth';
+import { getAdminSecret, isAdminAuthenticated, loginAdmin, logoutAdmin } from '@/lib/admin-auth';
 import type { BlogStatus } from '@/lib/blog-utils';
 import ConnectAdmin from './ConnectAdmin';
 
 type BlogTabFilter = BlogStatus | 'all';
 type MainTab = 'blog' | 'experts' | 'jobs' | 'connect';
+
+async function connectAdminRequest(body: Record<string, unknown>) {
+  const response = await fetch(
+    `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/connect-admin`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+        'x-admin-key': getAdminSecret(),
+      },
+      body: JSON.stringify(body),
+    }
+  );
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(data.error || 'Admin request failed');
+  return data;
+}
 
 /* ── Job type ── */
 type Job = {
@@ -160,13 +178,18 @@ function useExperts(filter: 'pending' | 'approved') {
 
   const load = async () => {
     setLoading(true);
-    const { data } = await (supabase as any)
-      .from('experts')
-      .select('id, name, title, company, package_lpa, photo_url, proof_url, skills, approved, created_at')
-      .eq('approved', filter === 'approved')
-      .order('created_at', { ascending: false });
-    setExperts(data ?? []);
-    setLoading(false);
+    try {
+      const data = await connectAdminRequest({
+        action: 'list_experts',
+        approved: filter === 'approved',
+      });
+      setExperts(data.experts ?? []);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Could not load experts');
+      setExperts([]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => { load(); }, [filter]);
@@ -256,17 +279,23 @@ function ExpertsSection() {
   const { experts, loading, reload } = useExperts(expertTab);
 
   const handleApprove = async (id: string) => {
-    const { error } = await (supabase as any).from('experts').update({ approved: true }).eq('id', id);
-    if (error) { toast.error('Failed to approve.'); return; }
-    toast.success('Expert approved — they are now visible on /connect');
-    reload();
+    try {
+      await connectAdminRequest({ action: 'set_expert_approval', expert_id: id, approved: true });
+      toast.success('Expert approved — they are now visible on /connect');
+      reload();
+    } catch {
+      toast.error('Failed to approve.');
+    }
   };
 
   const handleReject = async (id: string) => {
-    const { error } = await (supabase as any).from('experts').delete().eq('id', id);
-    if (error) { toast.error('Failed to reject.'); return; }
-    toast.success('Expert removed.');
-    reload();
+    try {
+      await connectAdminRequest({ action: 'set_expert_approval', expert_id: id, approved: false });
+      toast.success('Expert removed from Connect.');
+      reload();
+    } catch {
+      toast.error('Failed to remove expert.');
+    }
   };
 
   const pendingCount = expertTab === 'pending' ? experts.length : null;

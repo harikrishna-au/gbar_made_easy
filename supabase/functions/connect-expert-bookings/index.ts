@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { verifyClerkToken } from "../_shared/clerk.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -13,31 +14,13 @@ function json(body: unknown, status = 200) {
   });
 }
 
-async function verifyClerkUser(req: Request) {
-  const token = (req.headers.get("Authorization") ?? "").replace(/^Bearer\s+/i, "");
-  const secret = Deno.env.get("CLERK_SECRET_KEY");
-  if (!token || !secret) return null;
-
-  try {
-    const [, encodedPayload] = token.split(".");
-    if (!encodedPayload) return null;
-    const normalized = encodedPayload.replaceAll("-", "+").replaceAll("_", "/");
-    const payload = JSON.parse(atob(normalized.padEnd(Math.ceil(normalized.length / 4) * 4, "=")));
-    if (!payload.sub || (payload.exp && payload.exp * 1000 < Date.now())) return null;
-
-    const response = await fetch(`https://api.clerk.com/v1/users/${payload.sub}`, {
-      headers: { Authorization: `Bearer ${secret}` },
-    });
-    return response.ok ? payload.sub as string : null;
-  } catch {
-    return null;
-  }
-}
+const REVEAL_EMAIL_STATUSES = new Set(["confirmed", "completed"]);
 
 serve(async (req: Request) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
-  const clerkUserId = await verifyClerkUser(req);
+  const token = (req.headers.get("Authorization") ?? "").replace(/^Bearer\s+/i, "");
+  const clerkUserId = await verifyClerkToken(token);
   if (!clerkUserId) return json({ error: "Unauthorized" }, 401);
 
   try {
@@ -62,7 +45,11 @@ serve(async (req: Request) => {
       .order("start_time", { ascending: true });
     if (error) throw error;
 
-    return json({ bookings: data ?? [] });
+    const bookings = (data ?? []).map((booking) => ({
+      ...booking,
+      user_email: REVEAL_EMAIL_STATUSES.has(booking.status) ? booking.user_email : null,
+    }));
+    return json({ bookings });
   } catch (error) {
     console.error("[connect-expert-bookings]", error);
     return json({ error: error instanceof Error ? error.message : "Could not load bookings" }, 400);

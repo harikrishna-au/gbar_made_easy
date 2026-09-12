@@ -19,6 +19,11 @@ interface Booking {
 }
 
 const STATUS_CONFIG: Record<string, { label: string; icon: React.ReactNode; cls: string }> = {
+  payment_pending: {
+    label: 'Payment Incomplete',
+    icon: <Hourglass className="w-3 h-3" />,
+    cls: 'bg-stone-50 text-stone-600 border border-stone-200',
+  },
   paid: {
     label: 'Awaiting Confirmation',
     icon: <Hourglass className="w-3 h-3" />,
@@ -39,6 +44,31 @@ const STATUS_CONFIG: Record<string, { label: string; icon: React.ReactNode; cls:
     icon: <XCircle className="w-3 h-3" />,
     cls: 'bg-stone-50 text-stone-500 border border-stone-200',
   },
+  completed: {
+    label: 'Completed',
+    icon: <CheckCircle2 className="w-3 h-3" />,
+    cls: 'bg-stone-900 text-white border border-stone-900',
+  },
+  refunded: {
+    label: 'Refunded',
+    icon: <CheckCircle2 className="w-3 h-3" />,
+    cls: 'bg-blue-50 text-blue-700 border border-blue-100',
+  },
+  payment_expired: {
+    label: 'Checkout Expired',
+    icon: <XCircle className="w-3 h-3" />,
+    cls: 'bg-stone-50 text-stone-500 border border-stone-200',
+  },
+  payment_failed: {
+    label: 'Payment Failed',
+    icon: <XCircle className="w-3 h-3" />,
+    cls: 'bg-red-50 text-red-600 border border-red-100',
+  },
+  no_show: {
+    label: 'No Show',
+    icon: <XCircle className="w-3 h-3" />,
+    cls: 'bg-orange-50 text-orange-700 border border-orange-100',
+  },
 };
 
 interface MyBookingsModalProps {
@@ -53,6 +83,7 @@ const MyBookingsModal = ({ onClose }: MyBookingsModalProps) => {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(false);
   const [fetched, setFetched] = useState(false);
+  const [history, setHistory] = useState<'upcoming' | 'past'>('upcoming');
   const [dmExpert, setDmExpert] = useState<Booking['experts'] | null>(null);
 
   const fetchBookings = async () => {
@@ -126,26 +157,48 @@ const MyBookingsModal = ({ onClose }: MyBookingsModalProps) => {
 
             {/* Results */}
             {(() => {
-              const activeBookings = bookings.filter(
-                (b) => new Date(`${b.date}T${b.end_time}`) >= new Date()
+              const closed = new Set(['completed', 'cancelled', 'declined', 'refunded', 'no_show', 'payment_expired', 'payment_failed']);
+              const isPast = (booking: Booking) =>
+                closed.has(booking.status) || new Date(`${booking.date}T${booking.end_time}`) < new Date();
+              const visibleBookings = bookings.filter((booking) =>
+                history === 'past' ? isPast(booking) : !isPast(booking)
               );
-              return loading ? (
+              return (
+                <>
+                  <div className="flex gap-1 p-1 bg-stone-100 rounded-xl">
+                    {(['upcoming', 'past'] as const).map((key) => (
+                      <button
+                        key={key}
+                        onClick={() => setHistory(key)}
+                        className={`flex-1 py-1.5 rounded-lg text-xs font-semibold font-['Inter'] capitalize transition-all ${
+                          history === key ? 'bg-white text-stone-900 shadow-sm' : 'text-stone-500'
+                        }`}
+                      >
+                        {key}
+                      </button>
+                    ))}
+                  </div>
+              {loading ? (
                 <div className="flex justify-center py-10">
                   <Loader2 className="w-5 h-5 animate-spin text-stone-400" />
                 </div>
-              ) : fetched && activeBookings.length === 0 ? (
+              ) : fetched && visibleBookings.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-12 text-center gap-3">
                   <div className="w-14 h-14 rounded-2xl bg-stone-100 flex items-center justify-center mb-1">
                     <Calendar className="w-7 h-7 text-stone-300" />
                   </div>
-                  <p className="text-stone-800 text-sm font-['Merriweather'] font-bold">No bookings yet</p>
+                  <p className="text-stone-800 text-sm font-['Merriweather'] font-bold">
+                    {history === 'past' ? 'No past sessions' : 'No upcoming bookings'}
+                  </p>
                   <p className="text-stone-400 text-xs font-['Inter'] max-w-[200px] leading-relaxed">
-                    You haven't made any bookings. Browse our Placed Gurus and book a session!
+                    {history === 'past'
+                      ? 'Completed and cancelled sessions will appear here.'
+                      : "You haven't made any bookings. Browse our Placed Gurus and book a session!"}
                   </p>
                 </div>
               ) : (
                 <div className="space-y-3">
-                  {activeBookings.map((booking) => {
+                  {visibleBookings.map((booking) => {
                     const status = STATUS_CONFIG[booking.status] ?? STATUS_CONFIG.cancelled;
                     return (
                       <div key={booking.id} className="bg-white rounded-2xl p-4 shadow-sm border border-stone-100 space-y-3">
@@ -234,6 +287,8 @@ const MyBookingsModal = ({ onClose }: MyBookingsModalProps) => {
                     );
                   })}
                 </div>
+              )}
+                </>
               );
             })()}
           </div>

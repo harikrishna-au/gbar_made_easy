@@ -43,6 +43,7 @@ interface ExpertSummary {
 interface AdminBooking {
   id: string;
   expert_id: string | null;
+  clerk_user_id: string | null;
   user_name: string | null;
   user_email: string | null;
   message: string | null;
@@ -51,6 +52,14 @@ interface AdminBooking {
   end_time: string;
   razorpay_order_id: string | null;
   razorpay_payment_id: string | null;
+  payment_amount: number | null;
+  payment_verified_at: string | null;
+  payment_expires_at: string | null;
+  payment_failure_reason: string | null;
+  refund_reference: string | null;
+  refund_amount: number | null;
+  refunded_at: string | null;
+  cancellation_reason: string | null;
   meet_link: string | null;
   status: string;
   created_at: string;
@@ -76,6 +85,9 @@ interface BookingEvent {
 const API_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/connect-admin`;
 
 const statusStyle: Record<string, string> = {
+  payment_pending: "bg-stone-50 text-stone-600 border-stone-200",
+  payment_expired: "bg-stone-100 text-stone-500 border-stone-200",
+  payment_failed: "bg-red-50 text-red-700 border-red-200",
   paid: "bg-amber-50 text-amber-800 border-amber-200",
   confirmed: "bg-emerald-50 text-emerald-800 border-emerald-200",
   completed: "bg-stone-900 text-white border-stone-900",
@@ -163,6 +175,7 @@ export default function ConnectAdmin({ embedded = false }: { embedded?: boolean 
     setLoading(true);
     try {
       const key = password.trim();
+      await request({ action: "authenticate" }, key);
       const data = await request({ action: "list" }, key);
       saveAdminSession(key);
       setSecret(key);
@@ -195,7 +208,7 @@ export default function ConnectAdmin({ embedded = false }: { embedded?: boolean 
           return isUpcoming(booking) && ["paid", "confirmed"].includes(booking.status);
         }
         if (filter === "completed") {
-          return ["completed", "cancelled", "declined", "refunded", "no_show"].includes(booking.status);
+          return ["completed", "cancelled", "declined", "refunded", "no_show", "payment_expired", "payment_failed"].includes(booking.status);
         }
         return true;
       })
@@ -265,6 +278,42 @@ export default function ConnectAdmin({ embedded = false }: { embedded?: boolean 
       toast.success("Meeting details sent to both sides");
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Notification failed");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const notifyStatus = async () => {
+    if (!selected) return;
+    setSaving(true);
+    try {
+      await request({ action: "notify_status", booking_id: selected.id });
+      const eventData = await request({ action: "events", booking_id: selected.id });
+      setEvents(eventData.events ?? []);
+      toast.success("Status update sent to both sides");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Status notification failed");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const refundBooking = async (refundAmount: number, cancellationReason: string) => {
+    if (!selected) return;
+    setSaving(true);
+    try {
+      const data = await request({
+        action: "refund",
+        booking_id: selected.id,
+        refund_amount: refundAmount,
+        cancellation_reason: cancellationReason,
+      });
+      replaceBooking(data.booking);
+      const eventData = await request({ action: "events", booking_id: selected.id });
+      setEvents(eventData.events ?? []);
+      toast.success("Refund issued in Razorpay");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Refund failed");
     } finally {
       setSaving(false);
     }
@@ -475,6 +524,8 @@ export default function ConnectAdmin({ embedded = false }: { embedded?: boolean 
                 onClose={() => setSelectedId(null)}
                 onUpdate={updateBooking}
                 onNotify={notifyBoth}
+                onNotifyStatus={notifyStatus}
+                onRefund={refundBooking}
                 onUpdateExpertEmail={updateExpertEmail}
                 onCopy={copy}
               />
@@ -499,6 +550,8 @@ function BookingWorkspace({
   onClose,
   onUpdate,
   onNotify,
+  onNotifyStatus,
+  onRefund,
   onUpdateExpertEmail,
   onCopy,
 }: {
@@ -508,6 +561,8 @@ function BookingWorkspace({
   onClose: () => void;
   onUpdate: (patch: Partial<AdminBooking>, successMessage?: string) => Promise<void>;
   onNotify: () => Promise<void>;
+  onNotifyStatus: () => Promise<void>;
+  onRefund: (refundAmount: number, cancellationReason: string) => Promise<void>;
   onUpdateExpertEmail: (email: string) => Promise<void>;
   onCopy: (value: string, label: string) => Promise<void>;
 }) {
@@ -517,6 +572,9 @@ function BookingWorkspace({
   const [startTime, setStartTime] = useState(booking.start_time.slice(0, 5));
   const [endTime, setEndTime] = useState(booking.end_time.slice(0, 5));
   const [expertEmail, setExpertEmail] = useState(booking.experts?.email ?? "");
+  const [refundReference, setRefundReference] = useState(booking.refund_reference ?? "");
+  const [refundAmount, setRefundAmount] = useState(String(booking.refund_amount ?? booking.payment_amount ?? ""));
+  const [cancellationReason, setCancellationReason] = useState(booking.cancellation_reason ?? "");
 
   return (
     <div className="bg-white border border-stone-200 rounded-2xl overflow-hidden">
@@ -589,6 +647,23 @@ function BookingWorkspace({
           </div>
         )}
 
+        <div className="grid grid-cols-2 gap-2">
+          <div className="rounded-xl border border-stone-200 p-3">
+            <p className="text-[9px] uppercase tracking-wider text-stone-400">Payment</p>
+            <p className="text-sm font-semibold mt-1">
+              {booking.payment_amount != null ? `₹${booking.payment_amount.toLocaleString("en-IN")}` : "Legacy booking"}
+            </p>
+            <p className="text-[10px] text-stone-400 mt-1">
+              {booking.payment_verified_at ? `Verified ${format(parseISO(booking.payment_verified_at), "MMM d, h:mm a")}` : booking.status.replace("_", " ")}
+            </p>
+          </div>
+          <div className="rounded-xl border border-stone-200 p-3">
+            <p className="text-[9px] uppercase tracking-wider text-stone-400">Session fee</p>
+            <p className="text-sm font-semibold mt-1">₹{booking.experts?.price_inr?.toLocaleString("en-IN") ?? "—"}</p>
+            <p className="text-[10px] text-stone-400 mt-1">Expert listed price</p>
+          </div>
+        </div>
+
         <div>
           <Label>Operations status</Label>
           <div className="grid grid-cols-2 gap-2 mt-1.5">
@@ -598,9 +673,11 @@ function BookingWorkspace({
               onChange={(event) => onUpdate({ status: event.target.value }, "Status updated")}
               className="h-10 px-3 rounded-xl border border-stone-200 bg-white text-xs font-semibold capitalize"
             >
-              {["paid", "confirmed", "completed", "cancelled", "declined", "refunded", "no_show"].map((status) => (
+              {["paid", "completed", "cancelled", "declined", "no_show"].map((status) => (
                 <option key={status} value={status}>{status === "paid" ? "Needs review" : status.replace("_", " ")}</option>
               ))}
+              {booking.status === "confirmed" && <option value="confirmed">confirmed</option>}
+              {booking.status === "refunded" && <option value="refunded">refunded</option>}
             </select>
             <select
               value={booking.priority}
@@ -681,6 +758,67 @@ function BookingWorkspace({
           </button>
         </div>
 
+        <div>
+          <Label>Cancellation / refund record</Label>
+          <textarea
+            value={cancellationReason}
+            onChange={(event) => setCancellationReason(event.target.value)}
+            rows={2}
+            placeholder="Why was it cancelled or refunded?"
+            className="mt-1.5 w-full p-3 rounded-xl border border-stone-200 bg-stone-50 text-xs resize-none focus:outline-none focus:ring-2 focus:ring-stone-900/10"
+          />
+          <div className="grid grid-cols-[100px_1fr] gap-2 mt-2">
+            <input
+              type="number"
+              min="0"
+              value={refundAmount}
+              onChange={(event) => setRefundAmount(event.target.value)}
+              placeholder="₹ amount"
+              className="h-10 px-3 rounded-xl border border-stone-200 bg-stone-50 text-xs"
+            />
+            <input
+              value={refundReference}
+              onChange={(event) => setRefundReference(event.target.value)}
+              placeholder="Razorpay refund/reference ID"
+              className="h-10 px-3 rounded-xl border border-stone-200 bg-stone-50 text-xs"
+            />
+          </div>
+          <button
+            disabled={saving}
+            onClick={() => onUpdate({
+              cancellation_reason: cancellationReason,
+              refund_reference: refundReference,
+              refund_amount: refundAmount ? Number(refundAmount) : 0,
+            }, "Reconciliation details saved")}
+            className="mt-2 text-xs font-semibold text-stone-600 disabled:opacity-40"
+          >
+            Save reconciliation
+          </button>
+          <p className="text-[10px] text-stone-400 mt-1.5">Save notes here, or issue the refund through Razorpay below.</p>
+          <button
+            disabled={saving || !booking.razorpay_payment_id || ["refunded", "payment_pending", "payment_failed", "payment_expired"].includes(booking.status)}
+            onClick={() => {
+              const amount = Number(refundAmount);
+              if (!Number.isInteger(amount) || amount <= 0) {
+                toast.error("Enter a valid refund amount");
+                return;
+              }
+              onRefund(amount, cancellationReason);
+            }}
+            className="mt-3 w-full h-10 rounded-xl bg-white border border-red-200 text-red-700 text-xs font-semibold disabled:opacity-40"
+          >
+            Issue Razorpay refund
+          </button>
+          <button
+            disabled={saving || ["payment_pending", "payment_failed", "payment_expired"].includes(booking.status)}
+            onClick={onNotifyStatus}
+            className="mt-3 w-full h-10 rounded-xl border border-stone-300 bg-white text-stone-700 text-xs font-semibold flex items-center justify-center gap-2 disabled:opacity-40"
+          >
+            <Mail className="w-3.5 h-3.5" />
+            Email current status to both sides
+          </button>
+        </div>
+
         <button
           onClick={onNotify}
           disabled={saving || !booking.meet_link}
@@ -711,7 +849,17 @@ function BookingWorkspace({
                 <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-stone-400 flex-shrink-0" />
                 <div className="min-w-0">
                   <p className="text-[11px] font-medium text-stone-600">
-                    {event.event_type === "meeting_details_sent" ? "Meeting details sent to both sides" : "Booking updated"}
+                    {event.event_type === "meeting_details_sent"
+                      ? "Meeting details sent to both sides"
+                      : event.event_type === "status_update_sent"
+                        ? "Status update sent to both sides"
+                        : event.event_type === "payment_verified"
+                          ? "Payment verified"
+                          : event.event_type === "checkout_started"
+                            ? "Checkout started"
+                            : event.event_type === "refund_issued"
+                              ? "Razorpay refund issued"
+                              : "Booking updated"}
                   </p>
                   <p className="text-[10px] text-stone-400">
                     {format(parseISO(event.created_at), "MMM d, h:mm a")}
