@@ -1,7 +1,7 @@
-
 import { useState } from "react";
 import { useUser, useAuth } from "@clerk/clerk-react";
 import { toast } from "sonner";
+import { trackMetaInitiateCheckout, trackMetaPurchase } from "@/lib/meta-pixel";
 
 export function useRazorpay() {
     const { user } = useUser();
@@ -53,6 +53,10 @@ export function useRazorpay() {
             }
 
             const order = await response.json();
+            trackMetaInitiateCheckout({
+                value: amount,
+                contentName: "Lifetime Premium",
+            });
 
             const options = {
                 key: import.meta.env.VITE_RAZORPAY_KEY_ID,
@@ -79,6 +83,12 @@ export function useRazorpay() {
                         });
 
                         if (verifyRes.ok) {
+                            trackMetaPurchase({
+                                value: amount,
+                                contentName: "Lifetime Premium",
+                                contentIds: ["premium"],
+                                eventID: response.razorpay_payment_id,
+                            });
                             toast.success("Payment verified! Full access unlocked.");
                             localStorage.removeItem("referral_coupon");
                             try { await user.reload(); } catch { window.location.reload(); }

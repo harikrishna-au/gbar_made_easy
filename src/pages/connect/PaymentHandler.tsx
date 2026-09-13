@@ -6,6 +6,7 @@ import { useAuth } from '@clerk/clerk-react';
 import { Expert } from './ExpertCard';
 import { TimeSlot } from './TimeSlotPicker';
 import { BookingFormData } from './BookingForm';
+import { trackMetaInitiateCheckout, trackMetaPurchase } from '@/lib/meta-pixel';
 
 interface PaymentHandlerProps {
   expert: Expert;
@@ -86,6 +87,11 @@ const PaymentHandler = ({ expert, date, slot, formData, onSuccess, onError }: Pa
       const bookingId: string = order.booking_id;
       if (!bookingId) throw new Error('Booking reservation was not created');
 
+      trackMetaInitiateCheckout({
+        value: totalAmount,
+        contentName: `Connect 1:1 — ${expert.name}`,
+      });
+
       const options = {
         key: import.meta.env.VITE_RAZORPAY_KEY_ID,
         amount: order.amount.toString(),
@@ -122,6 +128,12 @@ const PaymentHandler = ({ expert, date, slot, formData, onSuccess, onError }: Pa
 
             if (verifyRes.ok) {
               await verifyRes.json();
+              trackMetaPurchase({
+                value: totalAmount,
+                contentName: `Connect 1:1 — ${expert.name}`,
+                contentIds: [expert.id],
+                eventID: response.razorpay_payment_id,
+              });
               setLoading(false);
               onSuccess();
             } else {

@@ -55,6 +55,7 @@ import DualTaskChallenge from "./pages/DualTaskChallenge";
 import { useState } from "react";
 import SplashScreen from "@/components/SplashScreen";
 import CustomerSupport from "@/components/CustomerSupport";
+import { MetaPixelTracker } from "@/components/MetaPixelTracker";
 
 const queryClient = new QueryClient();
 const clerkPubKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
@@ -106,6 +107,7 @@ const App = () => {
               v7_relativeSplatPath: true
             }}
           >
+            <MetaPixelTracker />
             <Routes>
               <Route path="/" element={<Landing />} />
               <Route path="/auth" element={<Auth />} />

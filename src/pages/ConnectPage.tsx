@@ -6,6 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 import ExpertCard, { Expert } from './connect/ExpertCard';
 import BookingScreen from './connect/BookingScreen';
 import MyBookingsModal from './connect/MyBookingsModal';
+import { trackMetaViewContent } from '@/lib/meta-pixel';
 
 const ConnectPage = () => {
     const navigate = useNavigate();
@@ -18,6 +19,13 @@ const ConnectPage = () => {
     const [showMyBookings, setShowMyBookings] = useState(false);
 
     const COMPANIES = ['All', 'Accenture', 'Infosys', 'Cognizant', 'TCS', 'Wipro', 'IBM'];
+
+    useEffect(() => {
+        trackMetaViewContent({
+            contentName: 'Connect 1:1',
+            contentCategory: 'booking',
+        });
+    }, []);
 
     useEffect(() => {
         const fetchExperts = async () => {
