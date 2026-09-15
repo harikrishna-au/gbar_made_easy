@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useRef } from "react";
-import { ArrowLeft, ArrowUpRight, Cpu, Zap, Navigation, Crown, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, Cpu, Zap, Navigation, Crown, CheckCircle2, BookOpen } from "lucide-react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { useActivityResults } from "@/hooks/useActivityResults";
@@ -179,11 +179,15 @@ function onLeave(el: HTMLElement) {
   el.style.transform = "translateY(0)";
 }
 
-// ─── Component ────────────────────────────────────────────────────────────────
+// ─── Component ─────────────────────────────────────────────────────────────
 
 interface Props {
   isPremium: boolean;
   onSubscribe: () => void;
+}
+
+interface ResourcesCard {
+  resourceLink: string;
 }
 
 export const CognitiveGamesPage = ({ isPremium, onSubscribe }: Props) => {
@@ -252,6 +256,18 @@ export const CognitiveGamesPage = ({ isPremium, onSubscribe }: Props) => {
         )}
       </div>
 
+      {/* ── Resources ── */}
+      <div className="mb-10">
+        <CompanyHeader
+          company={{ name: "Study Materials", accent: "#3b82f6" }}
+          count={1}
+          blurb="Access curated study materials and resources to supplement your cognitive prep."
+        />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <ResourcesCard resourceLink="https://drive.google.com/drive/folders/1wepyyapyvzyUR9T26CZJjQE-fGesd3A3?usp=sharing" />
+        </div>
+      </div>
+
       {/* ── Accenture ── */}
       <div className="mb-10">
         <CompanyHeader
@@ -314,16 +330,87 @@ function CompanyHeader({
         <h2 className="text-[15px] font-bold tracking-tight font-['Inter'] text-stone-800">
           {company.name}
         </h2>
-        <span className="px-2 py-0.5 rounded-full text-[9px] font-bold tracking-wide border border-stone-200 bg-stone-50 text-stone-500 font-['Inter']">
-          {count} GAMES
-        </span>
+        {count > 0 && (
+          <span className="px-2 py-0.5 rounded-full text-[9px] font-bold tracking-wide border border-stone-200 bg-stone-50 text-stone-500 font-['Inter']">
+            {count} {count === 1 ? 'ITEM' : 'GAMES'}
+          </span>
+        )}
       </div>
       <p className="text-stone-400 text-[12.5px] font-['Inter'] font-light">{blurb}</p>
     </div>
   );
 }
 
-// ─── Saved result line ────────────────────────────────────────────────────────
+// ─── Resources Card ─────────────────────────────────────────────────────────
+
+function ResourcesCard({ resourceLink }: ResourcesCard) {
+  const resourceColor = "#3b82f6";
+  const resourceBg = "rgba(59,130,246,0.06)";
+  const resourceBorder = "rgba(59,130,246,0.17)";
+  const resourceGlow = "rgba(59,130,246,0.15)";
+
+  return (
+    <a
+      href={resourceLink}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="relative rounded-2xl p-6 flex flex-col gap-5 cursor-pointer group overflow-hidden"
+      style={{
+        background: "#ffffff",
+        border: `1px solid ${resourceBorder}`,
+        boxShadow: "0 3px 16px rgba(0,0,0,0.04)",
+        transition: "box-shadow 0.22s ease, transform 0.22s ease",
+        textDecoration: "none",
+      }}
+      onMouseEnter={(e) => onEnter(e.currentTarget as HTMLElement, resourceGlow, resourceBorder)}
+      onMouseLeave={(e) => onLeave(e.currentTarget as HTMLElement)}
+    >
+      <div className="absolute inset-0 pointer-events-none"
+        style={{ background: `radial-gradient(ellipse 90% 60% at 10% 0%, ${resourceBg} 0%, transparent 68%)` }}
+      />
+      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 pointer-events-none" />
+      <div className="absolute bottom-0 left-0 right-0 h-[1.5px] opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+        style={{ background: `linear-gradient(90deg, ${resourceColor}, transparent 70%)` }}
+      />
+
+      <div className="relative z-10 flex flex-col gap-5 h-full">
+        <div className="flex items-start justify-between">
+          <div>
+            <div className="text-[9px] font-bold tracking-[0.38em] uppercase font-['Inter'] mb-2" style={{ color: resourceColor }}>
+              RESOURCE
+            </div>
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center"
+              style={{ background: resourceBg, border: `1px solid ${resourceBorder}` }}>
+              <BookOpen className="w-5 h-5" style={{ color: resourceColor }} />
+            </div>
+          </div>
+        </div>
+
+        <div className="flex-1">
+          <h3 className="text-[1.1rem] font-bold tracking-tight font-['Inter'] mb-2" style={{ color: "#1c1c1e", letterSpacing: "-0.015em" }}>
+            Study Resources
+          </h3>
+          <p className="text-stone-500 text-[12.5px] leading-relaxed font-['Inter']">Access our curated collection of study materials, guides, and preparation documents to boost your readiness.</p>
+        </div>
+
+        <div className="flex items-center justify-between">
+          <div className="inline-flex items-center px-2 py-0.5 rounded-full text-[9.5px] font-semibold tracking-wide border font-['Inter']"
+            style={{ color: resourceColor, background: resourceBg, borderColor: resourceBorder }}>
+            Materials · Guides
+          </div>
+          <div className="flex items-center gap-1">
+            <span className="text-[12px] font-semibold font-['Inter']" style={{ color: resourceColor }}>
+              Open
+            </span>
+            <ArrowUpRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" style={{ color: resourceColor }} />
+          </div>
+        </div>
+      </div>
+    </a>
+  );
+}
+
+// ─── Saved result line ──────────────────────────────────────────────────────
 
 function ResultLine({ result, color }: { result: ActivityResult; color: string }) {
   return (
@@ -338,7 +425,7 @@ function ResultLine({ result, color }: { result: ActivityResult; color: string }
   );
 }
 
-// ─── Classic game card ────────────────────────────────────────────────────────
+// ─── Classic game card ──────────────────────────────────────────────────────
 
 function GameCard({
   game,
