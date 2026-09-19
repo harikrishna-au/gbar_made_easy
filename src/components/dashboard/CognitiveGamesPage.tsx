@@ -256,18 +256,6 @@ export const CognitiveGamesPage = ({ isPremium, onSubscribe }: Props) => {
         )}
       </div>
 
-      {/* ── Resources ── */}
-      <div className="mb-10">
-        <CompanyHeader
-          company={{ name: "Study Materials", accent: "#3b82f6" }}
-          count={1}
-          blurb="Access curated study materials and resources to supplement your cognitive prep."
-        />
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          <ResourcesCard resourceLink="https://drive.google.com/drive/folders/1wepyyapyvzyUR9T26CZJjQE-fGesd3A3?usp=sharing" />
-        </div>
-      </div>
-
       {/* ── Accenture ── */}
       <div className="mb-10">
         <CompanyHeader
