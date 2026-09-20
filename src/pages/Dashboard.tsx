@@ -17,7 +17,7 @@ import { CompanySelection } from "@/components/dashboard/CompanySelection";
 import { TestimonialScroller } from "@/components/dashboard/TestimonialScroller";
 import { CognitiveGamesPage } from "@/components/dashboard/CognitiveGamesPage";
 import PaymentPopup from "@/components/PaymentPopup";
-import { StudyResourcesCard } from "@/components/dashboard/StudyResourcesCard";
+
 
 import { useSearchParams, useParams, useNavigate } from "react-router-dom";
 
@@ -266,10 +266,7 @@ const Dashboard = () => {
               />
             ) : (
               // VIEW 2: Cognitive Games
-              <>
                 <CognitiveGamesPage isPremium={isPremium} onSubscribe={handleSubscribe} />
-                <StudyResourcesCard />
-              </>
             )}
 
           </div>

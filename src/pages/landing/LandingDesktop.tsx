@@ -1,4 +1,5 @@
 import { motion, AnimatePresence, SpringValue } from "framer-motion";
+import { Rise } from "cube-motion/react";
 import {
   SignIn,
   SignUp,
@@ -48,10 +49,7 @@ export const LandingDesktop = ({
   <div className="hidden lg:flex relative z-10 min-h-screen flex-row">
     {/* Left: brand + hero */}
     <div className="flex flex-col justify-between px-14 py-12 w-[54%] min-h-screen">
-      <motion.div
-        initial={{ opacity: 0, y: -12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
+      <Rise
         className="flex items-center gap-2.5"
       >
         <motion.img
@@ -65,13 +63,12 @@ export const LandingDesktop = ({
         <span className="font-['Merriweather'] font-black text-[0.9rem] tracking-tight text-stone-800">
           HARRY THE BLAZE
         </span>
-      </motion.div>
+      </Rise>
 
       <div className="py-2">
-        <motion.h1
-          initial={{ opacity: 0, y: 22 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.16, ease: "easeOut" }}
+        <Rise
+          as="h1"
+          delay={160}
           className="font-['Merriweather'] font-black text-stone-900 leading-[1.06] tracking-tight mb-5"
           style={{ fontSize: "clamp(2.4rem, 4vw, 4rem)" }}
         >
@@ -82,28 +79,24 @@ export const LandingDesktop = ({
           rounds. Then talk
           <br />
           to someone placed.
-        </motion.h1>
+        </Rise>
 
-        <motion.p
-          initial={{ opacity: 0, y: 14 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.25, ease: "easeOut" }}
+        <Rise
+          as="p"
+          delay={250}
           className="font-['Inter'] text-stone-600 leading-relaxed mb-8 max-w-md"
           style={{ fontSize: "0.96rem" }}
         >
           Cognitive games and communication rounds live here. When you want a live senior, book a 20-minute Connect 1:1 — we send one meeting link to both of you.
-        </motion.p>
+        </Rise>
 
         {/* Interactive feature list */}
-        <div className="space-y-1">
+        <Rise targets="children" delay={380} stagger={60} className="space-y-1">
           {features.filter((f) => f.featured).map(({ icon: Icon, label, sub, to }) => (
-            <motion.button
+            <button
               key={label}
               type="button"
               onClick={() => to && navigate(to)}
-              initial={{ opacity: 0, x: -14 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.4, delay: 0.38, ease: "easeOut" }}
               className="group w-full text-left flex items-center gap-3.5 rounded-2xl px-3.5 py-3.5 -mx-1 mb-2 border-2 border-stone-900 bg-white hover:bg-stone-50 transition-colors"
             >
               <div className="w-10 h-10 rounded-xl bg-stone-900 flex items-center justify-center flex-shrink-0">
@@ -117,16 +110,12 @@ export const LandingDesktop = ({
                 <span className="font-['Inter'] text-[12px] text-stone-500">{sub}</span>
               </div>
               <ArrowRight className="w-4 h-4 text-stone-900 flex-shrink-0" />
-            </motion.button>
+            </button>
           ))}
-          {features.filter((f) => !f.featured).map(({ icon: Icon, label, sub, to }, i) => (
-            <motion.div
+          {features.filter((f) => !f.featured).map(({ icon: Icon, label, sub, to }) => (
+            <div
               key={label}
-              initial={{ opacity: 0, x: -14 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.4, delay: 0.4 + i * 0.06, ease: "easeOut" }}
-              whileHover={{ x: 4 }}
-              className={`group flex items-center gap-3.5 rounded-xl px-3 py-2.5 -mx-3 transition-colors duration-200 hover:bg-white/70${to ? " cursor-pointer" : ""}`}
+              className={`group flex items-center gap-3.5 rounded-xl px-3 py-2.5 -mx-3 transition-all duration-200 hover:bg-white/70 hover:translate-x-1${to ? " cursor-pointer" : ""}`}
               onClick={to ? () => navigate(to) : undefined}
             >
               <div
@@ -140,15 +129,13 @@ export const LandingDesktop = ({
                 <span className="font-['Inter'] text-[11.5px] text-stone-400">{sub}</span>
               </div>
               <ArrowRight className="w-4 h-4 text-stone-300 flex-shrink-0 opacity-0 -translate-x-1 transition-all duration-200 group-hover:opacity-100 group-hover:translate-x-0 group-hover:text-stone-500" />
-            </motion.div>
+            </div>
           ))}
-        </div>
+        </Rise>
       </div>
 
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.4, delay: 0.85 }}
+      <Rise
+        delay={850}
         className="flex items-center gap-5 flex-wrap"
       >
         {[
@@ -165,20 +152,21 @@ export const LandingDesktop = ({
             {label}
           </Link>
         ))}
-      </motion.div>
+      </Rise>
     </div>
 
     {/* Right: auth card */}
     <div className="flex-1 flex flex-col items-center justify-center px-8 gap-4">
-      <motion.div
-        initial={{ opacity: 0, y: 28 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.65, delay: 0.22, ease: "easeOut" }}
-        style={{ rotateX: sX, rotateY: sY, transformStyle: "preserve-3d", perspective: 1000 }}
-        onMouseMove={onMove}
-        onMouseLeave={onLeave}
+      <Rise
+        delay={220}
         className="w-full max-w-[390px] relative"
       >
+        <motion.div
+          style={{ rotateX: sX, rotateY: sY, transformStyle: "preserve-3d", perspective: 1000 }}
+          onMouseMove={onMove}
+          onMouseLeave={onLeave}
+          className="w-full h-full relative"
+        >
         <div
           className="bg-white rounded-3xl p-8 border border-stone-100 overflow-hidden relative"
           style={{
@@ -359,21 +347,20 @@ export const LandingDesktop = ({
           className="absolute -inset-4 -z-10 blur-[40px] opacity-30 rounded-3xl"
           style={{ background: "radial-gradient(ellipse, rgba(28,25,23,0.08) 0%, transparent 70%)" }}
         />
-      </motion.div>
+        </motion.div>
+      </Rise>
 
       {/* trust microcopy under card */}
       <SignedOut>
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.5 }}
+        <Rise
+          delay={500}
           className="flex items-center gap-2 text-stone-400"
         >
           <ShieldCheck className="w-3.5 h-3.5 text-stone-400" />
           <span className="font-['Inter'] text-[11.5px]">
             Secure sign-in · We never share your data
           </span>
-        </motion.div>
+        </Rise>
       </SignedOut>
     </div>
   </div>

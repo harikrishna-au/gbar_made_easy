@@ -1,4 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
+import { Rise } from "cube-motion/react";
 import {
   SignIn,
   SignUp,
@@ -40,12 +41,7 @@ export const LandingMobile = ({
   <div className="lg:hidden relative z-10">
     <SignedIn>
       <div className="min-h-dvh flex flex-col items-center justify-center px-5">
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-          className="w-full text-center"
-        >
+        <Rise className="w-full text-center">
           <div className="flex justify-center mb-5">
             <UserButton />
           </div>
@@ -78,7 +74,7 @@ export const LandingMobile = ({
           >
             Browse Placed Gurus
           </Link>
-        </motion.div>
+        </Rise>
       </div>
     </SignedIn>
 
@@ -105,45 +101,39 @@ export const LandingMobile = ({
       </header>
 
       <section className="px-5 pt-6 pb-8">
-        <motion.h1
-          initial={{ opacity: 0, y: 14 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.45, delay: 0.05 }}
+        <Rise
+          as="h1"
+          delay={50}
           className="font-['Merriweather'] font-black text-stone-900 leading-[1.12] tracking-tight text-[2rem]"
         >
           Practice Accenture 2026 rounds. Then talk to someone placed.
-        </motion.h1>
+        </Rise>
 
-        <motion.p
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.1 }}
+        <Rise
+          as="p"
+          delay={100}
           className="font-['Inter'] text-[14px] text-stone-600 leading-relaxed mt-3"
         >
           Cognitive games and communication live here. Book a 20-minute Connect 1:1 when you want a senior who just got placed.
-        </motion.p>
+        </Rise>
 
-        <motion.a
+        <Rise
+          as="a"
           href="#auth-section"
           onClick={() => setView("sign-up")}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.16 }}
+          delay={160}
           className="mt-6 flex items-center justify-center gap-2 min-h-[48px] rounded-2xl font-['Inter'] font-semibold text-[15px] bg-stone-900 text-white active:scale-[0.98] transition-transform"
         >
           Get started free
           <ArrowRight className="w-4 h-4" />
-        </motion.a>
+        </Rise>
 
-        <div className="mt-8 space-y-2.5">
+        <Rise targets="children" delay={200} stagger={40} className="mt-8 space-y-2.5">
           {features.filter((f) => f.featured).map(({ icon: Icon, label, sub, to }) => (
-            <motion.button
+            <button
               key={label}
               type="button"
               onClick={() => to && navigate(to)}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: 0.2 }}
               className="flex items-center gap-3 w-full text-left p-3.5 rounded-2xl border-2 border-stone-900 bg-white active:scale-[0.99] transition-transform"
             >
               <div className="w-10 h-10 rounded-xl bg-stone-900 flex items-center justify-center flex-shrink-0">
@@ -157,14 +147,11 @@ export const LandingMobile = ({
                 <p className="font-['Inter'] text-[12px] text-stone-500">{sub}</p>
               </div>
               <ArrowRight className="w-4 h-4 text-stone-900 flex-shrink-0" />
-            </motion.button>
+            </button>
           ))}
-          {features.filter((f) => !f.featured).map(({ icon: Icon, label, sub, to }, i) => (
-            <motion.div
+          {features.filter((f) => !f.featured).map(({ icon: Icon, label, sub, to }) => (
+            <div
               key={label}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: 0.24 + i * 0.04 }}
               className={`flex items-center gap-3 p-3 bg-white rounded-2xl border border-stone-100${to ? " cursor-pointer active:scale-[0.99]" : ""}`}
               onClick={to ? () => navigate(to) : undefined}
             >
@@ -175,9 +162,9 @@ export const LandingMobile = ({
                 <p className="font-['Inter'] text-[13px] font-semibold text-stone-800">{label}</p>
                 <p className="font-['Inter'] text-[12px] text-stone-400">{sub}</p>
               </div>
-            </motion.div>
+            </div>
           ))}
-        </div>
+        </Rise>
       </section>
 
       <section id="auth-section" className="px-5 pt-4 pb-24 scroll-mt-4">
