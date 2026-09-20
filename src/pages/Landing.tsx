@@ -7,7 +7,7 @@ import {
   useTransform,
   useSpring,
 } from "framer-motion";
-import { BarChart2, Brain, Trophy, Mic, Users, Radar } from "lucide-react";
+import { BarChart2, Brain, Trophy, Mic, Users, Radar, BookOpen } from "lucide-react";
 import { AuthView } from "./landing/authConfig";
 import { LandingBackground } from "./landing/LandingBackground";
 import { LandingMobile } from "./landing/LandingMobile";
@@ -20,6 +20,7 @@ const features = [
   { icon: Trophy, label: "Gamified aptitude", sub: "Practice the round types MNCs actually run" },
   { icon: BarChart2, label: "Company dashboard", sub: "Start with Accenture 2026, then other MNCs" },
   { icon: Radar, label: "Radar — job match", sub: "Find roles that fit your skill profile", to: "/radar" },
+  { icon: BookOpen, label: "Study Resources", sub: "Prep materials and guides", href: "https://drive.google.com/drive/folders/1wepyyapyvzyUR9T26CZJjQE-fGesd3A3?usp=sharing" },
 ];
 
 export default function Landing() {

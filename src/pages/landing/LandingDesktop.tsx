@@ -16,6 +16,7 @@ interface Feature {
   label: string;
   sub: string;
   to?: string;
+  href?: string;
   featured?: boolean;
 }
 
@@ -92,11 +93,11 @@ export const LandingDesktop = ({
 
         {/* Interactive feature list */}
         <Rise targets="children" delay={380} stagger={60} className="space-y-1">
-          {features.filter((f) => f.featured).map(({ icon: Icon, label, sub, to }) => (
+          {features.filter((f) => f.featured).map(({ icon: Icon, label, sub, to, href }) => (
             <button
               key={label}
               type="button"
-              onClick={() => to && navigate(to)}
+              onClick={() => to ? navigate(to) : href ? window.open(href, '_blank') : undefined}
               className="group w-full text-left flex items-center gap-3.5 rounded-2xl px-3.5 py-3.5 -mx-1 mb-2 border-2 border-stone-900 bg-white hover:bg-stone-50 transition-colors"
             >
               <div className="w-10 h-10 rounded-xl bg-stone-900 flex items-center justify-center flex-shrink-0">
@@ -112,11 +113,11 @@ export const LandingDesktop = ({
               <ArrowRight className="w-4 h-4 text-stone-900 flex-shrink-0" />
             </button>
           ))}
-          {features.filter((f) => !f.featured).map(({ icon: Icon, label, sub, to }) => (
+          {features.filter((f) => !f.featured).map(({ icon: Icon, label, sub, to, href }) => (
             <div
               key={label}
-              className={`group flex items-center gap-3.5 rounded-xl px-3 py-2.5 -mx-3 transition-all duration-200 hover:bg-white/70 hover:translate-x-1${to ? " cursor-pointer" : ""}`}
-              onClick={to ? () => navigate(to) : undefined}
+              className={`group flex items-center gap-3.5 rounded-xl px-3 py-2.5 -mx-3 transition-all duration-200 hover:bg-white/70 hover:translate-x-1${to || href ? " cursor-pointer" : ""}`}
+              onClick={to ? () => navigate(to) : href ? () => window.open(href, '_blank') : undefined}
             >
               <div
                 className="w-9 h-9 rounded-lg bg-white border border-stone-200 flex items-center justify-center flex-shrink-0 shadow-sm transition-all duration-200 group-hover:border-stone-400 group-hover:shadow-md"

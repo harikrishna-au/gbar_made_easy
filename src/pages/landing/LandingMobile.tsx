@@ -16,6 +16,7 @@ interface Feature {
   label: string;
   sub: string;
   to?: string;
+  href?: string;
   featured?: boolean;
 }
 
@@ -129,11 +130,11 @@ export const LandingMobile = ({
         </Rise>
 
         <Rise targets="children" delay={200} stagger={40} className="mt-8 space-y-2.5">
-          {features.filter((f) => f.featured).map(({ icon: Icon, label, sub, to }) => (
+          {features.filter((f) => f.featured).map(({ icon: Icon, label, sub, to, href }) => (
             <button
               key={label}
               type="button"
-              onClick={() => to && navigate(to)}
+              onClick={() => to ? navigate(to) : href ? window.open(href, '_blank') : undefined}
               className="flex items-center gap-3 w-full text-left p-3.5 rounded-2xl border-2 border-stone-900 bg-white active:scale-[0.99] transition-transform"
             >
               <div className="w-10 h-10 rounded-xl bg-stone-900 flex items-center justify-center flex-shrink-0">
@@ -149,11 +150,11 @@ export const LandingMobile = ({
               <ArrowRight className="w-4 h-4 text-stone-900 flex-shrink-0" />
             </button>
           ))}
-          {features.filter((f) => !f.featured).map(({ icon: Icon, label, sub, to }) => (
+          {features.filter((f) => !f.featured).map(({ icon: Icon, label, sub, to, href }) => (
             <div
               key={label}
-              className={`flex items-center gap-3 p-3 bg-white rounded-2xl border border-stone-100${to ? " cursor-pointer active:scale-[0.99]" : ""}`}
-              onClick={to ? () => navigate(to) : undefined}
+              className={`flex items-center gap-3 p-3 bg-white rounded-2xl border border-stone-100${to || href ? " cursor-pointer active:scale-[0.99]" : ""}`}
+              onClick={to ? () => navigate(to) : href ? () => window.open(href, '_blank') : undefined}
             >
               <div className="w-9 h-9 rounded-xl bg-stone-50 border border-stone-200 flex items-center justify-center flex-shrink-0">
                 <Icon className="w-4 h-4 text-stone-600" />
