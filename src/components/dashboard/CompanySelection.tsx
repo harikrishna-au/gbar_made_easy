@@ -1,8 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useRef, useState, useCallback } from "react";
 import { Layers, Mic2, Bot, Users, ArrowUpRight, Code2, Hammer, Radar } from "lucide-react";
-import gsap from "gsap";
-import { useGSAP } from "@gsap/react";
+import { Rise } from "cube-motion/react";
 import { WaitlistPopup } from "./WaitlistPopup";
 
 // ─── CSS animations ───────────────────────────────────────────────────────────
@@ -268,32 +267,12 @@ interface CompanySelectionProps {
 
 export const CompanySelection = ({ onSelectCompany }: CompanySelectionProps) => {
   const navigate = useNavigate();
-  const containerRef = useRef<HTMLDivElement>(null);
-  const heroRef = useRef<HTMLDivElement>(null);
-  const bentoRef = useRef<HTMLDivElement>(null);
 
   const [showWaitlist, setShowWaitlist] = useState(false);
   const [selectedWaitlistCompany] = useState<{ name: string; id: string } | null>(null);
 
-  useGSAP(() => {
-    const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
-    tl.fromTo(containerRef.current, { opacity: 0 }, { opacity: 1, duration: 0.7 })
-      .fromTo(
-        heroRef.current?.children || [],
-        { y: 20, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.65, stagger: 0.11 },
-        "-=0.45"
-      )
-      .fromTo(
-        bentoRef.current,
-        { y: 26, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.7 },
-        "-=0.38"
-      );
-  }, { scope: containerRef });
-
   return (
-    <div ref={containerRef} className="w-full max-w-7xl mx-auto px-3 sm:px-6 py-8 sm:py-14 opacity-0">
+    <div className="w-full max-w-7xl mx-auto px-3 sm:px-6 py-8 sm:py-14">
       <style>{STYLES}</style>
 
       <WaitlistPopup
@@ -304,23 +283,25 @@ export const CompanySelection = ({ onSelectCompany }: CompanySelectionProps) => 
       />
 
       {/* ── Hero ─────────────────────────────────────────────────────────── */}
-      <div
-        ref={heroRef}
-        className="flex flex-col items-center text-center mb-8 sm:mb-12 space-y-3 sm:space-y-4"
-      >
-        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[3.3rem] font-serif text-stone-800 tracking-tight leading-[1.12] max-w-2xl">
-          Accenture 2026 rounds
-          <br />
-          <span className="text-stone-500 font-light">live on this dashboard.</span>
-        </h1>
+      <Rise targets="children" stagger={110}>
+        <div
+          className="flex flex-col items-center text-center mb-8 sm:mb-12 space-y-3 sm:space-y-4"
+        >
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[3.3rem] font-serif text-stone-800 tracking-tight leading-[1.12] max-w-2xl">
+            Accenture 2026 rounds
+            <br />
+            <span className="text-stone-500 font-light">live on this dashboard.</span>
+          </h1>
 
-        <p className="text-[0.92rem] text-stone-600 max-w-[460px] leading-relaxed font-['Inter']">
-          Start with cognitive games and communication. When you want a live senior, book Connect 1:1 below.
-        </p>
-      </div>
+          <p className="text-[0.92rem] text-stone-600 max-w-[460px] leading-relaxed font-['Inter']">
+            Start with cognitive games and communication. When you want a live senior, book Connect 1:1 below.
+          </p>
+        </div>
+      </Rise>
 
       {/* ── Bento grid ───────────────────────────────────────────────────── */}
-      <div ref={bentoRef} className="flex flex-col gap-4">
+      <Rise delay={400}>
+        <div className="flex flex-col gap-4">
 
         {/* Row 1 — Card 01 (tall left) + Card 02 & 03 (stacked right) */}
         <div className="flex flex-col md:flex-row gap-4">
@@ -835,7 +816,7 @@ export const CompanySelection = ({ onSelectCompany }: CompanySelectionProps) => 
           </TiltCard>
 
         </div>
-      </div>
+      </Rise>
     </div>
   );
 };

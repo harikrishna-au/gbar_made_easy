@@ -11,6 +11,7 @@ import SEO from "@/components/SEO";
 import { usePremiumStatus } from "@/hooks/usePremiumStatus";
 import { toast } from "sonner";
 import { OnboardingTour } from "@/components/OnboardingTour";
+import LandingBackground from "@/pages/landing/LandingBackground";
 import { DashboardHero } from "@/components/dashboard/DashboardHero";
 import { DashboardFooter } from "@/components/dashboard/DashboardFooter";
 import { CompanySelection } from "@/components/dashboard/CompanySelection";
@@ -221,12 +222,7 @@ const Dashboard = () => {
         title="Harry The Blaze | Dashboard"
         description="Your central hub for MNC cognitive practice. Track progress, access games, and sharpen your skills for top company assessments."
       />
-      {/* Japandi / Zen Sanctuary Background */}
-      {/* Japandi / Zen Sanctuary Background */}
-      <div className="fixed inset-0 -z-10 h-full w-full bg-[#fcfcf9] overflow-hidden">
-        {/* Subtle Gradient - Barely there */}
-        <div className="absolute top-0 left-0 w-full h-[600px] bg-gradient-to-b from-stone-50 to-transparent opacity-60"></div>
-      </div>
+      <LandingBackground />
 
       {!companyId && (
         <div className={`w-full flex flex-col items-center transition-all duration-700 z-50 ${isFooterHovered ? 'blur-sm scale-[0.98] opacity-80' : ''}`}>

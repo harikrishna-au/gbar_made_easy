@@ -1,8 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useRef } from "react";
 import { ArrowLeft, ArrowUpRight, Cpu, Zap, Navigation, Crown, CheckCircle2, BookOpen } from "lucide-react";
-import gsap from "gsap";
-import { useGSAP } from "@gsap/react";
+import { Rise } from "cube-motion/react";
 import { useActivityResults } from "@/hooks/useActivityResults";
 import { formatAttempts, formatBestScore, type ActivityResult } from "@/lib/activityResults";
 
@@ -192,7 +191,6 @@ interface ResourcesCard {
 
 export const CognitiveGamesPage = ({ isPremium, onSubscribe }: Props) => {
   const navigate = useNavigate();
-  const containerRef = useRef<HTMLDivElement>(null);
   const results = useActivityResults();
 
   const totalGames = ACCENTURE_GAMES.length + COGNIZANT_GAMES.length;
@@ -200,16 +198,9 @@ export const CognitiveGamesPage = ({ isPremium, onSubscribe }: Props) => {
     (g) => results[g.path]
   ).length;
 
-  useGSAP(
-    () => {
-      const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
-      tl.fromTo(containerRef.current, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.55 });
-    },
-    { scope: containerRef }
-  );
-
   return (
-    <div ref={containerRef} className="w-full max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-10 opacity-0">
+    <Rise>
+      <div className="w-full max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
 
       {/* Back */}
       <button
@@ -296,7 +287,7 @@ export const CognitiveGamesPage = ({ isPremium, onSubscribe }: Props) => {
           ))}
         </div>
       </div>
-    </div>
+    </Rise>
   );
 };
 
