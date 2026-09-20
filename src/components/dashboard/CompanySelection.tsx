@@ -816,6 +816,7 @@ export const CompanySelection = ({ onSelectCompany }: CompanySelectionProps) => 
           </TiltCard>
 
         </div>
+      </div>
       </Rise>
     </div>
   );

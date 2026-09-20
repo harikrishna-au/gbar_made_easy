@@ -287,6 +287,7 @@ export const CognitiveGamesPage = ({ isPremium, onSubscribe }: Props) => {
           ))}
         </div>
       </div>
+    </div>
     </Rise>
   );
 };
