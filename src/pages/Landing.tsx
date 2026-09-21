@@ -12,6 +12,7 @@ import { AuthView } from "./landing/authConfig";
 import { LandingBackground } from "./landing/LandingBackground";
 import { LandingMobile } from "./landing/LandingMobile";
 import { LandingDesktop } from "./landing/LandingDesktop";
+import { ProductHuntBadge } from "@/components/ProductHuntBadge";
 
 const features = [
   { icon: Brain, label: "Cognitive games", sub: "Accenture-style matrix, balloon math, maze" },
@@ -78,6 +79,7 @@ export default function Landing() {
       <LandingBackground />
       <LandingMobile {...sharedProps} />
       <LandingDesktop {...sharedProps} sX={sX} sY={sY} onMove={onMove} onLeave={onLeave} />
+      <ProductHuntBadge />
     </div>
   );
 }
