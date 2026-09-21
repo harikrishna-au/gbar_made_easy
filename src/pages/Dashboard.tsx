@@ -11,7 +11,7 @@ import SEO from "@/components/SEO";
 import { usePremiumStatus } from "@/hooks/usePremiumStatus";
 import { toast } from "sonner";
 import { OnboardingTour } from "@/components/OnboardingTour";
-import LandingBackground from "@/pages/landing/LandingBackground";
+import { LandingBackground } from "@/pages/landing/LandingBackground";
 import { DashboardHero } from "@/components/dashboard/DashboardHero";
 import { DashboardFooter } from "@/components/dashboard/DashboardFooter";
 import { CompanySelection } from "@/components/dashboard/CompanySelection";
