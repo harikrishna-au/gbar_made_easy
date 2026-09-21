@@ -112,7 +112,7 @@ const Header = ({ onStartTour }: HeaderProps) => {
                 } else if (location.pathname === '/connect' || location.pathname === '/ai-interview') {
                   navigate('/');
                 } else {
-                  navigate('/dashboard/Accenture');
+                  navigate('/dashboard');
                 }
               }}
               className="flex items-center gap-1.5 px-3.5 py-2 text-rose-600/80 hover:text-rose-700 hover:bg-rose-50 rounded-xl font-medium transition-all duration-200 text-[13px] font-['Inter']"
