@@ -86,7 +86,7 @@ npm install
 npm run dev
 ```
 
-The app starts on the Vite dev server (default `http://localhost:5173`). Most screens sit behind Clerk sign-in, so the Clerk key is required.
+The app starts on the Vite dev server at `http://localhost:8080`, which proxies `/api` to `http://localhost:8000`. Most screens sit behind Clerk sign-in, so the Clerk key is required.
 
 ### 2. Environment variables
 
@@ -137,7 +137,7 @@ cd ..
 uvicorn backend.main:app --reload --port 8000
 ```
 
-Then set `VITE_BACKEND_URL=http://localhost:8000`. Environment variables read by the backend:
+Then either set `VITE_BACKEND_URL=http://localhost:8000` or rely on the dev server proxying `/api` to that port. Environment variables read by the backend:
 
 `OPENAI_API_KEY`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_DEFAULT_REGION`, `AZURE_SPEECH_KEY`, `AZURE_SPEECH_REGION`, `INTERVIEW_TABLE`, `RESUME_BUCKET_NAME`, `ALLOWED_ORIGINS` (comma-separated, for CORS).
 
