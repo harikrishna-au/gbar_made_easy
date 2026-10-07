@@ -90,7 +90,7 @@ const FeedbackPopup = ({ isOpen, onClose, feedbackType = 'recruitment' }: Feedba
     };
 
     return (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200 overflow-y-auto">
+        <div role="dialog" aria-modal="true" className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200 overflow-y-auto">
             <div className="bg-white rounded-3xl shadow-2xl p-6 md:p-8 max-w-lg w-full relative animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto custom-scrollbar">
                 <button
                     onClick={onClose}
@@ -103,8 +103,8 @@ const FeedbackPopup = ({ isOpen, onClose, feedbackType = 'recruitment' }: Feedba
                     {/* Recruitment Flow - Campus Check */}
                     {feedbackType === 'recruitment' && showCampusConfirmation ? (
                         <div className="text-center space-y-6">
-                            <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mx-auto">
-                                <GraduationCap className="w-9 h-9 text-blue-600" />
+                            <div className="w-16 h-16 bg-stone-50 rounded-full flex items-center justify-center mx-auto">
+                                <GraduationCap className="w-9 h-9 text-stone-900" />
                             </div>
                             <div className="space-y-3">
                                 <h2 className="text-2xl font-black text-neutral-900 leading-tight">Important for On-Campus Students</h2>
@@ -124,7 +124,7 @@ const FeedbackPopup = ({ isOpen, onClose, feedbackType = 'recruitment' }: Feedba
                                         setPlacementType("On-Campus");
                                         setShowCampusConfirmation(false);
                                     }}
-                                    className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-base font-bold shadow-lg shadow-blue-200"
+                                    className="w-full h-12 bg-stone-900 hover:bg-stone-900 text-white rounded-xl text-base font-bold shadow-lg shadow-stone-200"
                                 >
                                     🔵 Yes, a company is coming to my campus
                                 </Button>
@@ -143,11 +143,11 @@ const FeedbackPopup = ({ isOpen, onClose, feedbackType = 'recruitment' }: Feedba
                     ) : (
                         <>
                             <div className="text-center space-y-2">
-                                <div className={`w-14 h-14 ${feedbackType === 'platform' ? 'bg-rose-50' : 'bg-indigo-50'} rounded-full flex items-center justify-center mx-auto mb-3`}>
+                                <div className={`w-14 h-14 ${feedbackType === 'platform' ? 'bg-rose-50' : 'bg-stone-50'} rounded-full flex items-center justify-center mx-auto mb-3`}>
                                     {feedbackType === 'platform' ? (
                                         <HeartHandshake className="w-7 h-7 text-rose-500 fill-rose-500/20" />
                                     ) : (
-                                        <MessageSquare className="w-7 h-7 text-indigo-600 fill-indigo-600/20" />
+                                        <MessageSquare className="w-7 h-7 text-stone-900 fill-indigo-600/20" />
                                     )}
                                 </div>
                                 <h2 className="text-2xl font-black text-neutral-900 leading-tight">
@@ -267,7 +267,7 @@ const FeedbackPopup = ({ isOpen, onClose, feedbackType = 'recruitment' }: Feedba
                                         disabled={isSubmitting}
                                         className={`w-full h-12 text-white rounded-xl text-lg font-bold flex items-center justify-center gap-2 shadow-lg mt-2 ${feedbackType === 'platform'
                                                 ? "bg-rose-500 hover:bg-rose-600 shadow-rose-200"
-                                                : "bg-indigo-600 hover:bg-indigo-700 shadow-indigo-200"
+                                                : "bg-stone-900 hover:bg-stone-900 shadow-stone-200"
                                             }`}
                                     >
                                         {isSubmitting ? "Submitting..." : (

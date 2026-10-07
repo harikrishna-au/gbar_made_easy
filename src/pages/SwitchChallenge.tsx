@@ -133,7 +133,7 @@ export default function SwitchChallenge() {
           </div>
           <h1 className="text-3xl font-serif text-stone-800 mb-3">Switch Challenge</h1>
           <p className="text-stone-500 text-sm font-['Inter'] leading-relaxed mb-6 max-w-[270px] mx-auto">
-            Two tasks alternate. For <strong className="text-violet-600">numbers</strong>: press Odd or Even.
+            Two tasks alternate. For <strong className="text-stone-900">numbers</strong>: press Odd or Even.
             For <strong className="text-cyan-600">letters</strong>: press Vowel or Consonant.
           </p>
           <div className="rounded-2xl p-4 mb-8 text-left" style={{ background: '#fff', border: '1.5px solid rgba(0,0,0,0.07)' }}>
@@ -178,7 +178,7 @@ export default function SwitchChallenge() {
             ].map(([val, label]) => (
               <div key={String(label)} className="rounded-2xl py-4 px-2" style={{ background: '#fff', border: '1.5px solid rgba(0,0,0,0.07)', boxShadow: '0 2px 10px rgba(0,0,0,0.04)' }}>
                 <div className="text-2xl font-bold text-stone-800 font-['Inter']">{val}</div>
-                <div className="text-[10px] text-stone-400 font-['Inter'] mt-0.5">{label}</div>
+                <div className="text-[11px] text-stone-400 font-['Inter'] mt-0.5">{label}</div>
               </div>
             ))}
           </div>
@@ -236,7 +236,7 @@ export default function SwitchChallenge() {
             {trial.task === 'number' ? 'Number Task' : 'Letter Task'}
           </div>
           {isSwitch && (
-            <span className="text-[10px] font-bold text-orange-500 font-['Inter'] animate-pulse uppercase tracking-wider">
+            <span className="text-[11px] font-bold text-orange-500 font-['Inter'] animate-pulse uppercase tracking-wider">
               ⚡ SWITCH!
             </span>
           )}

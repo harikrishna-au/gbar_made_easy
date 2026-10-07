@@ -334,7 +334,7 @@ export default function InductiveChallenge() {
           <p className="text-[13px] text-stone-400 font-['Inter'] mb-6">Recognition</p>
 
           <div className="rounded-2xl p-4 mb-5 text-left" style={{ background: '#fff', border: '1.5px solid rgba(0,0,0,0.07)' }}>
-            <div className="text-[10px] font-bold text-stone-400 font-['Inter'] uppercase tracking-wider mb-2">How it works</div>
+            <div className="text-[11px] font-bold text-stone-400 font-['Inter'] uppercase tracking-wider mb-2">How it works</div>
             <p className="text-sm font-['Inter'] text-stone-600 leading-relaxed">
               Two grids on the left show a pattern change following a hidden rule.
               Four grids on the right are shown. Find the <strong>two grids</strong> that follow the same rule.
@@ -342,7 +342,7 @@ export default function InductiveChallenge() {
           </div>
 
           <div className="rounded-2xl p-4 mb-8 text-left" style={{ background: '#fff', border: '1.5px solid rgba(0,0,0,0.07)' }}>
-            <div className="text-[10px] font-bold text-stone-400 font-['Inter'] uppercase tracking-wider mb-3">Rules</div>
+            <div className="text-[11px] font-bold text-stone-400 font-['Inter'] uppercase tracking-wider mb-3">Rules</div>
             <div className="space-y-2 text-sm font-['Inter'] text-stone-600">
               <div>⏱ 30 seconds per level</div>
               <div>✅ +3 marks for correct answer</div>
@@ -382,7 +382,7 @@ export default function InductiveChallenge() {
             ] as [string | number, string][]).map(([val, label]) => (
               <div key={label} className="rounded-2xl py-4 px-2" style={{ background: '#fff', border: '1.5px solid rgba(0,0,0,0.07)', boxShadow: '0 2px 10px rgba(0,0,0,0.04)' }}>
                 <div className="text-2xl font-bold text-stone-800 font-['Inter']">{val}</div>
-                <div className="text-[10px] text-stone-400 font-['Inter'] mt-0.5">{label}</div>
+                <div className="text-[11px] text-stone-400 font-['Inter'] mt-0.5">{label}</div>
               </div>
             ))}
           </div>
@@ -435,7 +435,7 @@ export default function InductiveChallenge() {
             style={{ width: `${(levelNum / TOTAL_LEVELS) * 100}%`, background: 'linear-gradient(90deg, #7c3aed, #a855f7)' }}
           />
         </div>
-        <div className="text-right text-[10px] text-stone-400 font-['Inter'] mb-4">
+        <div className="text-right text-[11px] text-stone-400 font-['Inter'] mb-4">
           Level {levelNum + 1} / {TOTAL_LEVELS}
         </div>
 
@@ -449,7 +449,7 @@ export default function InductiveChallenge() {
 
         {/* Rule pair — horizontal: A → B */}
         <div className="mb-5">
-          <div className="text-[9px] font-bold text-stone-400 font-['Inter'] uppercase tracking-wider text-center mb-3">
+          <div className="text-[11px] font-bold text-stone-400 font-['Inter'] uppercase tracking-wider text-center mb-3">
             These two grids follow a rule
           </div>
           <div className="flex items-center justify-center gap-4">
@@ -468,7 +468,7 @@ export default function InductiveChallenge() {
 
         {/* Answer options */}
         <div>
-          <div className="text-[9px] font-bold text-stone-400 font-['Inter'] uppercase tracking-wider text-center mb-3">
+          <div className="text-[11px] font-bold text-stone-400 font-['Inter'] uppercase tracking-wider text-center mb-3">
             Which two grids follow the same rule?
           </div>
           <div className="grid grid-cols-2 gap-4">

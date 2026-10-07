@@ -79,7 +79,7 @@ export function ErrorCorrectionRound() {
         return (
             <RoundLayout title="Error Correction" description="Identify and correct errors" showNavigation={false}>
                 <div className="text-center py-12">
-                    <div className="w-16 h-16 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
+                    <div className="w-16 h-16 border-4 border-stone-200 border-t-stone-900 rounded-full animate-spin mx-auto mb-4"></div>
                     <p className="text-neutral-600">Loading questions...</p>
                 </div>
             </RoundLayout>

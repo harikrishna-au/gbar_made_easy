@@ -28,11 +28,11 @@ const ACTIVE_PATTERN = {
     path: "/game/communication",
     desc: "Full Communication Round simulation — conversation, listening, reading aloud, repeat sentences, fill-in-the-blank, error correction, speaking topic, and written email.",
     tag: "All Sections · AI Feedback",
-    color: "#A100FF",
-    bg: "rgba(161,0,255,0.06)",
-    border: "rgba(161,0,255,0.17)",
-    glow: "rgba(161,0,255,0.15)",
-    dark: "#7A00C2",
+    color: "#1c1917",
+    bg: "rgba(28,25,23,0.05)",
+    border: "rgba(28,25,23,0.14)",
+    glow: "rgba(28,25,23,0.10)",
+    dark: "#0c0a09",
 };
 
 const PATTERN_2 = {
@@ -41,20 +41,20 @@ const PATTERN_2 = {
     path: "/game/communication-p2",
     desc: "Read sentences aloud, listen and repeat, spoken Q&A, sentence rearrangement, and story retelling — a fresh set of skills with AI feedback.",
     tag: "5 Sections · AI Feedback",
-    color: "#0033A0",
-    bg: "rgba(0,51,160,0.06)",
-    border: "rgba(0,51,160,0.17)",
-    glow: "rgba(0,51,160,0.15)",
-    dark: "#002374",
+    color: "#1c1917",
+    bg: "rgba(28,25,23,0.05)",
+    border: "rgba(28,25,23,0.14)",
+    glow: "rgba(28,25,23,0.10)",
+    dark: "#0c0a09",
 };
 
 const PATTERN_2_SECTIONS = [
     { label: "Microphone Setup", detail: "Quick device check before the assessment begins", icon: MonitorCheck, tag: "Pre-check", tagColor: "text-stone-400", tagBg: "bg-stone-100" },
     { label: "Section A — Read the Sentence", detail: "5 sentences · Read each sentence aloud clearly", icon: BookOpen, tag: "Reading", tagColor: "text-cyan-600", tagBg: "bg-cyan-50" },
-    { label: "Section B — Listen & Repeat", detail: "5 sentences · Listen to audio and repeat accurately", icon: Repeat2, tag: "Speaking", tagColor: "text-violet-600", tagBg: "bg-violet-50" },
-    { label: "Section C — Spoken Q&A", detail: "4 questions · Listen to question and answer verbally", icon: MessageSquare, tag: "Speaking", tagColor: "text-violet-600", tagBg: "bg-violet-50" },
+    { label: "Section B — Listen & Repeat", detail: "5 sentences · Listen to audio and repeat accurately", icon: Repeat2, tag: "Speaking", tagColor: "text-stone-900", tagBg: "bg-stone-50" },
+    { label: "Section C — Spoken Q&A", detail: "4 questions · Listen to question and answer verbally", icon: MessageSquare, tag: "Speaking", tagColor: "text-stone-900", tagBg: "bg-stone-50" },
     { label: "Section D — Sentence Rearrangement", detail: "4 puzzles · Tap words to form the correct sentence", icon: PencilLine, tag: "Grammar", tagColor: "text-amber-600", tagBg: "bg-amber-50" },
-    { label: "Section E — Story Retelling", detail: "1 story · Listen then retell in your own words", icon: Radio, tag: "Speaking", tagColor: "text-violet-600", tagBg: "bg-violet-50" },
+    { label: "Section E — Story Retelling", detail: "1 story · Listen then retell in your own words", icon: Radio, tag: "Speaking", tagColor: "text-stone-900", tagBg: "bg-stone-50" },
     { label: "AI Score Analysis", detail: "Fluency · Grammar · Vocabulary · Pronunciation breakdown", icon: BarChart2, tag: "Feedback", tagColor: "text-stone-500", tagBg: "bg-stone-100" },
 ];
 
@@ -78,16 +78,16 @@ const PATTERN_SECTIONS = [
         detail: "6 questions · Have a natural spoken conversation with AI",
         icon: MessageSquare,
         tag: "Speaking",
-        tagColor: "text-violet-600",
-        tagBg: "bg-violet-50",
+        tagColor: "text-stone-900",
+        tagBg: "bg-stone-50",
     },
     {
         label: "Section B — Listening Comprehension",
         detail: "6 questions · Listen to audio clips and answer questions",
         icon: Headphones,
         tag: "Listening",
-        tagColor: "text-blue-600",
-        tagBg: "bg-blue-50",
+        tagColor: "text-stone-900",
+        tagBg: "bg-stone-50",
     },
     {
         label: "Section C — Reading Aloud",
@@ -102,8 +102,8 @@ const PATTERN_SECTIONS = [
         detail: "8 questions · Listen and repeat sentences accurately",
         icon: Repeat2,
         tag: "Speaking",
-        tagColor: "text-violet-600",
-        tagBg: "bg-violet-50",
+        tagColor: "text-stone-900",
+        tagBg: "bg-stone-50",
     },
     {
         label: "Section E — Fill in the Blank",
@@ -126,8 +126,8 @@ const PATTERN_SECTIONS = [
         detail: "3 questions · Speak for 60 seconds on a given topic",
         icon: Radio,
         tag: "Speaking",
-        tagColor: "text-violet-600",
-        tagBg: "bg-violet-50",
+        tagColor: "text-stone-900",
+        tagBg: "bg-stone-50",
     },
     {
         label: "Written Email",
@@ -201,7 +201,7 @@ function PatternDetailModal({
                             </div>
                             <div>
                                 <div
-                                    className="text-[9px] font-bold tracking-[0.35em] uppercase font-['Inter'] mb-0.5"
+                                    className="text-[11px] font-bold tracking-[0.35em] uppercase font-['Inter'] mb-0.5"
                                     style={{ color: ACTIVE_PATTERN.color }}
                                 >
                                     Communication Round · {ACTIVE_PATTERN.num}
@@ -246,7 +246,7 @@ function PatternDetailModal({
 
                 {/* Sections list */}
                 <div className="overflow-y-auto flex-1 px-6 py-4 space-y-2">
-                    <p className="text-[10px] font-bold tracking-[0.25em] uppercase text-stone-400 font-['Inter'] mb-3">
+                    <p className="text-[11px] font-bold tracking-[0.25em] uppercase text-stone-400 font-['Inter'] mb-3">
                         Exam Structure
                     </p>
                     {PATTERN_SECTIONS.map((sec, idx) => {
@@ -258,7 +258,7 @@ function PatternDetailModal({
                             >
                                 {/* Step number */}
                                 <div className="w-5 h-5 rounded-full bg-stone-100 flex items-center justify-center flex-shrink-0">
-                                    <span className="text-[9px] font-bold text-stone-400 font-['Inter']">
+                                    <span className="text-[11px] font-bold text-stone-400 font-['Inter']">
                                         {idx + 1}
                                     </span>
                                 </div>
@@ -283,7 +283,7 @@ function PatternDetailModal({
 
                                 {/* Tag */}
                                 <div
-                                    className={`px-2 py-0.5 rounded-full text-[9px] font-bold tracking-wide font-['Inter'] flex-shrink-0 ${sec.tagBg} ${sec.tagColor}`}
+                                    className={`px-2 py-0.5 rounded-full text-[11px] font-bold tracking-wide font-['Inter'] flex-shrink-0 ${sec.tagBg} ${sec.tagColor}`}
                                 >
                                     {sec.tag}
                                 </div>
@@ -317,7 +317,7 @@ function PatternDetailModal({
                                 style={{
                                     background: "rgba(217,119,6,0.07)",
                                     border: "1.5px solid rgba(217,119,6,0.3)",
-                                    color: "#b45309",
+                                    color: "#1c1917",
                                 }}
                             >
                                 <Lock className="w-4 h-4" />
@@ -371,7 +371,7 @@ function Pattern2Modal({
                                 <Mic className="w-5 h-5" style={{ color: PATTERN_2.color }} />
                             </div>
                             <div>
-                                <div className="text-[9px] font-bold tracking-[0.35em] uppercase font-['Inter'] mb-0.5" style={{ color: PATTERN_2.color }}>
+                                <div className="text-[11px] font-bold tracking-[0.35em] uppercase font-['Inter'] mb-0.5" style={{ color: PATTERN_2.color }}>
                                     Communication Round · {PATTERN_2.num}
                                 </div>
                                 <h2 className="text-[1.1rem] font-bold tracking-tight font-['Inter'] text-stone-900">{PATTERN_2.name}</h2>
@@ -395,13 +395,13 @@ function Pattern2Modal({
 
                 {/* Sections list */}
                 <div className="overflow-y-auto flex-1 px-6 py-4 space-y-2">
-                    <p className="text-[10px] font-bold tracking-[0.25em] uppercase text-stone-400 font-['Inter'] mb-3">Exam Structure</p>
+                    <p className="text-[11px] font-bold tracking-[0.25em] uppercase text-stone-400 font-['Inter'] mb-3">Exam Structure</p>
                     {PATTERN_2_SECTIONS.map((sec, idx) => {
                         const Icon = sec.icon;
                         return (
                             <div key={idx} className="flex items-center gap-3 px-3 py-3 rounded-xl bg-stone-50 border border-stone-100 hover:border-stone-200 transition-colors">
                                 <div className="w-5 h-5 rounded-full bg-stone-100 flex items-center justify-center flex-shrink-0">
-                                    <span className="text-[9px] font-bold text-stone-400 font-['Inter']">{idx + 1}</span>
+                                    <span className="text-[11px] font-bold text-stone-400 font-['Inter']">{idx + 1}</span>
                                 </div>
                                 <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: PATTERN_2.bg }}>
                                     <Icon className="w-3.5 h-3.5" style={{ color: PATTERN_2.color }} />
@@ -410,7 +410,7 @@ function Pattern2Modal({
                                     <div className="text-[12.5px] font-semibold text-stone-800 font-['Inter'] leading-tight truncate">{sec.label}</div>
                                     <div className="text-[11px] text-stone-400 font-['Inter'] leading-tight mt-0.5 truncate">{sec.detail}</div>
                                 </div>
-                                <div className={`px-2 py-0.5 rounded-full text-[9px] font-bold tracking-wide font-['Inter'] flex-shrink-0 ${sec.tagBg} ${sec.tagColor}`}>{sec.tag}</div>
+                                <div className={`px-2 py-0.5 rounded-full text-[11px] font-bold tracking-wide font-['Inter'] flex-shrink-0 ${sec.tagBg} ${sec.tagColor}`}>{sec.tag}</div>
                             </div>
                         );
                     })}
@@ -567,10 +567,10 @@ function PatternsContent() {
 
                 {/* Hero */}
                 <div className="mb-10">
-                    <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-stone-100 text-stone-500 text-[10px] font-semibold tracking-[0.2em] uppercase font-['Inter'] mb-4">
+                    <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-stone-100 text-stone-500 text-[11px] font-semibold tracking-[0.2em] uppercase font-['Inter'] mb-4">
                         <span className="relative flex h-1.5 w-1.5">
-                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-violet-400 opacity-75" />
-                            <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-violet-500" />
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-stone-400 opacity-75" />
+                            <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-stone-500" />
                         </span>
                         Communication Round
                     </div>
@@ -633,7 +633,7 @@ function PatternsContent() {
                             <div className="flex items-start justify-between">
                                 <div>
                                     <div
-                                        className="text-[9px] font-bold tracking-[0.38em] uppercase font-['Inter'] mb-2"
+                                        className="text-[11px] font-bold tracking-[0.38em] uppercase font-['Inter'] mb-2"
                                         style={{ color: ACTIVE_PATTERN.color }}
                                     >
                                         {ACTIVE_PATTERN.num}
@@ -648,9 +648,9 @@ function PatternsContent() {
 
                                 {!isPremium ? (
                                     <div
-                                        className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-bold tracking-wide border font-['Inter']"
+                                        className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold tracking-wide border font-['Inter']"
                                         style={{
-                                            color: "#d97706",
+                                            color: "#1c1917",
                                             background: "rgba(217,119,6,0.07)",
                                             borderColor: "rgba(217,119,6,0.2)",
                                         }}
@@ -660,9 +660,9 @@ function PatternsContent() {
                                     </div>
                                 ) : (
                                     <div
-                                        className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-bold tracking-wide border font-['Inter']"
+                                        className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold tracking-wide border font-['Inter']"
                                         style={{
-                                            color: "#16a34a",
+                                            color: "#1c1917",
                                             background: "rgba(22,163,74,0.07)",
                                             borderColor: "rgba(22,163,74,0.2)",
                                         }}
@@ -746,7 +746,7 @@ function PatternsContent() {
                         <div className="relative z-10 flex flex-col gap-5 h-full">
                             <div className="flex items-start justify-between">
                                 <div>
-                                    <div className="text-[9px] font-bold tracking-[0.38em] uppercase font-['Inter'] mb-2" style={{ color: PATTERN_2.color }}>
+                                    <div className="text-[11px] font-bold tracking-[0.38em] uppercase font-['Inter'] mb-2" style={{ color: PATTERN_2.color }}>
                                         {PATTERN_2.num}
                                     </div>
                                     <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: PATTERN_2.bg, border: `1px solid ${PATTERN_2.border}` }}>
@@ -754,12 +754,12 @@ function PatternsContent() {
                                     </div>
                                 </div>
                                 {!isPremium ? (
-                                    <div className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-bold tracking-wide border font-['Inter']" style={{ color: "#d97706", background: "rgba(217,119,6,0.07)", borderColor: "rgba(217,119,6,0.2)" }}>
+                                    <div className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold tracking-wide border font-['Inter']" style={{ color: "#d97706", background: "rgba(217,119,6,0.07)", borderColor: "rgba(217,119,6,0.2)" }}>
                                         <Lock className="w-2.5 h-2.5" />
                                         Premium Only
                                     </div>
                                 ) : (
-                                    <div className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-bold tracking-wide border font-['Inter']" style={{ color: "#16a34a", background: "rgba(22,163,74,0.07)", borderColor: "rgba(22,163,74,0.2)" }}>
+                                    <div className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold tracking-wide border font-['Inter']" style={{ color: "#16a34a", background: "rgba(22,163,74,0.07)", borderColor: "rgba(22,163,74,0.2)" }}>
                                         <Crown className="w-2.5 h-2.5" />
                                         Unlocked
                                     </div>
@@ -798,12 +798,12 @@ function PatternsContent() {
                         >
                             <div className="flex items-start justify-between">
                                 <div>
-                                    <div className="text-[9px] font-bold tracking-[0.38em] uppercase font-['Inter'] mb-2 text-stone-300">{pattern.num}</div>
+                                    <div className="text-[11px] font-bold tracking-[0.38em] uppercase font-['Inter'] mb-2 text-stone-300">{pattern.num}</div>
                                     <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-stone-100 border border-stone-200">
                                         <Mic className="w-5 h-5 text-stone-300" />
                                     </div>
                                 </div>
-                                <div className="px-2.5 py-0.5 rounded-full text-[9px] font-bold tracking-wider border border-stone-200 text-stone-300 font-['Inter']">
+                                <div className="px-2.5 py-0.5 rounded-full text-[11px] font-bold tracking-wider border border-stone-200 text-stone-300 font-['Inter']">
                                     Coming Soon
                                 </div>
                             </div>

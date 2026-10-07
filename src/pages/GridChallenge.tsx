@@ -579,7 +579,7 @@ export default function GridChallenge() {
             {results.map((r, i) => (
               <div
                 key={i}
-                className="w-6 h-6 rounded-full flex items-center justify-center text-[10px]"
+                className="w-6 h-6 rounded-full flex items-center justify-center text-[11px]"
                 style={{ background: r ? 'rgba(5,150,105,0.15)' : 'rgba(239,68,68,0.12)', color: r ? '#059669' : '#ef4444' }}
               >
                 {r ? '✓' : '✗'}

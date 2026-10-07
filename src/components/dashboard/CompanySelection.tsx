@@ -330,7 +330,7 @@ export const CompanySelection = ({ onSelectCompany }: CompanySelectionProps) => 
                 <div className="flex items-start justify-between mb-8">
                   <div>
                     <div
-                      className="text-[9px] font-bold tracking-[0.38em] uppercase font-['Inter'] mb-2"
+                      className="text-[11px] font-bold tracking-[0.38em] uppercase font-['Inter'] mb-2"
                       style={{ color: "#78716c" }}
                     >
                       Practice
@@ -374,7 +374,7 @@ export const CompanySelection = ({ onSelectCompany }: CompanySelectionProps) => 
                 {/* Tag + CTA */}
                 <div className="flex flex-col gap-4">
                   <div
-                    className="inline-flex self-start items-center px-2.5 py-1 rounded-full text-[10px] font-semibold tracking-wide border font-['Inter']"
+                    className="inline-flex self-start items-center px-2.5 py-1 rounded-full text-[11px] font-semibold tracking-wide border font-['Inter']"
                     style={{
                       color: "#44403c",
                       background: "#f5f5f4",
@@ -429,7 +429,7 @@ export const CompanySelection = ({ onSelectCompany }: CompanySelectionProps) => 
                 <div className="flex items-start justify-between">
                   <div>
                     <div
-                      className="text-[9px] font-bold tracking-[0.38em] uppercase font-['Inter'] mb-2"
+                      className="text-[11px] font-bold tracking-[0.38em] uppercase font-['Inter'] mb-2"
                       style={{ color: "#78716c" }}
                     >
                       02
@@ -462,7 +462,7 @@ export const CompanySelection = ({ onSelectCompany }: CompanySelectionProps) => 
 
                 <div className="mt-auto flex items-center justify-between gap-3 flex-wrap">
                   <div
-                    className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-semibold tracking-wide border font-['Inter']"
+                    className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold tracking-wide border font-['Inter']"
                     style={{
                       color: "#44403c",
                       background: "#f5f5f4",
@@ -512,7 +512,7 @@ export const CompanySelection = ({ onSelectCompany }: CompanySelectionProps) => 
                 <div className="flex items-start justify-between">
                   <div>
                     <div
-                      className="text-[9px] font-bold tracking-[0.38em] uppercase font-['Inter'] mb-2"
+                      className="text-[11px] font-bold tracking-[0.38em] uppercase font-['Inter'] mb-2"
                       style={{ color: "#78716c" }}
                     >
                       03
@@ -545,7 +545,7 @@ export const CompanySelection = ({ onSelectCompany }: CompanySelectionProps) => 
 
                 <div className="mt-auto flex items-center justify-between gap-3 flex-wrap">
                   <div
-                    className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-semibold tracking-wide border font-['Inter']"
+                    className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold tracking-wide border font-['Inter']"
                     style={{
                       color: "#44403c",
                       background: "#f5f5f4",
@@ -608,13 +608,13 @@ export const CompanySelection = ({ onSelectCompany }: CompanySelectionProps) => 
               <div>
                 <div className="flex items-center gap-2.5 mb-0.5">
                   <div
-                    className="text-[9px] font-bold tracking-[0.38em] uppercase font-['Inter']"
+                    className="text-[11px] font-bold tracking-[0.38em] uppercase font-['Inter']"
                     style={{ color: "#78716c" }}
                   >
                     04
                   </div>
                   <span
-                    className="inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-bold tracking-wide border font-['Inter']"
+                    className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold tracking-wide border font-['Inter']"
                     style={{
                       color: "#44403c",
                       background: "#f5f5f4",
@@ -689,13 +689,13 @@ export const CompanySelection = ({ onSelectCompany }: CompanySelectionProps) => 
               <div>
                 <div className="flex items-center gap-2.5 mb-0.5">
                   <div
-                    className="text-[9px] font-bold tracking-[0.38em] uppercase font-['Inter']"
+                    className="text-[11px] font-bold tracking-[0.38em] uppercase font-['Inter']"
                     style={{ color: "#78716c" }}
                   >
                     05
                   </div>
                   <span
-                    className="inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-bold tracking-wide border font-['Inter']"
+                    className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold tracking-wide border font-['Inter']"
                     style={{
                       color: "#44403c",
                       background: "#f5f5f4",

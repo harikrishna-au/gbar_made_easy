@@ -97,8 +97,8 @@ export function StoryRetellingP2() {
                 {/* Question card */}
                 <div className="rounded-xl border-2 p-6 space-y-3" style={{ background: 'rgba(124,58,237,0.04)', borderColor: 'rgba(124,58,237,0.25)' }}>
                     <div className="flex items-center gap-2">
-                        <MessageSquare className="w-4 h-4 text-violet-600" />
-                        <p className="text-xs font-bold text-violet-700 uppercase tracking-widest">Question</p>
+                        <MessageSquare className="w-4 h-4 text-stone-900" />
+                        <p className="text-xs font-bold text-stone-900 uppercase tracking-widest">Question</p>
                     </div>
                     <p className="text-neutral-800 text-base font-medium leading-relaxed">{questions[idx]}</p>
                 </div>
@@ -122,7 +122,7 @@ export function StoryRetellingP2() {
 
                 {phase === 'ready' && (
                     <Button onClick={handleStart} disabled={!!speechError} size="lg"
-                        className="w-full h-14 text-base bg-violet-600 hover:bg-violet-700">
+                        className="w-full h-14 text-base bg-stone-900 hover:bg-stone-900">
                         <Mic className="w-5 h-5 mr-2" /> Start Speaking
                     </Button>
                 )}
@@ -140,7 +140,7 @@ export function StoryRetellingP2() {
                             <p className="text-xs text-neutral-400 mb-1 font-medium uppercase tracking-wide">Your Response</p>
                             <p className="text-neutral-800 italic leading-relaxed">{transcript || '(no speech detected)'}</p>
                         </div>
-                        <Button onClick={handleNext} size="lg" className="w-full h-12 bg-violet-600 hover:bg-violet-700">
+                        <Button onClick={handleNext} size="lg" className="w-full h-12 bg-stone-900 hover:bg-stone-900">
                             {idx < questions.length - 1
                                 ? <><ChevronRight className="w-5 h-5 mr-2" />Next Question</>
                                 : 'Finish Section'}

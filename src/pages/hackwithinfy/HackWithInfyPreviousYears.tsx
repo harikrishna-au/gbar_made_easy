@@ -350,7 +350,7 @@ const QuestionCard = ({ q }: { q: Question }) => {
           {/* Topics */}
           <div className="flex items-center gap-1.5 flex-wrap mt-2">
             {q.topics.map((t) => (
-              <span key={t} className="text-[10.5px] font-['Inter'] text-stone-400">#{t}</span>
+              <span key={t} className="text-[11px] font-['Inter'] text-stone-400">#{t}</span>
             ))}
           </div>
         </div>
@@ -431,7 +431,7 @@ const HackWithInfyPreviousYears = () => {
         {/* Hero */}
         <div className="mb-8">
           <div
-            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[10px] font-semibold tracking-[0.2em] uppercase font-['Inter'] mb-4"
+            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[11px] font-semibold tracking-[0.2em] uppercase font-['Inter'] mb-4"
             style={{ background: INFY_BG, color: INFY_BLUE, border: `1px solid ${INFY_BDR}` }}
           >
             <Clock className="w-3 h-3" />

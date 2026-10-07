@@ -107,46 +107,46 @@ const ROW_2: Testimonial[] = [
 
 const ACCENTS = [
   {
-    color: "#7c3aed",
-    bg: "rgba(124,58,237,0.055)",
-    border: "rgba(124,58,237,0.13)",
-    quote: "rgba(124,58,237,0.11)",
-    avatar: "linear-gradient(135deg,#7c3aed,#a78bfa)",
+    color: "#44403c",
+    bg: "rgba(28,25,23,0.04)",
+    border: "rgba(28,25,23,0.10)",
+    quote: "rgba(28,25,23,0.10)",
+    avatar: "#57534e",
   },
   {
-    color: "#0891b2",
-    bg: "rgba(8,145,178,0.055)",
-    border: "rgba(8,145,178,0.13)",
-    quote: "rgba(8,145,178,0.11)",
-    avatar: "linear-gradient(135deg,#0891b2,#38bdf8)",
+    color: "#44403c",
+    bg: "rgba(28,25,23,0.04)",
+    border: "rgba(28,25,23,0.10)",
+    quote: "rgba(28,25,23,0.10)",
+    avatar: "#57534e",
   },
   {
-    color: "#059669",
-    bg: "rgba(5,150,105,0.055)",
-    border: "rgba(5,150,105,0.13)",
-    quote: "rgba(5,150,105,0.11)",
-    avatar: "linear-gradient(135deg,#059669,#34d399)",
+    color: "#44403c",
+    bg: "rgba(28,25,23,0.04)",
+    border: "rgba(28,25,23,0.10)",
+    quote: "rgba(28,25,23,0.10)",
+    avatar: "#57534e",
   },
   {
-    color: "#d97706",
-    bg: "rgba(217,119,6,0.055)",
-    border: "rgba(217,119,6,0.13)",
-    quote: "rgba(217,119,6,0.11)",
-    avatar: "linear-gradient(135deg,#d97706,#fbbf24)",
+    color: "#44403c",
+    bg: "rgba(28,25,23,0.04)",
+    border: "rgba(28,25,23,0.10)",
+    quote: "rgba(28,25,23,0.10)",
+    avatar: "#57534e",
   },
   {
-    color: "#e11d48",
-    bg: "rgba(225,29,72,0.055)",
-    border: "rgba(225,29,72,0.13)",
-    quote: "rgba(225,29,72,0.11)",
-    avatar: "linear-gradient(135deg,#e11d48,#fb7185)",
+    color: "#44403c",
+    bg: "rgba(28,25,23,0.04)",
+    border: "rgba(28,25,23,0.10)",
+    quote: "rgba(28,25,23,0.10)",
+    avatar: "#57534e",
   },
   {
-    color: "#0891b2",
-    bg: "rgba(8,145,178,0.055)",
-    border: "rgba(8,145,178,0.13)",
-    quote: "rgba(8,145,178,0.11)",
-    avatar: "linear-gradient(135deg,#0891b2,#38bdf8)",
+    color: "#44403c",
+    bg: "rgba(28,25,23,0.04)",
+    border: "rgba(28,25,23,0.10)",
+    quote: "rgba(28,25,23,0.10)",
+    avatar: "#57534e",
   },
 ];
 
@@ -277,7 +277,7 @@ export const TestimonialScroller = () => {
       <div className="py-10 sm:py-20">
         {/* Section header */}
         <div className="text-center mb-8 sm:mb-14 px-6">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-stone-100 text-stone-500 text-[10.5px] font-semibold tracking-[0.2em] uppercase font-['Inter'] mb-5">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-stone-100 text-stone-500 text-[11px] font-semibold tracking-[0.2em] uppercase font-['Inter'] mb-5">
             <span className="relative flex h-1.5 w-1.5">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
               <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500" />

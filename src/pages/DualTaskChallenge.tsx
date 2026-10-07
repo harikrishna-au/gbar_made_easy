@@ -315,7 +315,7 @@ export default function DualTaskChallenge() {
           <p className="text-[13px] text-stone-400 font-['Inter'] mb-6">Power of Attention & Memory</p>
 
           <div className="rounded-2xl p-4 mb-4 text-left" style={{ background: '#fff', border: '1.5px solid rgba(0,0,0,0.07)' }}>
-            <div className="text-[10px] font-bold text-stone-400 font-['Inter'] uppercase tracking-wider mb-2">How it works</div>
+            <div className="text-[11px] font-bold text-stone-400 font-['Inter'] uppercase tracking-wider mb-2">How it works</div>
             <div className="space-y-2 text-sm font-['Inter'] text-stone-500">
               <p>1. A grid of circles is shown — <strong className="text-stone-700">one blinks</strong> for 2 s. Remember it.</p>
               <p>2. Two shape patterns appear for 6 s. Decide: <strong className="text-stone-700">symmetric or not?</strong></p>
@@ -325,7 +325,7 @@ export default function DualTaskChallenge() {
           </div>
 
           <div className="rounded-2xl p-4 mb-8 text-left" style={{ background: '#fff', border: '1.5px solid rgba(0,0,0,0.07)' }}>
-            <div className="text-[10px] font-bold text-stone-400 font-['Inter'] uppercase tracking-wider mb-3">Rules</div>
+            <div className="text-[11px] font-bold text-stone-400 font-['Inter'] uppercase tracking-wider mb-3">Rules</div>
             <div className="space-y-2 text-sm font-['Inter'] text-stone-600">
               <div>👁 Highlighted circle appears for 2 s</div>
               <div>⏱ Patterns visible for 6 s</div>
@@ -365,7 +365,7 @@ export default function DualTaskChallenge() {
               <div key={label} className="rounded-2xl py-4 px-2"
                 style={{ background: '#fff', border: '1.5px solid rgba(0,0,0,0.07)', boxShadow: '0 2px 10px rgba(0,0,0,0.04)' }}>
                 <div className="text-xl font-bold text-stone-800 font-['Inter']">{val}</div>
-                <div className="text-[10px] text-stone-400 font-['Inter'] mt-0.5">{label}</div>
+                <div className="text-[11px] text-stone-400 font-['Inter'] mt-0.5">{label}</div>
               </div>
             ))}
           </div>
@@ -458,7 +458,7 @@ export default function DualTaskChallenge() {
           <div className="flex flex-col items-center gap-4">
             {/* Timer bar */}
             <div className="w-full">
-              <div className="flex justify-between text-[10px] text-stone-400 font-['Inter'] mb-1">
+              <div className="flex justify-between text-[11px] text-stone-400 font-['Inter'] mb-1">
                 <span>Are these patterns symmetric?</span>
                 <span style={{ color: timerColor, fontWeight: 700 }}>{symTime}s</span>
               </div>
@@ -505,7 +505,7 @@ export default function DualTaskChallenge() {
         {isRecall(step) && (
           <div className="flex flex-col items-center gap-4">
             <div className="text-center">
-              <p className="text-[11px] font-bold text-violet-600 font-['Inter'] uppercase tracking-wider mb-1">
+              <p className="text-[11px] font-bold text-stone-900 font-['Inter'] uppercase tracking-wider mb-1">
                 🧠 Recall
               </p>
               <p className="text-xs text-stone-400 font-['Inter']">

@@ -73,7 +73,7 @@ export function WrittenRound() {
         return (
             <RoundLayout title="Written Communication" description="Demonstrate your professional email writing skills" showNavigation={false}>
                 <div className="text-center py-12">
-                    <div className="w-16 h-16 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
+                    <div className="w-16 h-16 border-4 border-stone-200 border-t-stone-900 rounded-full animate-spin mx-auto mb-4"></div>
                     <p className="text-neutral-600">Loading question...</p>
                 </div>
             </RoundLayout>
@@ -101,13 +101,13 @@ export function WrittenRound() {
         >
             <div className="space-y-6">
                 {/* Scenario Description */}
-                <div className="bg-indigo-50 p-6 rounded-xl border-2 border-indigo-200">
-                    <h3 className="text-lg font-bold text-indigo-900 mb-3">📋 Scenario:</h3>
+                <div className="bg-stone-50 p-6 rounded-xl border-2 border-stone-200">
+                    <h3 className="text-lg font-bold text-stone-900 mb-3">📋 Scenario:</h3>
                     <p className="text-neutral-800 leading-relaxed">
                         {question.promptText}
                     </p>
-                    <div className="bg-white p-4 rounded-lg border border-indigo-200 mt-4">
-                        <p className="text-sm text-indigo-600 font-semibold">
+                    <div className="bg-white p-4 rounded-lg border border-stone-200 mt-4">
+                        <p className="text-sm text-stone-900 font-semibold">
                             Target: {wordRange}
                         </p>
                     </div>
@@ -133,7 +133,7 @@ export function WrittenRound() {
                             <Button
                                 onClick={handleSubmit}
                                 disabled={!writtenText.trim()}
-                                className="bg-indigo-600 hover:bg-indigo-700 h-12 px-8"
+                                className="bg-stone-900 hover:bg-stone-900 h-12 px-8"
                             >
                                 Submit Email
                             </Button>

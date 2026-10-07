@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from "react";
 import { SignedIn, SignedOut, SignInButton, useAuth } from "@clerk/clerk-react";
-import { Lock, Crown, ClipboardList, Users, Linkedin, Bot, ArrowLeft, MessageCircle, Hammer } from "lucide-react";
 import PageWrapper from "@/components/PageWrapper";
 import OutlineButton from "@/components/OutlineButton";
 import CompletionPopup from "@/components/CompletionPopup";
@@ -22,12 +21,6 @@ import PaymentPopup from "@/components/PaymentPopup";
 
 import { useSearchParams, useParams, useNavigate } from "react-router-dom";
 
-const EXTERNAL_LINKS = {
-  linkedin: "https://www.linkedin.com/in/hari-krishna-nallana-33949b277/",
-  whatsapp: "https://chat.whatsapp.com/CBORD8aR3x91d5rmwo87de",
-  googleDrive: "https://drive.google.com/drive/folders/1wepyyapyvzyUR9T26CZJjQE-fGesd3A3?usp=sharing",
-};
-
 const Dashboard = () => {
   const [searchParams] = useSearchParams();
   const { companyId } = useParams();
@@ -40,7 +33,6 @@ const Dashboard = () => {
   const { isPremium, loading: premiumLoading } = usePremiumStatus();
   const { isSignedIn } = useAuth();
   // useRazorpay removed to force popup flow
-  const [isFooterHovered, setIsFooterHovered] = useState(false);
   const [showTour, setShowTour] = useState(false);
 
   // Capture Referral Code
@@ -118,104 +110,6 @@ const Dashboard = () => {
 
   const companyName = companyId ? companyId.charAt(0).toUpperCase() + companyId.slice(1) : 'Assessment';
 
-  const accentureGames = [
-    { id: 1, name: "Matrix Flow", path: "/game/matrix", premiumBottomBarText: "EXTRA LEVELS with Premium" },
-    { id: 2, name: "Balloon Math", path: "/game/balloon" },
-    { id: 3, name: "Hidden Maze", path: "/game/hidden-maze", premiumBottomBarText: "EXTRA LEVELS with Premium" },
-    {
-      id: 4,
-      name: "Communication Round",
-      path: "/game/communication-patterns",
-      // Navigates to pattern selector page first
-      disabled: false,
-      premiumBottomBarText: "UNLOCK WITH PREMIUM"
-    },
-    {
-      id: 5,
-      name: "Connect with me",
-      subtitle: `${companyName} Interview Guidance – Paid 1-on-1 Session`,
-      path: "/connect",
-      typingHighlight: true,
-      typingText: "BOOK 1:1 SESSION"
-    },
-    {
-      id: 13,
-      name: "Forge",
-      subtitle: "Resume Builder",
-      path: "/forge",
-      icon: <Hammer className="w-8 h-8 text-orange-500" />
-    },
-    {
-      id: 10,
-      name: "AI Interview",
-      path: "/ai-interview",
-      icon: <Bot className="w-8 h-8" />
-    },
-    {
-      id: 7,
-      name: isPremium ? "Premium Active" : "Unlock All Levels",
-      subtitle: isPremium ? "" : "Extra Levels : Communication Round",
-      path: "#subscribe",
-      special: true,
-      icon: isPremium ? <Crown className="w-8 h-8 text-stone-700 fill-stone-200" /> : <Lock className="w-8 h-8 text-white drop-shadow-md group-hover:scale-110 transition-transform" />
-    },
-    {
-      id: 8,
-      name: "Take Survey",
-      path: "#survey",
-      special: true,
-      survey: true,
-      icon: <ClipboardList className="w-8 h-8 text-white drop-shadow-md group-hover:scale-110 transition-transform" />
-    },
-    {
-      id: 9,
-      name: "LinkedIn Profile",
-      subtitle: "Connect with me on LinkedIn",
-      path: EXTERNAL_LINKS.linkedin,
-      isExternal: true,
-      icon: <div className="p-2 bg-blue-100 rounded-full"><Linkedin className="w-6 h-6 text-blue-600" /></div>
-    },
-    { id: 6, name: `${companyName} Resources`, path: EXTERNAL_LINKS.googleDrive, isExternal: true },
-    {
-      id: 11,
-      name: `${companyName} Community`,
-      subtitle: "Join the WhatsApp Group",
-      path: EXTERNAL_LINKS.whatsapp,
-      isExternal: true,
-      icon: <div className="p-2 bg-green-100 rounded-full"><MessageCircle className="w-6 h-6 text-green-600" /></div>
-    },
-    { id: 12, name: "", path: "" },
-  ];
-
-  const cognizantGames = [
-    // You can add different games/endpoints here for Cognizant
-    {
-      id: 13,
-      name: "Forge",
-      subtitle: "Resume Builder",
-      path: "/forge",
-      icon: <Hammer className="w-8 h-8 text-orange-500" />
-    },
-    {
-      id: 5,
-      name: "Connect with me",
-      subtitle: `${companyName} Interview Guidance – Paid 1-on-1 Session`,
-      path: "/connect",
-      typingHighlight: true,
-      typingText: "BOOK 1:1 SESSION"
-    },
-    {
-      id: 9,
-      name: "LinkedIn Profile",
-      subtitle: "Connect with me on LinkedIn",
-      path: EXTERNAL_LINKS.linkedin,
-      isExternal: true,
-      icon: <div className="p-2 bg-blue-100 rounded-full"><Linkedin className="w-6 h-6 text-blue-600" /></div>
-    },
-  ];
-
-  const games = companyId === 'cognizant' ? cognizantGames : accentureGames;
-
   return (
     <div className={`min-h-screen w-full flex flex-col items-center font-sans selection:bg-secondary/20 selection:text-secondary-foreground ${companyId ? 'overflow-y-auto' : 'overflow-y-auto'}`}>
       <SEO
@@ -225,7 +119,7 @@ const Dashboard = () => {
       <LandingBackground />
 
       {!companyId && (
-        <div className={`w-full flex flex-col items-center transition-all duration-700 z-50 ${isFooterHovered ? 'blur-sm scale-[0.98] opacity-80' : ''}`}>
+        <div className={`w-full flex flex-col items-center transition-all duration-700 z-50`}>
           {/* Header - Transparent/Minimal */}
           <Header onStartTour={() => setShowTour(true)} />
         </div>
@@ -245,7 +139,7 @@ const Dashboard = () => {
         mode={companyId ? 'journey' : 'landing'}
       />
 
-      <div className={`relative z-10 flex-1 flex flex-col items-center w-full transition-all duration-500 ${companyId ? 'justify-start pt-16 p-3 sm:p-4' : 'p-3 sm:p-4 pt-16 md:p-8'} ${isFooterHovered ? 'blur-sm scale-[0.98] opacity-80' : ''}`}>
+      <div className={`relative z-10 flex-1 flex flex-col items-center w-full transition-all duration-500 ${companyId ? 'justify-start pt-16 p-3 sm:p-4' : 'p-3 sm:p-4 pt-16 md:p-8'}`}>
         <SignedIn>
           <div className={`flex flex-col items-center w-full max-w-6xl flex-1 ${companyId ? 'justify-start' : 'min-h-[60vh] justify-start'}`}>
 
@@ -289,8 +183,6 @@ const Dashboard = () => {
             setShowFeedbackPopup(true);
           }}
           onSupportClick={() => setShowSupportPopup(true)}
-          onMouseEnter={() => setIsFooterHovered(true)}
-          onMouseLeave={() => setIsFooterHovered(false)}
         />
       )}
     </div>

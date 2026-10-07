@@ -109,7 +109,7 @@ export function ListeningComprehensionRound() {
         return (
             <RoundLayout title="Listening Comprehension" description="Listen carefully and answer questions" showNavigation={false}>
                 <div className="text-center py-12">
-                    <div className="w-16 h-16 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
+                    <div className="w-16 h-16 border-4 border-stone-200 border-t-stone-900 rounded-full animate-spin mx-auto mb-4"></div>
                     <p className="text-neutral-600">Loading questions...</p>
                 </div>
             </RoundLayout>
@@ -130,7 +130,7 @@ export function ListeningComprehensionRound() {
                 {!contextPlayed && currentQuestion?.contextAudioSrc && (
                     <div className="space-y-4">
                         <div className="text-center">
-                            <h3 className="text-lg font-bold text-purple-900 mb-2">📖 Listen to the Context</h3>
+                            <h3 className="text-lg font-bold text-stone-900 mb-2">📖 Listen to the Context</h3>
                             <p className="text-sm text-neutral-600">(Listen carefully to the passage)</p>
                         </div>
                         <AudioPlayer
@@ -151,7 +151,7 @@ export function ListeningComprehensionRound() {
 
                         <div className="space-y-4">
                             <div className="text-center">
-                                <h3 className="text-lg font-bold text-purple-900 mb-2">🎧 Listen to the Question</h3>
+                                <h3 className="text-lg font-bold text-stone-900 mb-2">🎧 Listen to the Question</h3>
                             </div>
                             <AudioPlayer
                                 text={currentSubQuestion.audioSrc || currentSubQuestion.text || ''}
@@ -161,7 +161,7 @@ export function ListeningComprehensionRound() {
                             />
                         </div>
 
-                        <div className="bg-purple-50 p-6 rounded-xl flex flex-col items-center gap-3">
+                        <div className="bg-stone-50 p-6 rounded-xl flex flex-col items-center gap-3">
                             {showQuestionText && (currentSubQuestion.text || currentSubQuestion.audioSrc) ? (
                                 <p className="text-lg text-neutral-800 text-center font-medium">
                                     {currentSubQuestion.text || currentSubQuestion.audioSrc}
@@ -174,7 +174,7 @@ export function ListeningComprehensionRound() {
                                     {(currentSubQuestion.text || currentSubQuestion.audioSrc) && (
                                         <button
                                             onClick={() => setShowQuestionText(true)}
-                                            className="inline-flex items-center gap-1.5 text-sm font-medium text-purple-700 hover:text-purple-900 transition-colors"
+                                            className="inline-flex items-center gap-1.5 text-sm font-medium text-stone-900 hover:text-stone-900 transition-colors"
                                         >
                                             <Eye className="w-4 h-4" />
                                             Can't hear it? Show question text
@@ -195,7 +195,7 @@ export function ListeningComprehensionRound() {
                                 onClick={handleToggleRecording}
                                 disabled={!!speechError}
                                 size="lg"
-                                className={`w-48 h-16 text-lg ${isRecording ? 'bg-red-600 hover:bg-red-700' : 'bg-purple-600 hover:bg-purple-700'}`}
+                                className={`w-48 h-16 text-lg ${isRecording ? 'bg-red-600 hover:bg-red-700' : 'bg-stone-900 hover:bg-stone-900'}`}
                             >
                                 {isRecording ? (
                                     <>

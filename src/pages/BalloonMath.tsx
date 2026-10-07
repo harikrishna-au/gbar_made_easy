@@ -219,7 +219,7 @@ const BalloonMathGame: React.FC = () => {
                             <div className="w-14 h-14 bg-white rounded-full shadow-md flex items-center justify-center text-base font-bold text-neutral-500 -mt-4">2</div>
                             <div className="w-16 h-16 bg-white rounded-full shadow-lg flex items-center justify-center text-xl font-bold text-neutral-800">3</div>
                         </div>
-                        <h1 className="text-4xl font-bold text-neutral-900 mb-4">Bubble Order</h1>
+                        <h1 className="text-4xl font-bold text-neutral-900 mb-4">Balloon Math</h1>
                         <p className="text-xl text-neutral-600 mb-8">
                             Pop the bubbles in <strong>ascending order</strong> (Lowest to Highest).
                         </p>

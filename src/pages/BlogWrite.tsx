@@ -108,7 +108,7 @@ export default function BlogWrite() {
       <main className="relative z-10 container mx-auto px-6 pt-24 pb-24 max-w-3xl">
         {/* Page header */}
         <div className="mb-10">
-          <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-white border border-stone-100 text-[10px] uppercase tracking-widest font-bold text-stone-400 font-['Inter'] mb-4">
+          <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-white border border-stone-100 text-[11px] uppercase tracking-widest font-bold text-stone-400 font-['Inter'] mb-4">
             <PenLine className="w-2.5 h-2.5" />
             New Post
           </div>
@@ -159,7 +159,7 @@ export default function BlogWrite() {
               className="w-full px-4 py-3 font-['Inter'] text-[15px] text-stone-800 border border-stone-200 rounded-xl focus:outline-none focus:border-stone-400 bg-white placeholder:text-stone-300 transition-colors shadow-sm"
             />
             <div className="flex justify-end mt-1.5">
-              <span className="text-[10px] font-['Inter'] text-stone-400">{title.length}/120</span>
+              <span className="text-[11px] font-['Inter'] text-stone-400">{title.length}/120</span>
             </div>
           </div>
 
@@ -238,12 +238,12 @@ export default function BlogWrite() {
             </label>
             <BlogEditor value={content} onChange={setContent} />
             <div className="flex justify-between mt-1.5">
-              <span className="text-[10px] font-['Inter'] text-stone-400">
+              <span className="text-[11px] font-['Inter'] text-stone-400">
                 {content.trim().length < 500
                   ? `${500 - content.trim().length} more characters needed`
                   : `${content.trim().length} characters`}
               </span>
-              <span className="text-[10px] font-['Inter'] text-stone-400">
+              <span className="text-[11px] font-['Inter'] text-stone-400">
                 ~{Math.max(1, Math.ceil(content.split(/\s+/).length / 200))} min read
               </span>
             </div>

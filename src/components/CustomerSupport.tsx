@@ -102,7 +102,7 @@ export default function CustomerSupport() {
               </div>
               <span className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-emerald-50 border border-emerald-100">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                <span className="font-['Inter'] text-[10px] font-semibold text-emerald-700">Online</span>
+                <span className="font-['Inter'] text-[11px] font-semibold text-emerald-700">Online</span>
               </span>
             </div>
 

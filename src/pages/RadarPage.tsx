@@ -79,9 +79,9 @@ function ScoreArc({ score }: { score: number }) {
 /* ── Job card ── */
 function JobCard({ job, index }: { job: MatchedJob; index: number }) {
   const typeColor = job.type === "Internship"
-    ? "bg-blue-50 text-blue-600 border-blue-100"
+    ? "bg-stone-50 text-stone-900 border-stone-100"
     : job.type === "Part-time"
-    ? "bg-purple-50 text-purple-600 border-purple-100"
+    ? "bg-stone-50 text-stone-900 border-stone-100"
     : "bg-emerald-50 text-emerald-600 border-emerald-100";
 
   const c = scoreColor(job.match_score);
@@ -104,7 +104,7 @@ function JobCard({ job, index }: { job: MatchedJob; index: number }) {
               <p className="text-xs font-['Inter'] text-stone-500 mt-0.5">{job.company}</p>
             )}
             {job.match_score > 0 && (
-              <span className={`inline-block mt-1.5 px-2 py-0.5 rounded-full text-[10px] font-semibold font-['Inter'] ${c.bg}`} style={{ color: c.text }}>
+              <span className={`inline-block mt-1.5 px-2 py-0.5 rounded-full text-[11px] font-semibold font-['Inter'] ${c.bg}`} style={{ color: c.text }}>
                 {c.label}
               </span>
             )}
@@ -137,7 +137,7 @@ function JobCard({ job, index }: { job: MatchedJob; index: number }) {
         {/* Skills sections */}
         {job.skills_match.length > 0 && (
           <div className="mt-3">
-            <p className="text-[10px] font-semibold font-['Inter'] text-stone-400 uppercase tracking-widest mb-1.5 flex items-center gap-1">
+            <p className="text-[11px] font-semibold font-['Inter'] text-stone-400 uppercase tracking-widest mb-1.5 flex items-center gap-1">
               <CheckCircle2 className="w-3 h-3 text-green-500" /> You have
             </p>
             <div className="flex flex-wrap gap-1">
@@ -150,7 +150,7 @@ function JobCard({ job, index }: { job: MatchedJob; index: number }) {
 
         {job.skills_gap.length > 0 && (
           <div className="mt-2.5">
-            <p className="text-[10px] font-semibold font-['Inter'] text-stone-400 uppercase tracking-widest mb-1.5 flex items-center gap-1">
+            <p className="text-[11px] font-semibold font-['Inter'] text-stone-400 uppercase tracking-widest mb-1.5 flex items-center gap-1">
               <TrendingUp className="w-3 h-3 text-amber-500" /> Learn
             </p>
             <div className="flex flex-wrap gap-1">

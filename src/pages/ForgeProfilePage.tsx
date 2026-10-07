@@ -175,7 +175,7 @@ export default function ForgeProfilePage() {
                           { label: "Soft Skills", items: savedData.skills.soft },
                         ].filter(g => g.items.length > 0).map(group => (
                           <div key={group.label}>
-                            <p className="text-[10px] font-semibold font-['Inter'] text-stone-400 uppercase tracking-widest mb-1.5">{group.label}</p>
+                            <p className="text-[11px] font-semibold font-['Inter'] text-stone-400 uppercase tracking-widest mb-1.5">{group.label}</p>
                             <div className="flex flex-wrap gap-1">{group.items.map((s, i) => <Pill key={i} label={s} />)}</div>
                           </div>
                         ))}

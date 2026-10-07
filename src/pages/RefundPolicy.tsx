@@ -48,7 +48,7 @@ const RefundPolicy = () => (
       <main className="relative z-10 max-w-3xl mx-auto px-6 pt-28 pb-20">
         {/* Page heading */}
         <div className="mb-12">
-          <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-white border border-stone-100 text-[10px] uppercase tracking-widest font-bold text-stone-400 font-['Inter'] mb-5">
+          <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-white border border-stone-100 text-[11px] uppercase tracking-widest font-bold text-stone-400 font-['Inter'] mb-5">
             <span className="w-1.5 h-1.5 rounded-full bg-stone-300 inline-block" />
             Legal
           </div>

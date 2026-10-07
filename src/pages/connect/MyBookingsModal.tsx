@@ -215,7 +215,7 @@ const MyBookingsModal = ({ onClose }: MyBookingsModalProps) => {
                             <span className="text-xs font-medium text-stone-600 font-['Inter']">
                               Message {booking.experts.name.split(' ')[0]}
                             </span>
-                            <span className="ml-auto text-[10px] text-stone-400 font-['Inter']">Send a message →</span>
+                            <span className="ml-auto text-[11px] text-stone-400 font-['Inter']">Send a message →</span>
                           </button>
                         )}
 

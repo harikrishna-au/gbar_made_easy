@@ -151,7 +151,7 @@ const AIInterview = () => {
 
                                 {/* Tips */}
                                 <div className="bg-stone-50 rounded-2xl p-5 text-left space-y-3 border border-stone-100">
-                                    <p className="text-[10px] font-bold text-stone-400 uppercase tracking-widest">Quick tips</p>
+                                    <p className="text-[11px] font-bold text-stone-400 uppercase tracking-widest">Quick tips</p>
                                     {[
                                         interviewType === "hr" ? "Use the STAR method for behavioral answers" : "Think aloud — explain your reasoning",
                                         "Speak clearly; the mic transcribes your voice",

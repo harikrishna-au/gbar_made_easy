@@ -106,7 +106,7 @@ export const LandingDesktop = ({
               <div className="flex-1 min-w-0">
                 <span className="flex items-center gap-2">
                   <span className="font-['Inter'] text-[14px] font-bold text-stone-900 leading-tight">{label}</span>
-                  <span className="text-[9px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded-full bg-stone-100 text-stone-600">Live</span>
+                  <span className="text-[11px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded-full bg-stone-100 text-stone-600">Live</span>
                 </span>
                 <span className="font-['Inter'] text-[12px] text-stone-500">{sub}</span>
               </div>
@@ -205,7 +205,7 @@ export const LandingDesktop = ({
                           <Icon className="w-3.5 h-3.5" />
                           {v === "sign-up" ? "Sign Up" : "Sign In"}
                         </span>
-                        <span className="text-[10px] font-medium opacity-75">
+                        <span className="text-[11px] font-medium opacity-75">
                           {v === "sign-up" ? "New here — it's free" : "I have an account"}
                         </span>
                       </button>

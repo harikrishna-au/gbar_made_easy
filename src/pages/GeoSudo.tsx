@@ -246,7 +246,7 @@ export default function GeoSudo() {
         <div className="mb-5">
           <div className="flex items-center gap-2 mb-0.5">
             <h1 className="text-2xl font-serif text-stone-800">Geo-Sudo</h1>
-            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full font-['Inter']"
+            <span className="text-[11px] font-bold px-2 py-0.5 rounded-full font-['Inter']"
               style={{
                 background: puzzle.difficulty === 'Hard' ? 'rgba(239,68,68,0.1)' : puzzle.difficulty === 'Medium' ? 'rgba(245,158,11,0.1)' : 'rgba(5,150,105,0.1)',
                 color: puzzle.difficulty === 'Hard' ? '#ef4444' : puzzle.difficulty === 'Medium' ? '#d97706' : '#059669',
@@ -260,10 +260,10 @@ export default function GeoSudo() {
         </div>
 
         {showTip && (
-          <div className="flex items-start gap-2 bg-violet-50 border border-violet-100 rounded-xl px-3 py-2.5 mb-4 text-violet-600 text-xs font-['Inter']">
+          <div className="flex items-start gap-2 bg-stone-50 border border-stone-100 rounded-xl px-3 py-2.5 mb-4 text-stone-900 text-xs font-['Inter']">
             <Info className="w-3.5 h-3.5 mt-0.5 shrink-0" />
             <span>Tap a blank cell, then pick a shape below. Gray cells are fixed.</span>
-            <button onClick={() => setShowTip(false)} className="ml-auto text-violet-400 hover:text-violet-600">✕</button>
+            <button onClick={() => setShowTip(false)} className="ml-auto text-stone-400 hover:text-stone-900">✕</button>
           </div>
         )}
 

@@ -5,40 +5,21 @@ import { MessageSquare, Coffee, Youtube, Linkedin, Mail, Heart, Building2, Arrow
 interface DashboardFooterProps {
     onFeedbackClick: () => void;
     onSupportClick: () => void;
-    onMouseEnter: () => void;
-    onMouseLeave: () => void;
 }
 
-export const DashboardFooter = ({ onFeedbackClick, onSupportClick, onMouseEnter, onMouseLeave }: DashboardFooterProps) => {
+export const DashboardFooter = ({ onFeedbackClick, onSupportClick, }: DashboardFooterProps) => {
     const navigate = useNavigate();
 
     return (
         <div
             className="w-full bg-[#fcfcf9] relative overflow-hidden"
-            onMouseEnter={onMouseEnter}
-            onMouseLeave={onMouseLeave}
         >
-            {/* Subtle ambient orbs in the background */}
-            <div
-                className="absolute top-0 left-1/4 w-96 h-96 rounded-full pointer-events-none"
-                style={{
-                    background: "radial-gradient(circle, rgba(124,58,237,0.04) 0%, transparent 70%)",
-                    transform: "translate(-50%, -50%)",
-                }}
-            />
-            <div
-                className="absolute bottom-0 right-1/4 w-80 h-80 rounded-full pointer-events-none"
-                style={{
-                    background: "radial-gradient(circle, rgba(217,119,6,0.04) 0%, transparent 70%)",
-                    transform: "translate(50%, 50%)",
-                }}
-            />
 
             <div className="relative z-10 max-w-5xl mx-auto px-6 py-24 flex flex-col items-center gap-10">
 
                 {/* Section badge */}
-                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-stone-100 text-stone-500 text-[10.5px] font-semibold tracking-[0.2em] uppercase font-['Inter']">
-                    <Heart className="w-3 h-3 text-rose-400 fill-rose-400 animate-pulse" />
+                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-stone-100 text-stone-500 text-[11px] font-semibold tracking-[0.2em] uppercase font-['Inter']">
+                    <Heart className="w-3 h-3 text-stone-400 fill-stone-400" />
                     Made with love
                 </div>
 
@@ -133,7 +114,7 @@ export const DashboardFooter = ({ onFeedbackClick, onSupportClick, onMouseEnter,
                             href="https://www.linkedin.com/in/hari-krishna-nallana-33949b277/"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center gap-2 px-4 py-2.5 bg-white border border-stone-200 rounded-xl text-stone-500 hover:text-blue-600 hover:border-blue-200 hover:bg-blue-50 transition-all duration-300 text-[12px] font-semibold font-['Inter']"
+                            className="flex items-center gap-2 px-4 py-2.5 bg-white border border-stone-200 rounded-xl text-stone-500 hover:text-stone-900 hover:border-stone-300 hover:bg-stone-50 transition-all duration-300 text-[12px] font-semibold font-['Inter']"
                         >
                             <Linkedin className="w-3.5 h-3.5" />
                             <span className="hidden sm:inline">LinkedIn</span>

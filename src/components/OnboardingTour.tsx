@@ -127,7 +127,7 @@ export const OnboardingTour = ({ isOpen, onClose, mode = 'journey' }: Onboarding
     if (!step) return null;
 
     return (
-        <div className="fixed inset-0 z-[100] overflow-hidden bg-black/20 backdrop-blur-[2px]">
+        <div role="dialog" aria-modal="true" className="fixed inset-0 z-[100] overflow-hidden bg-black/20 backdrop-blur-[2px]">
             {/* Content Card */}
             <div className="absolute z-20 w-full h-full pointer-events-none flex flex-col items-center justify-center">
                 <div

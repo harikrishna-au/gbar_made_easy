@@ -31,7 +31,7 @@ export const InterviewFeedback = ({ feedback }: InterviewFeedbackProps) => {
         return (
             <PageWrapper>
                 <div className="flex flex-col items-center justify-center min-h-[calc(100vh-100px)] p-6 bg-neutral-50">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mb-4"></div>
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-stone-900 mb-4"></div>
                     <h2 className="text-xl font-semibold text-gray-700">Generating Detailed Feedback...</h2>
                     <p className="text-gray-500">Analysing your answers and speech patterns</p>
                 </div>

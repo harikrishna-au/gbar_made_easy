@@ -73,7 +73,7 @@ const PhotoUploader = ({
           {isPdf ? (
             <div className="w-24 h-24 rounded-2xl bg-stone-100 border border-stone-200 flex flex-col items-center justify-center gap-1">
               <FileText className="w-6 h-6 text-stone-500" />
-              <span className="text-[10px] text-stone-500 font-['Inter']">PDF</span>
+              <span className="text-[11px] text-stone-500 font-['Inter']">PDF</span>
             </div>
           ) : (
             <img

@@ -64,7 +64,7 @@ export function SummaryRound() {
                 showNavigation={false}
             >
                 <div className="flex flex-col items-center justify-center py-12 space-y-4">
-                    <div className="w-16 h-16 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
+                    <div className="w-16 h-16 border-4 border-stone-200 border-t-stone-900 rounded-full animate-spin"></div>
                     <p className="text-neutral-600">Analyzing your vocabulary, grammar, and fluency with AI...</p>
                 </div>
             </RoundLayout>
@@ -89,7 +89,7 @@ export function SummaryRound() {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 py-8 px-4">
+        <div className="min-h-screen bg-gradient-to-br from-stone-50 via-white to-stone-50 py-8 px-4">
             <div className="max-w-4xl mx-auto space-y-8 pb-12">
                 {/* Header */}
                 <div className="text-center space-y-4">
@@ -100,9 +100,9 @@ export function SummaryRound() {
                 {/* Score Cards */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     {[
-                        { label: 'Fluency', score: analysisResult.fluency_score, color: 'bg-blue-50 text-blue-700' },
-                        { label: 'Grammar', score: analysisResult.grammar_score, color: 'bg-indigo-50 text-indigo-700' },
-                        { label: 'Vocabulary', score: analysisResult.vocabulary_score, color: 'bg-purple-50 text-purple-700' },
+                        { label: 'Fluency', score: analysisResult.fluency_score, color: 'bg-stone-50 text-stone-900' },
+                        { label: 'Grammar', score: analysisResult.grammar_score, color: 'bg-stone-50 text-stone-900' },
+                        { label: 'Vocabulary', score: analysisResult.vocabulary_score, color: 'bg-stone-50 text-stone-900' },
                         { label: 'Pronunciation', score: analysisResult.pronunciation_score, color: 'bg-pink-50 text-pink-700' },
                     ].map((item) => (
                         <div key={item.label} className={`p-6 rounded-2xl ${item.color} flex flex-col items-center justify-center space-y-2`}>
@@ -158,7 +158,7 @@ export function SummaryRound() {
                         <div className="grid gap-6">
                             {analysisResult.section_feedback.map((sec: any, idx: number) => (
                                 <div key={idx} className="bg-white p-6 rounded-2xl shadow-sm border border-neutral-100 flex flex-col gap-2">
-                                    <div className="text-sm font-bold text-blue-600 uppercase tracking-widest">
+                                    <div className="text-sm font-bold text-stone-900 uppercase tracking-widest">
                                         {sec.section}
                                     </div>
                                     <p className="text-neutral-700 leading-relaxed">

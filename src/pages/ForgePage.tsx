@@ -503,7 +503,7 @@ export default function ForgePage() {
                           : <Icon className={`w-3.5 h-3.5 ${active ? "text-white" : "text-stone-400 group-hover:text-stone-600"}`} />
                         }
                       </div>
-                      <span className={`text-[10px] font-semibold font-['Inter'] tracking-wide transition-colors ${active ? "text-stone-900" : done ? "text-stone-500" : "text-stone-300 group-hover:text-stone-500"}`}>
+                      <span className={`text-[11px] font-semibold font-['Inter'] tracking-wide transition-colors ${active ? "text-stone-900" : done ? "text-stone-500" : "text-stone-300 group-hover:text-stone-500"}`}>
                         {s.label}
                       </span>
                     </button>
@@ -682,7 +682,7 @@ export default function ForgePage() {
                   ].map((step, i) => (
                     <li key={i} className="flex items-start gap-2.5 text-[11px] font-['Inter'] text-stone-500">
                       <span
-                        className="shrink-0 w-4 h-4 rounded-full flex items-center justify-center text-[9px] font-bold text-white mt-0.5"
+                        className="shrink-0 w-4 h-4 rounded-full flex items-center justify-center text-[11px] font-bold text-white mt-0.5"
                         style={{ background: '#292524' }}
                       >
                         {i + 1}

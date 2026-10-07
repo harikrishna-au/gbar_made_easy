@@ -26,11 +26,11 @@ export function RoundLayout({
     const { currentRoundIndex, nextRound } = useGame();
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 py-8 px-4">
+        <div className="min-h-screen bg-background py-8 px-4">
             <div className="max-w-4xl mx-auto space-y-6">
                 {/* Header */}
                 <div className="text-center space-y-2">
-                    <div className="text-sm font-bold text-blue-600 uppercase tracking-widest">
+                    <div className="text-sm font-bold text-stone-900 uppercase tracking-widest">
                         Round {currentRoundIndex + 1} of 10
                     </div>
                     <h1 className="text-3xl font-extrabold text-neutral-900">{title}</h1>
@@ -47,7 +47,7 @@ export function RoundLayout({
                     {showNavigation && (
                         <Button
                             onClick={onNext}
-                            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700"
+                            className="flex items-center gap-2 bg-stone-900 hover:bg-stone-700"
                         >
                             {isLastRound ? 'Finish' : 'Next Round'}
                             {!isLastRound && <ChevronRight className="w-4 h-4" />}

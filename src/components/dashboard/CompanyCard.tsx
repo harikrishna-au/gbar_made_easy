@@ -59,7 +59,7 @@ export const CompanyCard = ({ name, description, status, onClick, logoColor = "b
                 {isActive ? (
                     <div className="w-2 h-2 rounded-full bg-emerald-500/80"></div>
                 ) : (
-                    <div className="px-2 py-1 rounded bg-stone-100 text-[10px] font-bold tracking-widest text-stone-500 uppercase flex items-center gap-1">
+                    <div className="px-2 py-1 rounded bg-stone-100 text-[11px] font-bold tracking-widest text-stone-500 uppercase flex items-center gap-1">
                         <Sparkles className="w-3 h-3 text-amber-500" />
                         Waitlist Open
                     </div>

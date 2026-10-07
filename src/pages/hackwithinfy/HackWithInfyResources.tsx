@@ -120,7 +120,7 @@ function PreviewModal({ res, onClose }: { res: Resource; onClose: () => void }) 
             {res.title}
           </span>
           <span
-            className="text-[10px] font-bold tracking-wide border px-2 py-0.5 rounded-full font-['Inter']"
+            className="text-[11px] font-bold tracking-wide border px-2 py-0.5 rounded-full font-['Inter']"
             style={{ color: res.color, background: res.bg, borderColor: res.border }}
           >
             {res.tag}
@@ -184,7 +184,7 @@ const HackWithInfyResources = () => {
         {/* Hero */}
         <div className="mb-10">
           <div
-            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[10px] font-semibold tracking-[0.2em] uppercase font-['Inter'] mb-4"
+            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[11px] font-semibold tracking-[0.2em] uppercase font-['Inter'] mb-4"
             style={{ background: INFY_BG, color: INFY_BLUE, border: `1px solid ${INFY_BDR}` }}
           >
             <FileText className="w-3 h-3" />
@@ -257,12 +257,12 @@ const HackWithInfyResources = () => {
                       {res.tag}
                     </span>
                     {res.type === "docx" && (
-                      <span className="px-2 py-0.5 rounded-full text-[9px] font-semibold border border-stone-200 text-stone-400 font-['Inter']">
+                      <span className="px-2 py-0.5 rounded-full text-[11px] font-semibold border border-stone-200 text-stone-400 font-['Inter']">
                         DOCX
                       </span>
                     )}
                     {res.type === "zip" && (
-                      <span className="px-2 py-0.5 rounded-full text-[9px] font-semibold border border-stone-200 text-stone-400 font-['Inter']">
+                      <span className="px-2 py-0.5 rounded-full text-[11px] font-semibold border border-stone-200 text-stone-400 font-['Inter']">
                         ZIP
                       </span>
                     )}

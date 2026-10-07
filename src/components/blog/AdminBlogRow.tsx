@@ -188,12 +188,12 @@ function BlogPreviewDrawer({ blog, onClose }: { blog: Blog; onClose: () => void 
         >
           <div className="flex items-center gap-2">
             <span
-              className="px-2 py-0.5 rounded-full text-[9px] font-bold font-['Inter'] uppercase tracking-widest border"
+              className="px-2 py-0.5 rounded-full text-[11px] font-bold font-['Inter'] uppercase tracking-widest border"
               style={{ background: '#fdf8f0', color: '#8a6a3a', borderColor: '#e8d5b0' }}
             >
               Admin Preview
             </span>
-            <span className={`inline-flex items-center px-2 py-0.5 rounded-full border text-[10px] font-bold font-['Inter'] uppercase tracking-widest ${STATUS_PILL[blog.status]}`}>
+            <span className={`inline-flex items-center px-2 py-0.5 rounded-full border text-[11px] font-bold font-['Inter'] uppercase tracking-widest ${STATUS_PILL[blog.status]}`}>
               {blog.status}
             </span>
           </div>
@@ -215,7 +215,7 @@ function BlogPreviewDrawer({ blog, onClose }: { blog: Blog; onClose: () => void 
             {blog.tags?.map(t => (
               <span
                 key={t}
-                className="px-2.5 py-0.5 bg-white border border-stone-200 rounded-full text-[10px] font-medium font-['Inter'] text-stone-500"
+                className="px-2.5 py-0.5 bg-white border border-stone-200 rounded-full text-[11px] font-medium font-['Inter'] text-stone-500"
               >
                 #{t}
               </span>
@@ -373,7 +373,7 @@ export function AdminBlogRow({ blog, onApprove, onReject, onDelete }: AdminBlogR
               <h3 className="font-['Merriweather'] font-bold text-stone-800 text-[0.93rem] leading-snug">
                 {blog.title}
               </h3>
-              <span className={`inline-flex items-center px-2 py-0.5 rounded-full border text-[10px] font-bold font-['Inter'] uppercase tracking-widest ${STATUS_PILL[blog.status]}`}>
+              <span className={`inline-flex items-center px-2 py-0.5 rounded-full border text-[11px] font-bold font-['Inter'] uppercase tracking-widest ${STATUS_PILL[blog.status]}`}>
                 {blog.status}
               </span>
             </div>
@@ -481,7 +481,7 @@ export function AdminBlogRow({ blog, onApprove, onReject, onDelete }: AdminBlogR
             {blog.tags?.length > 0 && (
               <div className="flex gap-1.5 flex-wrap mb-3">
                 {blog.tags.map(t => (
-                  <span key={t} className="px-2 py-0.5 bg-stone-100 border border-stone-200 rounded-full text-[10px] font-['Inter'] text-stone-500">#{t}</span>
+                  <span key={t} className="px-2 py-0.5 bg-stone-100 border border-stone-200 rounded-full text-[11px] font-['Inter'] text-stone-500">#{t}</span>
                 ))}
               </div>
             )}

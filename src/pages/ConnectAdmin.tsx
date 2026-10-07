@@ -353,7 +353,7 @@ export default function ConnectAdmin({ embedded = false }: { embedded?: boolean 
           <div className="w-12 h-12 rounded-2xl bg-stone-900 text-white flex items-center justify-center mb-6">
             <LockKeyhole className="w-5 h-5" />
           </div>
-          <p className="text-[10px] uppercase tracking-[0.2em] text-stone-400 font-semibold">Connect Operations</p>
+          <p className="text-[11px] uppercase tracking-[0.2em] text-stone-400 font-semibold">Connect Operations</p>
           <h1 className="font-['Merriweather'] text-2xl text-stone-900 mt-2">Super-admin access</h1>
           <p className="text-sm text-stone-500 mt-2 mb-6">Control bookings, meeting links, and communication from one place.</p>
           <label className="text-xs font-semibold text-stone-600">Admin password</label>
@@ -391,7 +391,7 @@ export default function ConnectAdmin({ embedded = false }: { embedded?: boolean 
             <div>
               <div className="flex items-center gap-2">
                 <h1 className="font-['Merriweather'] text-lg">Connect Command Center</h1>
-                <span className="text-[9px] uppercase tracking-widest px-2 py-0.5 bg-stone-900 text-white rounded-full">V1</span>
+                <span className="text-[11px] uppercase tracking-widest px-2 py-0.5 bg-stone-900 text-white rounded-full">V1</span>
               </div>
               <p className="text-[11px] text-stone-400">Manual operations · one source of truth</p>
             </div>
@@ -412,7 +412,7 @@ export default function ConnectAdmin({ embedded = false }: { embedded?: boolean 
           <div className="mb-6">
             <div className="flex items-center gap-2">
               <h1 className="font-['Merriweather'] text-2xl text-stone-900">Connect Operations</h1>
-              <span className="text-[9px] uppercase tracking-widest px-2 py-0.5 bg-stone-900 text-white rounded-full">V1</span>
+              <span className="text-[11px] uppercase tracking-widest px-2 py-0.5 bg-stone-900 text-white rounded-full">V1</span>
             </div>
             <p className="text-sm text-stone-400 mt-1">Review bookings, arrange calls, and send meeting details from one queue.</p>
           </div>
@@ -491,10 +491,10 @@ export default function ConnectAdmin({ embedded = false }: { embedded?: boolean 
                           <div className="flex items-center gap-2 min-w-0">
                             <p className="font-semibold text-sm truncate">{booking.user_name || "Unnamed student"}</p>
                             {booking.priority !== "normal" && (
-                              <span className="text-[9px] uppercase font-bold text-red-600">{booking.priority}</span>
+                              <span className="text-[11px] uppercase font-bold text-red-600">{booking.priority}</span>
                             )}
                           </div>
-                          <span className={`px-2 py-0.5 rounded-full border text-[10px] font-semibold capitalize ${statusStyle[booking.status] ?? statusStyle.cancelled}`}>
+                          <span className={`px-2 py-0.5 rounded-full border text-[11px] font-semibold capitalize ${statusStyle[booking.status] ?? statusStyle.cancelled}`}>
                             {booking.status === "paid" ? "Needs review" : booking.status.replace("_", " ")}
                           </span>
                         </div>
@@ -580,7 +580,7 @@ function BookingWorkspace({
     <div className="bg-white border border-stone-200 rounded-2xl overflow-hidden">
       <div className="p-4 border-b border-stone-100 flex items-start justify-between">
         <div>
-          <p className="text-[10px] uppercase tracking-wider text-stone-400">Booking workspace</p>
+          <p className="text-[11px] uppercase tracking-wider text-stone-400">Booking workspace</p>
           <h2 className="font-['Merriweather'] text-lg mt-1">{booking.user_name}</h2>
           <p className="text-xs text-stone-400 mt-0.5">Created {format(parseISO(booking.created_at), "MMM d, h:mm a")}</p>
         </div>
@@ -636,7 +636,7 @@ function BookingWorkspace({
                 Save
               </button>
             </div>
-            <p className="text-[10px] text-red-600 mt-1.5">Required before details can be sent to both sides.</p>
+            <p className="text-[11px] text-red-600 mt-1.5">Required before details can be sent to both sides.</p>
           </div>
         )}
 
@@ -649,18 +649,18 @@ function BookingWorkspace({
 
         <div className="grid grid-cols-2 gap-2">
           <div className="rounded-xl border border-stone-200 p-3">
-            <p className="text-[9px] uppercase tracking-wider text-stone-400">Payment</p>
+            <p className="text-[11px] uppercase tracking-wider text-stone-400">Payment</p>
             <p className="text-sm font-semibold mt-1">
               {booking.payment_amount != null ? `₹${booking.payment_amount.toLocaleString("en-IN")}` : "Legacy booking"}
             </p>
-            <p className="text-[10px] text-stone-400 mt-1">
+            <p className="text-[11px] text-stone-400 mt-1">
               {booking.payment_verified_at ? `Verified ${format(parseISO(booking.payment_verified_at), "MMM d, h:mm a")}` : booking.status.replace("_", " ")}
             </p>
           </div>
           <div className="rounded-xl border border-stone-200 p-3">
-            <p className="text-[9px] uppercase tracking-wider text-stone-400">Session fee</p>
+            <p className="text-[11px] uppercase tracking-wider text-stone-400">Session fee</p>
             <p className="text-sm font-semibold mt-1">₹{booking.experts?.price_inr?.toLocaleString("en-IN") ?? "—"}</p>
-            <p className="text-[10px] text-stone-400 mt-1">Expert listed price</p>
+            <p className="text-[11px] text-stone-400 mt-1">Expert listed price</p>
           </div>
         </div>
 
@@ -794,7 +794,7 @@ function BookingWorkspace({
           >
             Save reconciliation
           </button>
-          <p className="text-[10px] text-stone-400 mt-1.5">Save notes here, or issue the refund through Razorpay below.</p>
+          <p className="text-[11px] text-stone-400 mt-1.5">Save notes here, or issue the refund through Razorpay below.</p>
           <button
             disabled={saving || !booking.razorpay_payment_id || ["refunded", "payment_pending", "payment_failed", "payment_expired"].includes(booking.status)}
             onClick={() => {
@@ -861,7 +861,7 @@ function BookingWorkspace({
                               ? "Razorpay refund issued"
                               : "Booking updated"}
                   </p>
-                  <p className="text-[10px] text-stone-400">
+                  <p className="text-[11px] text-stone-400">
                     {format(parseISO(event.created_at), "MMM d, h:mm a")}
                     {event.from_status !== event.to_status && event.to_status
                       ? ` · ${event.from_status ?? "new"} → ${event.to_status}`
@@ -878,7 +878,7 @@ function BookingWorkspace({
 }
 
 function Label({ children }: { children: React.ReactNode }) {
-  return <p className="text-[10px] uppercase tracking-wider text-stone-400 font-semibold">{children}</p>;
+  return <p className="text-[11px] uppercase tracking-wider text-stone-400 font-semibold">{children}</p>;
 }
 
 function ContactCard({
@@ -894,14 +894,14 @@ function ContactCard({
 }) {
   return (
     <div className="rounded-xl border border-stone-200 p-3 min-w-0">
-      <p className="text-[9px] uppercase tracking-wider text-stone-400">{label}</p>
+      <p className="text-[11px] uppercase tracking-wider text-stone-400">{label}</p>
       <p className="text-xs font-semibold mt-1 truncate">{name}</p>
       {email ? (
-        <button onClick={() => onCopy(email, `${label} email`)} className="mt-1 text-[10px] text-stone-500 flex items-center gap-1 max-w-full">
+        <button onClick={() => onCopy(email, `${label} email`)} className="mt-1 text-[11px] text-stone-500 flex items-center gap-1 max-w-full">
           <Mail className="w-3 h-3 flex-shrink-0" /><span className="truncate">{email}</span>
         </button>
       ) : (
-        <p className="mt-1 text-[10px] text-red-500">Email missing</p>
+        <p className="mt-1 text-[11px] text-red-500">Email missing</p>
       )}
     </div>
   );

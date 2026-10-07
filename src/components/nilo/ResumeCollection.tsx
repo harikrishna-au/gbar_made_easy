@@ -86,7 +86,7 @@ export const ResumeCollection = ({
                 {/* Header */}
                 <div className="text-center space-y-3">
                     <span
-                        className="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-bold tracking-[0.18em] uppercase font-['Inter'] border"
+                        className="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-bold tracking-[0.18em] uppercase font-['Inter'] border"
                         style={{ color: style.color, background: style.bg, borderColor: style.border }}
                     >
                         {style.label}
@@ -109,7 +109,7 @@ export const ResumeCollection = ({
                     className={cn(
                         "relative border-2 border-dashed rounded-xl flex flex-col items-center justify-center gap-3 cursor-pointer transition-all p-6",
                         isDragging
-                            ? "border-blue-400 bg-blue-50 scale-[1.01]"
+                            ? "border-stone-400 bg-stone-50 scale-[1.01]"
                             : "border-gray-200 bg-gray-50 hover:bg-gray-100 hover:border-gray-300"
                     )}
                     style={isDragging ? { borderColor: style.color, background: style.bg } : {}}
@@ -178,9 +178,9 @@ export const ResumeCollection = ({
                         value={resumeText}
                         onChange={e => setResumeText(e.target.value.slice(0, 5000))}
                         placeholder="Your resume text will appear here after upload, or paste it directly…"
-                        className="w-full h-52 p-4 rounded-xl border border-gray-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 resize-none text-sm font-mono leading-relaxed bg-gray-50/50 transition-all"
+                        className="w-full h-52 p-4 rounded-xl border border-gray-200 focus:border-stone-400 focus:ring-2 focus:ring-stone-100 resize-none text-sm font-mono leading-relaxed bg-gray-50/50 transition-all"
                     />
-                    <div className="absolute bottom-3 right-3 text-[10px] font-medium text-gray-400 bg-white px-1.5 py-0.5 rounded border border-gray-100 shadow-sm">
+                    <div className="absolute bottom-3 right-3 text-[11px] font-medium text-gray-400 bg-white px-1.5 py-0.5 rounded border border-gray-100 shadow-sm">
                         {resumeText.length}/5000
                     </div>
                 </div>
