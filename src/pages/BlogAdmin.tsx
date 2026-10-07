@@ -386,7 +386,7 @@ function BlogSection() {
             }`}>
             {t.label}
             {t.key === 'pending' && counts.pending > 0 && (
-              <span className="ml-1.5 px-1.5 py-0.5 text-white text-[10px] font-bold rounded-full" style={{ background: '#8a6a3a' }}>
+              <span className="ml-1.5 px-1.5 py-0.5 text-white text-[11px] font-bold rounded-full" style={{ background: '#8a6a3a' }}>
                 {counts.pending}
               </span>
             )}
@@ -770,7 +770,7 @@ function AdminDashboard() {
             </div>
             <div className="flex items-center gap-2">
               <span className="font-['Merriweather'] font-bold text-stone-800 text-[0.95rem]">Admin</span>
-              <span className="px-2 py-0.5 rounded-full text-[9px] font-bold font-['Inter'] uppercase tracking-widest border"
+              <span className="px-2 py-0.5 rounded-full text-[11px] font-bold font-['Inter'] uppercase tracking-widest border"
                 style={{ background: '#fdf8f0', color: '#8a6a3a', borderColor: '#e8d5b0' }}>
                 Harry The Blaze
               </span>

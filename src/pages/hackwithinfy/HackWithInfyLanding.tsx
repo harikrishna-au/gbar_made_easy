@@ -108,7 +108,7 @@ const HackWithInfyLanding = () => {
           {/* Left copy */}
           <div className="flex-1">
             <div
-              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[10px] font-semibold tracking-[0.2em] uppercase font-['Inter'] mb-5"
+              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[11px] font-semibold tracking-[0.2em] uppercase font-['Inter'] mb-5"
               style={{ background: INFY_BG, color: INFY_BLUE, border: `1px solid ${INFY_BDR}` }}
             >
               <Trophy className="w-3 h-3" />
@@ -163,7 +163,7 @@ const HackWithInfyLanding = () => {
           >
             {/* Selected badge */}
             <div
-              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[9px] font-bold tracking-widest uppercase font-['Inter'] mb-3"
+              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold tracking-widest uppercase font-['Inter'] mb-3"
               style={{ background: GOLD_BG, color: GOLD, border: `1px solid ${GOLD_BDR}` }}
             >
               <BadgeCheck className="w-2.5 h-2.5" /> Selected
@@ -199,7 +199,7 @@ const HackWithInfyLanding = () => {
               SP Role · ₹11 LPA
             </div>
             <div
-              className="text-[10.5px] font-['Inter'] text-stone-400 mb-3 leading-relaxed"
+              className="text-[11px] font-['Inter'] text-stone-400 mb-3 leading-relaxed"
             >
               Infosys Specialist<br />Programmer
             </div>
@@ -207,7 +207,7 @@ const HackWithInfyLanding = () => {
               href="https://www.linkedin.com/in/hari-krishna-nallana-33949b277/"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[10.5px] font-semibold font-['Inter'] transition-all hover:opacity-80 w-full justify-center"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[11px] font-semibold font-['Inter'] transition-all hover:opacity-80 w-full justify-center"
               style={{ background: "#ffffff", color: GOLD, border: `1px solid ${GOLD_BDR}` }}
               onClick={(e) => e.stopPropagation()}
             >
@@ -279,7 +279,7 @@ const HackWithInfyLanding = () => {
             <div>
               <div className="flex items-center gap-2 mb-1">
                 <h3 className="text-[15px] font-bold font-['Inter'] text-stone-800">AI Mock Interview — Infosys Mode</h3>
-                <span className="px-2 py-0.5 rounded-full text-[9px] font-bold tracking-wide border font-['Inter']" style={{ color: INFY_BLUE, background: INFY_BG, borderColor: INFY_BDR }}>
+                <span className="px-2 py-0.5 rounded-full text-[11px] font-bold tracking-wide border font-['Inter']" style={{ color: INFY_BLUE, background: INFY_BG, borderColor: INFY_BDR }}>
                   AVAILABLE
                 </span>
               </div>
@@ -337,7 +337,7 @@ const HackWithInfyLanding = () => {
                 <div className="absolute inset-0 pointer-events-none" style={{ background: `radial-gradient(ellipse 90% 60% at 10% 0%, ${r.bg} 0%, transparent 70%)` }} />
                 <div className="absolute bottom-0 left-0 right-0 h-[1.5px] opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ background: `linear-gradient(90deg, ${r.color}, transparent 70%)` }} />
                 <div className="relative z-10">
-                  <div className="text-[9px] font-bold tracking-[0.38em] uppercase font-['Inter'] mb-1" style={{ color: r.color }}>{r.num}</div>
+                  <div className="text-[11px] font-bold tracking-[0.38em] uppercase font-['Inter'] mb-1" style={{ color: r.color }}>{r.num}</div>
                   <h3 className="text-[13.5px] font-bold font-['Inter'] text-stone-800 mb-2 leading-tight">{r.title}</h3>
                   <p className="text-stone-500 text-[12px] leading-relaxed font-['Inter'] mb-3">{r.desc}</p>
                   <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[9.5px] font-semibold tracking-wide border font-['Inter']" style={{ color: r.color, background: r.bg, borderColor: r.border }}>

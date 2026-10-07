@@ -14,7 +14,7 @@ export function P2Layout({ title, description, children, accent = '#7c3aed' }: P
     const totalDisplay = P2_TOTAL_ROUNDS - 1; // exclude summary from "X of Y"
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 py-8 px-4">
+        <div className="min-h-screen bg-background py-8 px-4">
             <div className="max-w-3xl mx-auto space-y-6">
                 {/* Header */}
                 <div className="text-center space-y-2">

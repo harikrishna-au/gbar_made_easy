@@ -85,7 +85,7 @@ const AIInterviewSelection = () => {
 
         {/* Hero */}
         <div className="mb-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-stone-100 text-stone-500 text-[10px] font-semibold tracking-[0.2em] uppercase font-['Inter'] mb-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-stone-100 text-stone-500 text-[11px] font-semibold tracking-[0.2em] uppercase font-['Inter'] mb-4">
             <span className="relative flex h-1.5 w-1.5">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
               <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500" />
@@ -141,7 +141,7 @@ const AIInterviewSelection = () => {
                 {/* Header */}
                 <div>
                   <div
-                    className="text-[9px] font-bold tracking-[0.38em] uppercase font-['Inter'] mb-2.5"
+                    className="text-[11px] font-bold tracking-[0.38em] uppercase font-['Inter'] mb-2.5"
                     style={{ color: item.color }}
                   >
                     {item.num}
@@ -221,14 +221,14 @@ const AIInterviewSelection = () => {
             >
               <div className="flex items-start justify-between">
                 <div>
-                  <div className="text-[9px] font-bold tracking-[0.38em] uppercase font-['Inter'] mb-2 text-stone-300">
+                  <div className="text-[11px] font-bold tracking-[0.38em] uppercase font-['Inter'] mb-2 text-stone-300">
                     {item.num}
                   </div>
                   <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-stone-100 border border-stone-200">
                     <item.Icon className="w-5 h-5 text-stone-300" />
                   </div>
                 </div>
-                <div className="px-2.5 py-0.5 rounded-full text-[9px] font-bold tracking-wider border border-stone-200 text-stone-300 font-['Inter']">
+                <div className="px-2.5 py-0.5 rounded-full text-[11px] font-bold tracking-wider border border-stone-200 text-stone-300 font-['Inter']">
                   Coming Soon
                 </div>
               </div>

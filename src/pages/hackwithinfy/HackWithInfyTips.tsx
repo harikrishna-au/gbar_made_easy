@@ -212,7 +212,7 @@ const HackWithInfyTips = () => {
         {/* Hero */}
         <div className="mb-10">
           <div
-            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[10px] font-semibold tracking-[0.2em] uppercase font-['Inter'] mb-4"
+            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[11px] font-semibold tracking-[0.2em] uppercase font-['Inter'] mb-4"
             style={{ background: INFY_BG, color: INFY_BLUE, border: `1px solid ${INFY_BDR}` }}
           >
             <Zap className="w-3 h-3" />
@@ -244,7 +244,7 @@ const HackWithInfyTips = () => {
         <div className="mb-10">
           <div className="flex items-center gap-3 mb-4">
             <div
-              className="flex items-center gap-2 px-3 py-1.5 rounded-full text-[10px] font-semibold tracking-[0.15em] uppercase font-['Inter']"
+              className="flex items-center gap-2 px-3 py-1.5 rounded-full text-[11px] font-semibold tracking-[0.15em] uppercase font-['Inter']"
               style={{ background: INFY_BG, color: INFY_BLUE, border: `1px solid ${INFY_BDR}` }}
             >
               <Clock className="w-3 h-3" />
@@ -262,7 +262,7 @@ const HackWithInfyTips = () => {
         <div className="mb-10">
           <div className="flex items-center gap-3 mb-4">
             <div
-              className="flex items-center gap-2 px-3 py-1.5 rounded-full text-[10px] font-semibold tracking-[0.15em] uppercase font-['Inter']"
+              className="flex items-center gap-2 px-3 py-1.5 rounded-full text-[11px] font-semibold tracking-[0.15em] uppercase font-['Inter']"
               style={{ background: INFY_BG, color: INFY_BLUE, border: `1px solid ${INFY_BDR}` }}
             >
               <Clock className="w-3 h-3" />
@@ -280,7 +280,7 @@ const HackWithInfyTips = () => {
         <div>
           <div className="flex items-center gap-3 mb-4">
             <div
-              className="flex items-center gap-2 px-3 py-1.5 rounded-full text-[10px] font-semibold tracking-[0.15em] uppercase font-['Inter']"
+              className="flex items-center gap-2 px-3 py-1.5 rounded-full text-[11px] font-semibold tracking-[0.15em] uppercase font-['Inter']"
               style={{ background: INFY_BG, color: INFY_BLUE, border: `1px solid ${INFY_BDR}` }}
             >
               <Zap className="w-3 h-3" />

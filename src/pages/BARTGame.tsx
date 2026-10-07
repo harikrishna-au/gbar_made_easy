@@ -150,7 +150,7 @@ export default function BARTGame() {
             ].map(([val, label]) => (
               <div key={String(label)} className="rounded-2xl py-4 px-3 col-span-1" style={{ background: '#fff', border: '1.5px solid rgba(0,0,0,0.07)', boxShadow: '0 2px 10px rgba(0,0,0,0.04)' }}>
                 <div className="text-xl font-bold text-stone-800 font-['Inter']">{val}</div>
-                <div className="text-[10px] text-stone-400 font-['Inter'] mt-0.5">{label}</div>
+                <div className="text-[11px] text-stone-400 font-['Inter'] mt-0.5">{label}</div>
               </div>
             ))}
           </div>
@@ -162,7 +162,7 @@ export default function BARTGame() {
             ].map(([val, label]) => (
               <div key={String(label)} className="rounded-2xl py-3 px-2" style={{ background: '#fff', border: '1.5px solid rgba(0,0,0,0.07)' }}>
                 <div className="text-lg font-bold text-stone-800 font-['Inter']">{val}</div>
-                <div className="text-[9px] text-stone-400 font-['Inter'] mt-0.5">{label}</div>
+                <div className="text-[11px] text-stone-400 font-['Inter'] mt-0.5">{label}</div>
               </div>
             ))}
           </div>
@@ -275,14 +275,14 @@ export default function BARTGame() {
           ].map(([val, label]) => (
             <div key={String(label)} className="rounded-xl py-2.5 text-center" style={{ background: '#fff', border: '1.5px solid rgba(0,0,0,0.07)' }}>
               <div className="text-lg font-bold font-['Inter'] text-stone-800">{val}</div>
-              <div className="text-[9px] text-stone-400 font-['Inter']">{label}</div>
+              <div className="text-[11px] text-stone-400 font-['Inter']">{label}</div>
             </div>
           ))}
         </div>
 
         {/* Danger bar */}
         <div className="mb-5">
-          <div className="flex justify-between text-[10px] text-stone-400 font-['Inter'] mb-1">
+          <div className="flex justify-between text-[11px] text-stone-400 font-['Inter'] mb-1">
             <span>Safe</span>
             <span>Danger</span>
           </div>

@@ -88,6 +88,7 @@ const Header = ({ onStartTour }: HeaderProps) => {
           {/* Blog nav link */}
           <Link
             to="/blog"
+            aria-label="Blog"
             className="flex items-center gap-1.5 px-3.5 py-2 text-stone-500 hover:text-stone-800 hover:bg-stone-100 rounded-xl font-medium transition-all duration-200 text-[13px] font-['Inter']"
           >
             <BookOpen className="w-4 h-4" />
@@ -115,15 +116,16 @@ const Header = ({ onStartTour }: HeaderProps) => {
                   navigate('/dashboard');
                 }
               }}
-              className="flex items-center gap-1.5 px-3.5 py-2 text-rose-600/80 hover:text-rose-700 hover:bg-rose-50 rounded-xl font-medium transition-all duration-200 text-[13px] font-['Inter']"
+              className="flex items-center gap-1.5 px-3.5 py-2 text-stone-500 hover:text-stone-800 hover:bg-stone-100 rounded-xl font-medium transition-all duration-200 text-[13px] font-['Inter']"
             >
-              <LogOut className="w-4 h-4" />
+              <LogOut className="w-4 h-4" aria-hidden="true" />
               <span className="hidden sm:inline">Exit</span>
             </button>
           )}
 
           <button
             onClick={toggleFullscreen}
+            aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
             className="hidden sm:flex p-2 text-stone-400 hover:text-stone-700 hover:bg-stone-100 rounded-xl transition-all duration-200"
             title={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
           >
@@ -156,16 +158,9 @@ const Header = ({ onStartTour }: HeaderProps) => {
 {!premiumLoading && (
               isPremium ? (
                 /* ── Premium badge ── */
-                <div
-                  className="flex items-center gap-2 px-3.5 py-2 rounded-xl"
-                  style={{
-                    background: "linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)",
-                    border: "1px solid #f59e0b",
-                    boxShadow: "0 2px 10px rgba(245,158,11,0.25), inset 0 1px 0 rgba(255,255,255,0.5)",
-                  }}
-                >
-                  <Sparkles className="w-4 h-4 text-amber-600 flex-shrink-0" />
-                  <span className="text-[13px] font-bold font-['Inter'] text-amber-800 hidden sm:inline tracking-wide">
+                <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-stone-900 text-white">
+                  <Sparkles className="w-4 h-4 flex-shrink-0" />
+                  <span className="text-[13px] font-bold font-['Inter'] hidden sm:inline tracking-wide">
                     PREMIUM
                   </span>
                 </div>
@@ -173,26 +168,16 @@ const Header = ({ onStartTour }: HeaderProps) => {
                 /* ── Get Premium CTA ── */
                 <button
                   onClick={() => setShowPayment(true)}
-                  className="flex items-center gap-2 px-4 py-2 rounded-xl font-bold text-[13px] font-['Inter'] text-white transition-all duration-200 hover:scale-105 active:scale-95"
-                  style={{
-                    background: "linear-gradient(135deg, #1c1c1e 0%, #44403c 60%, #a16207 100%)",
-                    boxShadow: "0 3px 12px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.1)",
-                  }}
+                  className="flex items-center gap-2 px-4 py-2 rounded-xl font-bold text-[13px] font-['Inter'] text-white bg-stone-900 hover:bg-stone-700 transition-all duration-200 active:scale-95"
                 >
-                  <Sparkles className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />
+                  <Sparkles className="w-3.5 h-3.5 flex-shrink-0" />
                   <span className="hidden sm:inline">Get Premium</span>
-                  <span className="sm:hidden">Pro</span>
+                  <span className="sm:hidden">Premium</span>
                 </button>
               )
             )}
             {/* ── Avatar with golden ring for premium users ── */}
-            <div
-              className="ml-1.5 rounded-full p-[2px] transition-all duration-300"
-              style={isPremium && !premiumLoading ? {
-                background: "linear-gradient(135deg, #f59e0b, #fcd34d, #f59e0b)",
-                boxShadow: "0 0 10px rgba(245,158,11,0.5)",
-              } : {}}
-            >
+            <div className={`ml-1.5 rounded-full p-[2px] ${isPremium && !premiumLoading ? "ring-2 ring-stone-900" : ""}`}>
               <div className={isPremium && !premiumLoading ? "rounded-full overflow-hidden" : ""}>
                 <UserButton afterSignOutUrl="/" />
               </div>

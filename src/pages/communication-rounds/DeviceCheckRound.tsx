@@ -47,10 +47,10 @@ export function DeviceCheckRound() {
                 {/* Speaker Test */}
                 {step === 'speaker' && (
                     <div className="space-y-6">
-                        <div className="bg-blue-50 p-6 rounded-xl border-2 border-blue-200">
+                        <div className="bg-stone-50 p-6 rounded-xl border-2 border-stone-200">
                             <div className="flex items-center gap-3 mb-4">
-                                <Volume2 className="w-8 h-8 text-blue-600" />
-                                <h3 className="text-xl font-bold text-blue-900">Step 1: Speaker Test</h3>
+                                <Volume2 className="w-8 h-8 text-stone-900" />
+                                <h3 className="text-xl font-bold text-stone-900">Step 1: Speaker Test</h3>
                             </div>
                             <p className="text-neutral-700 mb-4">
                                 Click the "Play Audio" button below. If you can hear the audio clearly, click "I Can Hear It".
@@ -82,15 +82,15 @@ export function DeviceCheckRound() {
                 {/* Microphone Test */}
                 {step === 'microphone' && (
                     <div className="space-y-6">
-                        <div className="bg-purple-50 p-6 rounded-xl border-2 border-purple-200">
+                        <div className="bg-stone-50 p-6 rounded-xl border-2 border-stone-200">
                             <div className="flex items-center gap-3 mb-4">
-                                <Mic className="w-8 h-8 text-purple-600" />
-                                <h3 className="text-xl font-bold text-purple-900">Step 2: Microphone Test</h3>
+                                <Mic className="w-8 h-8 text-stone-900" />
+                                <h3 className="text-xl font-bold text-stone-900">Step 2: Microphone Test</h3>
                             </div>
                             <p className="text-neutral-700 mb-2">
                                 Click "Start Recording" and say the following sentence:
                             </p>
-                            <p className="text-lg font-semibold text-purple-900 italic">
+                            <p className="text-lg font-semibold text-stone-900 italic">
                                 "Testing my microphone for the communication assessment."
                             </p>
                         </div>
@@ -108,7 +108,7 @@ export function DeviceCheckRound() {
                                 size="lg"
                                 className={`w-56 h-16 text-lg ${isRecording
                                     ? 'bg-red-600 hover:bg-red-700'
-                                    : 'bg-purple-600 hover:bg-purple-700'
+                                    : 'bg-stone-900 hover:bg-stone-900'
                                     }`}
                             >
                                 {isRecording ? (

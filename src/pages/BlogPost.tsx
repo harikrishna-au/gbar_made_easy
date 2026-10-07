@@ -195,7 +195,7 @@ export default function BlogPost() {
             {blog.tags?.map(t => (
               <span
                 key={t}
-                className="px-2.5 py-0.5 bg-white border border-stone-200 rounded-full text-[10px] font-medium font-['Inter'] text-stone-500"
+                className="px-2.5 py-0.5 bg-white border border-stone-200 rounded-full text-[11px] font-medium font-['Inter'] text-stone-500"
               >
                 #{t}
               </span>

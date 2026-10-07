@@ -34,7 +34,7 @@ export function BlogCard({ blog }: { blog: Blog }) {
           {blog.tags.slice(0, 3).map(tag => (
             <span
               key={tag}
-              className="px-2 py-0.5 rounded-full bg-stone-100 border border-stone-200 text-stone-500 text-[10px] font-['Inter'] font-medium"
+              className="px-2 py-0.5 rounded-full bg-stone-100 border border-stone-200 text-stone-500 text-[11px] font-['Inter'] font-medium"
             >
               #{tag}
             </span>
@@ -45,7 +45,7 @@ export function BlogCard({ blog }: { blog: Blog }) {
       {/* Footer */}
       <div className="flex items-center justify-between pt-2 border-t border-stone-100 mt-auto">
         <div className="flex items-center gap-1.5 min-w-0">
-          <div className="w-5 h-5 rounded-full bg-stone-200 flex items-center justify-center text-[9px] font-bold text-stone-600 flex-shrink-0 font-['Inter']">
+          <div className="w-5 h-5 rounded-full bg-stone-200 flex items-center justify-center text-[11px] font-bold text-stone-600 flex-shrink-0 font-['Inter']">
             {displayAuthor(blog.author_name).charAt(0).toUpperCase()}
           </div>
           <span className="text-[11px] font-['Inter'] text-stone-500 truncate max-w-[90px]">
@@ -65,7 +65,7 @@ export function BlogCard({ blog }: { blog: Blog }) {
       </div>
 
       {blog.published_at && (
-        <p className="text-[10px] font-['Inter'] text-stone-400 -mt-1 tracking-wide">
+        <p className="text-[11px] font-['Inter'] text-stone-400 -mt-1 tracking-wide">
           {formatDate(blog.published_at)}
         </p>
       )}

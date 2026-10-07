@@ -82,7 +82,7 @@ export default function Blog() {
         <div className="mb-12 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6">
           <div>
             {/* Section badge — matches DashboardHero pattern */}
-            <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-white border border-stone-100 text-[10px] uppercase tracking-widest font-bold text-stone-400 font-['Inter'] mb-4">
+            <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-white border border-stone-100 text-[11px] uppercase tracking-widest font-bold text-stone-400 font-['Inter'] mb-4">
               <span className="relative flex h-1.5 w-1.5">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
                 <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500" />

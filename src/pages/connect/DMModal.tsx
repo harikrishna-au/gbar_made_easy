@@ -180,7 +180,7 @@ const DMModal = ({ expert, onClose }: DMModalProps) => {
                   className={`${inputCls} resize-none`}
                   required
                 />
-                <p className="text-right text-[10px] text-stone-400 font-['Inter'] mt-1">
+                <p className="text-right text-[11px] text-stone-400 font-['Inter'] mt-1">
                   {body.length}/{MAX.body}
                 </p>
               </div>

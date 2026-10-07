@@ -9,7 +9,7 @@ export const DashboardHero = ({ isPremium }: DashboardHeroProps) => {
     return (
         <div className="w-full mb-10 relative overflow-hidden rounded-xl bg-stone-50/50 border border-stone-100/50 p-8 md:p-10 flex flex-col md:flex-row items-center justify-between gap-8">
             <div className="flex-1 text-center md:text-left space-y-4 z-10">
-                <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-white border border-stone-100 text-[10px] uppercase tracking-widest font-bold text-stone-400 mb-2">
+                <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-white border border-stone-100 text-[11px] uppercase tracking-widest font-bold text-stone-400 mb-2">
                     <span className="relative flex h-1.5 w-1.5">
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                         <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
@@ -37,7 +37,7 @@ export const DashboardHero = ({ isPremium }: DashboardHeroProps) => {
                     <Youtube className="w-4 h-4 fill-current" />
                 </div>
                 <div className="flex flex-col items-start text-left">
-                    <span className="text-[10px] font-bold text-stone-400 uppercase tracking-widest">Subscribe</span>
+                    <span className="text-[11px] font-bold text-stone-400 uppercase tracking-widest">Subscribe</span>
                     <span className="text-sm font-semibold tracking-tight text-stone-700">@HARIKRISHNA-AU</span>
                 </div>
             </a>

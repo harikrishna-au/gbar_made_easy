@@ -104,7 +104,7 @@ export function SpeakingTopicRound() {
         return (
             <RoundLayout title="Speaking on a Topic" description="Speak for 45 seconds" showNavigation={false}>
                 <div className="text-center py-12">
-                    <div className="w-16 h-16 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
+                    <div className="w-16 h-16 border-4 border-stone-200 border-t-stone-900 rounded-full animate-spin mx-auto mb-4"></div>
                     <p className="text-neutral-600">Loading questions...</p>
                 </div>
             </RoundLayout>
@@ -126,8 +126,8 @@ export function SpeakingTopicRound() {
                     Question {currentQuestionIndex + 1} of {questions.length}
                 </div>
 
-                <div className="bg-indigo-50 p-8 rounded-xl border-2 border-indigo-200">
-                    <h3 className="text-xl font-bold text-indigo-900 mb-4 text-center">📝 Your Topic</h3>
+                <div className="bg-stone-50 p-8 rounded-xl border-2 border-stone-200">
+                    <h3 className="text-xl font-bold text-stone-900 mb-4 text-center">📝 Your Topic</h3>
                     <p className="text-lg text-neutral-800 text-center leading-relaxed">
                         {currentQuestion?.promptText}
                     </p>
@@ -146,7 +146,7 @@ export function SpeakingTopicRound() {
                 {!isPreparing && (
                     <>
                         <div className="text-center space-y-4">
-                            <div className="flex items-center justify-center gap-2 text-indigo-600">
+                            <div className="flex items-center justify-center gap-2 text-stone-900">
                                 <Clock className="w-6 h-6" />
                                 <span className="text-3xl font-bold">{speakTimeLeft}s</span>
                             </div>
@@ -165,7 +165,7 @@ export function SpeakingTopicRound() {
                                     onClick={handleStartSpeaking}
                                     disabled={!!speechError}
                                     size="lg"
-                                    className="w-48 h-16 text-lg bg-indigo-600 hover:bg-indigo-700"
+                                    className="w-48 h-16 text-lg bg-stone-900 hover:bg-stone-900"
                                 >
                                     <Mic className="w-5 h-5 mr-2" />
                                     Start Speaking

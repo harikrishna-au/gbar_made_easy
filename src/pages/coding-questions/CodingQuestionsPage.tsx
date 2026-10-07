@@ -140,7 +140,7 @@ export default function CodingQuestionsPage() {
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-3"
               style={{ background: "rgba(220,38,38,0.08)", border: "1px solid rgba(220,38,38,0.18)" }}>
-              <span className="text-[10px] font-bold tracking-[0.22em] uppercase" style={{ color: "#dc2626" }}>
+              <span className="text-[11px] font-bold tracking-[0.22em] uppercase" style={{ color: "#dc2626" }}>
                 DSA Checklist
               </span>
             </div>
@@ -263,7 +263,7 @@ export default function CodingQuestionsPage() {
                             {topicDone}/{topic.problems.length} done
                           </span>
                           {topicDone === topic.problems.length && topic.problems.length > 0 && (
-                            <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full"
+                            <span className="text-[11px] font-bold px-1.5 py-0.5 rounded-full"
                               style={{ background: "rgba(5,150,105,0.1)", color: "#059669" }}>
                               ✓ Complete
                             </span>
@@ -339,7 +339,7 @@ export default function CodingQuestionsPage() {
                               )}
 
                               {/* Difficulty badge */}
-                              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full flex-shrink-0"
+                              <span className="text-[11px] font-bold px-2 py-0.5 rounded-full flex-shrink-0"
                                 style={{ color: ds.color, background: ds.bg, border: `1px solid ${ds.border}` }}>
                                 {prob.difficulty}
                               </span>

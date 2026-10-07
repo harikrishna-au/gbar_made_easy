@@ -143,7 +143,7 @@ export const LandingMobile = ({
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
                   <p className="font-['Inter'] text-[13.5px] font-bold text-stone-900">{label}</p>
-                  <span className="text-[9px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded-full bg-stone-100 text-stone-600">Live</span>
+                  <span className="text-[11px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded-full bg-stone-100 text-stone-600">Live</span>
                 </div>
                 <p className="font-['Inter'] text-[12px] text-stone-500">{sub}</p>
               </div>

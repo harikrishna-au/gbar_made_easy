@@ -74,7 +74,7 @@ export default function BlogMyPosts() {
         {/* Page header */}
         <div className="flex items-start sm:items-center justify-between gap-4 mb-10">
           <div>
-            <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-white border border-stone-100 text-[10px] uppercase tracking-widest font-bold text-stone-400 font-['Inter'] mb-4">
+            <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-white border border-stone-100 text-[11px] uppercase tracking-widest font-bold text-stone-400 font-['Inter'] mb-4">
               <FileText className="w-2.5 h-2.5" />
               My Posts
             </div>
@@ -146,7 +146,7 @@ export default function BlogMyPosts() {
                           {blog.title}
                         </h3>
                       )}
-                      <span className={`flex items-center gap-1 px-2.5 py-0.5 rounded-full border text-[10px] font-bold font-['Inter'] uppercase tracking-widest ${sm.classes}`}>
+                      <span className={`flex items-center gap-1 px-2.5 py-0.5 rounded-full border text-[11px] font-bold font-['Inter'] uppercase tracking-widest ${sm.classes}`}>
                         {sm.icon}
                         {sm.label}
                       </span>

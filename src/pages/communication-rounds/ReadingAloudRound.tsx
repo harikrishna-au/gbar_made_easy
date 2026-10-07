@@ -78,7 +78,7 @@ export function ReadingAloudRound() {
         return (
             <RoundLayout title="Reading Aloud" description="Read the sentences clearly" showNavigation={false}>
                 <div className="text-center py-12">
-                    <div className="w-16 h-16 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
+                    <div className="w-16 h-16 border-4 border-stone-200 border-t-stone-900 rounded-full animate-spin mx-auto mb-4"></div>
                     <p className="text-neutral-600">Loading questions...</p>
                 </div>
             </RoundLayout>
@@ -100,7 +100,7 @@ export function ReadingAloudRound() {
                     Question {currentQuestionIndex + 1} of {questions.length}
                 </div>
 
-                <div className="bg-blue-50 p-8 rounded-xl border-2 border-blue-200">
+                <div className="bg-stone-50 p-8 rounded-xl border-2 border-stone-200">
                     <p className="text-xl text-neutral-900 text-center leading-relaxed">
                         {currentQuestion?.promptText}
                     </p>
@@ -125,7 +125,7 @@ export function ReadingAloudRound() {
                         onClick={handleToggleRecording}
                         disabled={!!speechError}
                         size="lg"
-                        className={`w-48 h-16 text-lg ${isRecording ? 'bg-red-600 hover:bg-red-700' : 'bg-blue-600 hover:bg-blue-700'}`}
+                        className={`w-48 h-16 text-lg ${isRecording ? 'bg-red-600 hover:bg-red-700' : 'bg-stone-900 hover:bg-stone-900'}`}
                         style={{ display: speechError ? 'none' : 'flex' }}
                     >
                         {isRecording ? (

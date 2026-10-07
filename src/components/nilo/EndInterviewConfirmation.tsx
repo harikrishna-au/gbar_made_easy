@@ -27,8 +27,8 @@ export const EndInterviewConfirmation = ({
         <Dialog open={isOpen} onOpenChange={(open) => !open && !isEnding && onCancel()}>
             <DialogContent className="sm:max-w-md">
                 <DialogHeader>
-                    <div className="mx-auto w-12 h-12 bg-indigo-50 rounded-full flex items-center justify-center mb-4">
-                        <AlertCircle className="w-6 h-6 text-indigo-600" />
+                    <div className="mx-auto w-12 h-12 bg-stone-50 rounded-full flex items-center justify-center mb-4">
+                        <AlertCircle className="w-6 h-6 text-stone-900" />
                     </div>
                     <DialogTitle className="text-center text-xl">Finish Interview?</DialogTitle>
                     <DialogDescription className="text-center">
@@ -59,7 +59,7 @@ export const EndInterviewConfirmation = ({
                     <Button
                         onClick={onConfirm}
                         disabled={isEnding}
-                        className="bg-indigo-600 hover:bg-indigo-700 rounded-xl font-bold h-12 px-8 shadow-lg shadow-indigo-100"
+                        className="bg-stone-900 hover:bg-stone-900 rounded-xl font-bold h-12 px-8 shadow-lg shadow-stone-100"
                     >
                         {isEnding ? "Submitting..." : "Submit & Get Feedback"}
                     </Button>

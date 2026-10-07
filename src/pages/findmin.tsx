@@ -289,23 +289,23 @@ export default function FindMin() {
             {/* Practice Mode */}
             <div
               onClick={() => handleModeSelect('practice')}
-              className="bg-gradient-to-br from-indigo-50 to-blue-50 hover:from-indigo-100 hover:to-blue-100 border-2 border-indigo-200 hover:border-indigo-500 rounded-3xl p-8 cursor-pointer transition-all duration-300 group relative overflow-hidden"
+              className="bg-gradient-to-br from-stone-50 to-stone-50 hover:from-stone-100 hover:to-stone-100 border-2 border-stone-200 hover:border-stone-500 rounded-3xl p-8 cursor-pointer transition-all duration-300 group relative overflow-hidden"
             >
-              <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity text-indigo-600">
+              <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity text-stone-900">
                 <Crosshair className="w-32 h-32" />
               </div>
               <div className="space-y-4 relative z-10">
-                <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-blue-600 text-white rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                <div className="w-16 h-16 bg-gradient-to-br from-stone-500 to-stone-900 text-white rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
                   <Crosshair className="w-8 h-8" />
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
                     <h3 className="text-2xl font-bold text-neutral-900">Practice Mode</h3>
-                    <span className="bg-indigo-100 text-indigo-700 text-xs font-bold px-2 py-1 rounded-full border border-indigo-200">PREMIUM</span>
+                    <span className="bg-stone-100 text-stone-900 text-xs font-bold px-2 py-1 rounded-full border border-stone-200">PREMIUM</span>
                   </div>
                   <p className="text-neutral-600 mt-2">Target specific levels. Master difficult patterns without restarting from the beginning.</p>
                 </div>
-                <div className="pt-4 flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-indigo-600 group-hover:text-indigo-800 transition-colors">
+                <div className="pt-4 flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-stone-900 group-hover:text-stone-800 transition-colors">
                   Select Level <ArrowRight className="w-4 h-4" />
                 </div>
               </div>
@@ -452,7 +452,7 @@ export default function FindMin() {
               setShowLevelSelect(true);
               setGameComplete(false); // Ensure we don't show completion screen
             }}
-            className="h-12 w-12 rounded-lg bg-indigo-500 p-0 text-white hover:bg-indigo-600"
+            className="h-12 w-12 rounded-lg bg-stone-500 p-0 text-white hover:bg-stone-900"
             title="Back to Levels"
           >
             <Grid3X3 className="h-6 w-6" />

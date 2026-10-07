@@ -176,10 +176,10 @@ export function AudioPlayer({ text, voiceType = 'male_1', audioUrl: initialAudio
                 disabled={isDisabled}
                 size="lg"
                 className={`h-16 px-8 rounded-full ${isPlaying
-                    ? 'bg-blue-500 hover:bg-blue-600'
+                    ? 'bg-stone-500 hover:bg-stone-900'
                     : (playOnce && hasPlayed)
                         ? 'bg-neutral-300 cursor-not-allowed'
-                        : 'bg-blue-600 hover:bg-blue-700'
+                        : 'bg-stone-900 hover:bg-stone-900'
                     }`}
             >
                 {isLoading ? (

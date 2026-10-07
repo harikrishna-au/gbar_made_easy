@@ -181,7 +181,7 @@ export default function SwithChallenge() {
           >
             🔁
           </div>
-          <h1 className="text-3xl font-serif text-stone-800 mb-3">Swith Challenge</h1>
+          <h1 className="text-3xl font-serif text-stone-800 mb-3">Mapping Challenge</h1>
           <p className="text-[13px] text-stone-500 font-['Inter'] leading-relaxed mb-1">Power of Logical Thinking</p>
           <p className="text-stone-400 text-[12px] font-['Inter'] leading-relaxed mb-6 max-w-[280px] mx-auto">
             Symbols are shown in a top row (input) and a bottom row (output). Find the number code that maps each output symbol back to its position in the input.
@@ -189,9 +189,9 @@ export default function SwithChallenge() {
 
           {/* Practice example */}
           <div className="rounded-2xl p-4 mb-6 text-left" style={{ background: '#fff', border: '1.5px solid rgba(0,0,0,0.07)' }}>
-            <div className="text-[10px] font-bold text-stone-400 font-['Inter'] uppercase tracking-wider mb-3">Example</div>
+            <div className="text-[11px] font-bold text-stone-400 font-['Inter'] uppercase tracking-wider mb-3">Example</div>
             <div className="flex items-center justify-between mb-2">
-              <span className="text-[10px] text-stone-400 font-['Inter']">Input</span>
+              <span className="text-[11px] text-stone-400 font-['Inter']">Input</span>
               <div className="flex gap-1">
                 {(['circle', 'square', 'triangle', 'plus'] as SymbolKey[]).map((s, i) => (
                   <div key={i} className="w-9 h-9 rounded-lg bg-white border border-stone-100 flex items-center justify-center shadow-sm">
@@ -201,7 +201,7 @@ export default function SwithChallenge() {
               </div>
             </div>
             <div className="flex items-center justify-between mb-3">
-              <span className="text-[10px] text-stone-400 font-['Inter']">Output</span>
+              <span className="text-[11px] text-stone-400 font-['Inter']">Output</span>
               <div className="flex gap-1">
                 {(['triangle', 'square', 'plus', 'circle'] as SymbolKey[]).map((s, i) => (
                   <div key={i} className="w-9 h-9 rounded-lg bg-white border border-stone-100 flex items-center justify-center shadow-sm">
@@ -249,7 +249,7 @@ export default function SwithChallenge() {
         <div className="max-w-sm mx-auto px-4 pt-28 pb-12 text-center">
           <Trophy className="w-14 h-14 mx-auto text-amber-500 mb-4" />
           <h2 className="text-3xl font-serif text-stone-800 mb-2">Complete!</h2>
-          <p className="text-stone-400 text-sm font-['Inter'] mb-8">Swith Challenge — {TOTAL_ROUNDS} questions</p>
+          <p className="text-stone-400 text-sm font-['Inter'] mb-8">Mapping Challenge — {TOTAL_ROUNDS} questions</p>
           <div className="grid grid-cols-3 gap-3 mb-8">
             {([
               [score, 'Score'],
@@ -258,7 +258,7 @@ export default function SwithChallenge() {
             ] as [string | number, string][]).map(([val, label]) => (
               <div key={label} className="rounded-2xl py-4 px-2" style={{ background: '#fff', border: '1.5px solid rgba(0,0,0,0.07)', boxShadow: '0 2px 10px rgba(0,0,0,0.04)' }}>
                 <div className="text-2xl font-bold text-stone-800 font-['Inter']">{val}</div>
-                <div className="text-[10px] text-stone-400 font-['Inter'] mt-0.5">{label}</div>
+                <div className="text-[11px] text-stone-400 font-['Inter'] mt-0.5">{label}</div>
               </div>
             ))}
           </div>
@@ -317,7 +317,7 @@ export default function SwithChallenge() {
 
         {/* Input row */}
         <div className="mb-2">
-          <div className="text-[10px] font-bold text-stone-400 font-['Inter'] uppercase tracking-wider text-center mb-2">Input</div>
+          <div className="text-[11px] font-bold text-stone-400 font-['Inter'] uppercase tracking-wider text-center mb-2">Input</div>
           <div className="flex justify-center gap-2">
             {round.input.map((sym, i) => (
               <div
@@ -327,7 +327,7 @@ export default function SwithChallenge() {
                 <div className="w-12 h-12 rounded-xl bg-white border border-stone-100 flex items-center justify-center shadow-sm">
                   <ShapeIcon sym={sym} size={28} color="#4ade80" />
                 </div>
-                <span className="text-[10px] text-stone-300 font-['Inter'] font-semibold">{i + 1}</span>
+                <span className="text-[11px] text-stone-300 font-['Inter'] font-semibold">{i + 1}</span>
               </div>
             ))}
           </div>
@@ -340,7 +340,7 @@ export default function SwithChallenge() {
 
         {/* Output row */}
         <div className="mb-6">
-          <div className="text-[10px] font-bold text-stone-400 font-['Inter'] uppercase tracking-wider text-center mb-2">Output</div>
+          <div className="text-[11px] font-bold text-stone-400 font-['Inter'] uppercase tracking-wider text-center mb-2">Output</div>
           <div className="flex justify-center gap-2">
             {round.output.map((sym, i) => (
               <div key={i} className="w-12 h-12 rounded-xl bg-white border border-stone-100 flex items-center justify-center shadow-sm">

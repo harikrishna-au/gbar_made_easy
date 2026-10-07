@@ -227,7 +227,7 @@ const BookingsPanel = () => {
       {/* ── Income stats banner ── */}
       <div className="bg-white rounded-2xl border border-stone-100 shadow-sm overflow-hidden">
         <div className="px-5 py-3 border-b border-stone-50">
-          <p className="text-[10px] font-bold tracking-[0.2em] uppercase text-stone-400 font-['Inter']">
+          <p className="text-[11px] font-bold tracking-[0.2em] uppercase text-stone-400 font-['Inter']">
             Earnings Overview
           </p>
         </div>
@@ -237,19 +237,19 @@ const BookingsPanel = () => {
             <span className="text-xl font-bold font-['Inter'] text-stone-900">
               ₹{totalEarned.toLocaleString('en-IN')}
             </span>
-            <span className="text-[10px] text-stone-400 font-['Inter']">{completedSessions.length} session{completedSessions.length !== 1 ? 's' : ''} completed</span>
+            <span className="text-[11px] text-stone-400 font-['Inter']">{completedSessions.length} session{completedSessions.length !== 1 ? 's' : ''} completed</span>
           </div>
           <div className="px-5 py-4 flex flex-col gap-0.5">
             <span className="text-[11px] text-stone-400 font-['Inter']">Upcoming</span>
             <span className="text-xl font-bold font-['Inter'] text-stone-900">{upcoming}</span>
-            <span className="text-[10px] text-stone-400 font-['Inter']">session{upcoming !== 1 ? 's' : ''} scheduled</span>
+            <span className="text-[11px] text-stone-400 font-['Inter']">session{upcoming !== 1 ? 's' : ''} scheduled</span>
           </div>
           <div className="px-5 py-4 flex flex-col gap-0.5">
             <span className="text-[11px] text-stone-400 font-['Inter']">Pending</span>
             <span className="text-xl font-bold font-['Inter'] text-stone-900">
               {activeBookings.filter((b) => b.status === 'paid').length}
             </span>
-            <span className="text-[10px] text-stone-400 font-['Inter']">awaiting Connect team</span>
+            <span className="text-[11px] text-stone-400 font-['Inter']">awaiting Connect team</span>
           </div>
         </div>
       </div>

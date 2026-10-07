@@ -232,7 +232,7 @@ const BookingScreen = ({ expert, onClose }: BookingScreenProps) => {
                     {isDone ? <Check className="w-3.5 h-3.5" /> : i + 1}
                   </div>
                   <span
-                    className={`text-[10px] font-['Inter'] transition-colors duration-200 ${
+                    className={`text-[11px] font-['Inter'] transition-colors duration-200 ${
                       isActive
                         ? 'text-stone-700 font-semibold'
                         : isDone

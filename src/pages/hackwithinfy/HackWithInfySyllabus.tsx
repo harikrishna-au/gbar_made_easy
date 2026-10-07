@@ -205,7 +205,7 @@ const HackWithInfySyllabus = () => {
         {/* Hero */}
         <div className="mb-8">
           <div
-            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[10px] font-semibold tracking-[0.2em] uppercase font-['Inter'] mb-4"
+            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[11px] font-semibold tracking-[0.2em] uppercase font-['Inter'] mb-4"
             style={{ background: INFY_BG, color: INFY_BLUE, border: `1px solid ${INFY_BDR}` }}
           >
             Role-wise Syllabus
@@ -237,10 +237,10 @@ const HackWithInfySyllabus = () => {
               >
                 {role}
                 {role === "SP" && (
-                  <span className="ml-1.5 text-[9px] opacity-80">₹11 LPA</span>
+                  <span className="ml-1.5 text-[11px] opacity-80">₹11 LPA</span>
                 )}
                 {role === "DSE" && (
-                  <span className="ml-1.5 text-[9px] opacity-80">₹7 LPA</span>
+                  <span className="ml-1.5 text-[11px] opacity-80">₹7 LPA</span>
                 )}
               </button>
             );

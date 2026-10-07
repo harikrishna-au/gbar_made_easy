@@ -45,7 +45,7 @@ export const StudyResourcesCard = () => {
     <div className="relative rounded-2xl p-6 flex flex-col gap-5 bg-white border border-stone-200 shadow-sm">
       <div className="flex items-start justify-between">
         <div>
-          <div className="text-[9px] font-bold uppercase" style={{ color: '#3b82f6' }}>
+          <div className="text-[11px] font-bold uppercase" style={{ color: '#3b82f6' }}>
             RESOURCE
           </div>
           <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'rgba(59,130,246,0.06)', border: '1px solid rgba(59,130,246,0.17)' }}>
@@ -66,7 +66,7 @@ export const StudyResourcesCard = () => {
               <span className="text-stone-600 truncate max-w-xs">{file.name}</span>
               <button
                 onClick={() => openPreview(file)}
-                className="px-2 py-0.5 rounded-full text-[9px] font-semibold border bg-[#f0f9ff] border-[#3b82f6] text-[#3b82f6]"
+                className="px-2 py-0.5 rounded-full text-[11px] font-semibold border bg-[#f0f9ff] border-[#3b82f6] text-[#3b82f6]"
               >
                 View
               </button>

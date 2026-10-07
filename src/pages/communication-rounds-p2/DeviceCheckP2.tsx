@@ -21,10 +21,10 @@ export function DeviceCheckP2() {
             <div className="space-y-6">
                 {step === 'speaker' && (
                     <div className="space-y-6">
-                        <div className="bg-violet-50 p-6 rounded-xl border-2 border-violet-200">
+                        <div className="bg-stone-50 p-6 rounded-xl border-2 border-stone-200">
                             <div className="flex items-center gap-3 mb-3">
-                                <Volume2 className="w-7 h-7 text-violet-600" />
-                                <h3 className="text-lg font-bold text-violet-900">Step 1 — Speaker Test</h3>
+                                <Volume2 className="w-7 h-7 text-stone-900" />
+                                <h3 className="text-lg font-bold text-stone-900">Step 1 — Speaker Test</h3>
                             </div>
                             <p className="text-neutral-700 text-sm">
                                 Click "Play Audio". If you can hear the message, click "I Can Hear It".
@@ -49,13 +49,13 @@ export function DeviceCheckP2() {
 
                 {step === 'microphone' && (
                     <div className="space-y-6">
-                        <div className="bg-violet-50 p-6 rounded-xl border-2 border-violet-200">
+                        <div className="bg-stone-50 p-6 rounded-xl border-2 border-stone-200">
                             <div className="flex items-center gap-3 mb-3">
-                                <Mic className="w-7 h-7 text-violet-600" />
-                                <h3 className="text-lg font-bold text-violet-900">Step 2 — Microphone Test</h3>
+                                <Mic className="w-7 h-7 text-stone-900" />
+                                <h3 className="text-lg font-bold text-stone-900">Step 2 — Microphone Test</h3>
                             </div>
                             <p className="text-neutral-700 text-sm mb-3">Record yourself saying:</p>
-                            <p className="text-base font-semibold text-violet-900 italic">
+                            <p className="text-base font-semibold text-stone-900 italic">
                                 "Testing my microphone for the communication assessment."
                             </p>
                         </div>
@@ -69,7 +69,7 @@ export function DeviceCheckP2() {
                                 onClick={isRecording ? stopRecording : startRecording}
                                 disabled={!!speechError}
                                 size="lg"
-                                className={`w-52 h-14 text-base ${isRecording ? 'bg-red-600 hover:bg-red-700' : 'bg-violet-600 hover:bg-violet-700'}`}
+                                className={`w-52 h-14 text-base ${isRecording ? 'bg-red-600 hover:bg-red-700' : 'bg-stone-900 hover:bg-stone-900'}`}
                             >
                                 {isRecording ? <><Square className="w-5 h-5 mr-2" />Stop Recording</> : <><Mic className="w-5 h-5 mr-2" />Start Recording</>}
                             </Button>
@@ -96,7 +96,7 @@ export function DeviceCheckP2() {
                         <CheckCircle className="w-14 h-14 text-green-600 mx-auto" />
                         <h3 className="text-2xl font-bold text-green-900">All Set!</h3>
                         <p className="text-neutral-700">Your audio devices are working. Let the assessment begin.</p>
-                        <Button onClick={nextRound} size="lg" className="h-12 px-8 bg-violet-600 hover:bg-violet-700 mt-2">
+                        <Button onClick={nextRound} size="lg" className="h-12 px-8 bg-stone-900 hover:bg-stone-900 mt-2">
                             Begin Assessment
                         </Button>
                     </div>

@@ -50,7 +50,7 @@ export function BlogEditor({ value, onChange, placeholder }: BlogEditorProps) {
             {t === 'write' ? 'Write' : 'Preview'}
           </button>
         ))}
-        <span className="ml-auto text-[10px] uppercase tracking-widest text-stone-400 font-['Inter'] font-semibold">
+        <span className="ml-auto text-[11px] uppercase tracking-widest text-stone-400 font-['Inter'] font-semibold">
           Markdown
         </span>
       </div>
