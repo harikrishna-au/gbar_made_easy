@@ -24,6 +24,26 @@ const features = [
   { icon: BookOpen, label: "Study Resources", sub: "Prep materials and guides", href: "https://drive.google.com/drive/folders/1wepyyapyvzyUR9T26CZJjQE-fGesd3A3?usp=sharing" },
 ];
 
+// Tailwind's `lg` breakpoint. Only ONE of the two landing layouts may be mounted:
+// each contains a Clerk <SignIn>/<SignUp>, and two live copies share one sign-up
+// attempt, so both would request the verification email and the second request
+// invalidates the first code/link.
+const DESKTOP_QUERY = "(min-width: 1024px)";
+
+function useIsDesktop() {
+  const [isDesktop, setIsDesktop] = useState(
+    () => typeof window !== "undefined" && window.matchMedia(DESKTOP_QUERY).matches,
+  );
+  useEffect(() => {
+    const mql = window.matchMedia(DESKTOP_QUERY);
+    const onChange = () => setIsDesktop(mql.matches);
+    onChange();
+    mql.addEventListener("change", onChange);
+    return () => mql.removeEventListener("change", onChange);
+  }, []);
+  return isDesktop;
+}
+
 export default function Landing() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -33,6 +53,7 @@ export default function Landing() {
   const [clerkStep, setClerkStep] = useState<string>("");
   const { isPremium } = usePremiumStatus();
   const { isLoaded, isSignedIn } = useAuth();
+  const isDesktop = useIsDesktop();
 
   useEffect(() => {
     const onHash = () => setClerkStep(window.location.hash);
@@ -77,8 +98,11 @@ export default function Landing() {
   return (
     <div className="min-h-screen relative overflow-hidden" style={{ background: "#fcfcf9" }}>
       <LandingBackground />
-      <LandingMobile {...sharedProps} />
-      <LandingDesktop {...sharedProps} sX={sX} sY={sY} onMove={onMove} onLeave={onLeave} />
+      {isDesktop ? (
+        <LandingDesktop {...sharedProps} sX={sX} sY={sY} onMove={onMove} onLeave={onLeave} />
+      ) : (
+        <LandingMobile {...sharedProps} />
+      )}
       <ProductHuntBadge />
     </div>
   );

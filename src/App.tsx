@@ -11,7 +11,6 @@ import FindMin from "./pages/findmin";
 
 import BalloonMathGame from "./pages/BalloonMath";
 import HiddenMaze from "./pages/HiddenMaze";
-import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 import { CommunicationRounds } from "./pages/communication-rounds";
 import { CommunicationRoundsP2 } from "./pages/communication-rounds-p2";
@@ -110,7 +109,6 @@ const App = () => {
             <MetaPixelTracker />
             <Routes>
               <Route path="/" element={<Landing />} />
-              <Route path="/auth" element={<Auth />} />
               <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
               <Route path="/dashboard/:companyId" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
               <Route path="/terms" element={<TermsOfService />} />

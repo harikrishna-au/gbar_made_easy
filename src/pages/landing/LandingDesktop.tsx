@@ -265,7 +265,7 @@ export const LandingDesktop = ({
                         Check your email to verify
                       </p>
                       <p className="font-['Inter'] text-[11.5px] text-stone-600 leading-snug mt-0.5">
-                        We just sent you a verification email. Enter the code below — and check your <span className="font-semibold">spam folder</span> if it's not in your inbox within a minute.
+                        We just sent you a verification email. Open the link in it or enter the code below, in this same browser. If it hasn't arrived in a minute, check your <span className="font-semibold">spam folder</span>, then tap Resend once.
                       </p>
                     </div>
                   </div>

@@ -222,7 +222,7 @@ export const LandingMobile = ({
                       Check your email to verify
                     </p>
                     <p className="font-['Inter'] text-[12px] text-stone-600 leading-snug mt-0.5">
-                      Enter the code below. If it is not in your inbox, check spam.
+                      Open the link in the email or enter the code below, in this same browser. Not there after a minute? Check spam, then tap Resend once.
                     </p>
                   </div>
                 </div>
