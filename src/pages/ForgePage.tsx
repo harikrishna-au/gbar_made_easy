@@ -1,3 +1,4 @@
+import { useAuth } from "@clerk/clerk-react";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -86,13 +87,16 @@ function StepContent({ step, data, onChange }: { step: number; data: ResumeData;
     const lines = value.split("\n");
     const [refactoring, setRefactoring] = useState(false);
     const [refactorError, setRefactorError] = useState("");
+    const { getToken } = useAuth();
 
     const handleRefactor = async () => {
       if (!value.trim() || refactoring) return;
       setRefactoring(true);
       setRefactorError("");
       try {
+        const token = await getToken();
         const { data, error } = await supabase.functions.invoke("refactor-description", {
+          headers: { Authorization: `Bearer ${token}` },
           body: {
             description: value,
             type: refactorContext?.type ?? "experience",
@@ -100,7 +104,11 @@ function StepContent({ step, data, onChange }: { step: number; data: ResumeData;
           },
         });
         // surface the real error from the function body (always 200 now)
-        if (error) throw new Error(error.message);
+        if (error) {
+          let reason: string | null = null;
+          try { reason = (await (error as { context?: Response }).context?.json())?.error ?? null; } catch { /* body unreadable */ }
+          throw new Error(reason || error.message);
+        }
         if (data?.error) throw new Error(data.error);
         if (!data?.points?.length) throw new Error("Refactor failed — try adding more detail.");
         setMode(entryKey, "points");

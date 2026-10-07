@@ -1,8 +1,9 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { requireAdmin } from "../_shared/guard.ts";
 
 const cors = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-admin-key",
 };
 
 const ok  = (body: unknown) => new Response(JSON.stringify(body), { headers: { ...cors, "Content-Type": "application/json" } });
@@ -11,9 +12,13 @@ const err = (msg: string, status = 400) => new Response(JSON.stringify({ error: 
 serve(async (req: Request) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: cors });
 
+  const denied = requireAdmin(req, cors, { scope: "parse-job", max: 60 });
+  if (denied) return denied;
+
   try {
-    const { raw } = await req.json();
-    if (!raw?.trim()) return err("No text provided.");
+    const body = await req.json();
+    const raw = typeof body?.raw === "string" ? body.raw.slice(0, 8000) : "";
+    if (!raw.trim()) return err("No text provided.");
 
     const apiKey = Deno.env.get("OPENAI_API_KEY");
     if (!apiKey) return err("OPENAI_API_KEY not configured.", 500);

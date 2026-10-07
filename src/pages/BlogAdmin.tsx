@@ -420,7 +420,10 @@ async function parseJobWithAI(raw: string): Promise<{
   title: string; company: string; type: string; location: string;
   description: string; apply_url: string; package_lpa: string; skills_required: string[];
 }> {
-  const { data, error } = await (supabase as any).functions.invoke('parse-job', { body: { raw } });
+  const { data, error } = await (supabase as any).functions.invoke('parse-job', {
+    body: { raw },
+    headers: { 'x-admin-key': getAdminSecret() },
+  });
   if (error) throw new Error(error.message ?? 'Edge function error');
   if (data?.error) throw new Error(data.error);
   return data;

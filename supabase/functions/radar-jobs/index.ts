@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { requireUser } from "../_shared/guard.ts";
 
 const cors = {
   "Access-Control-Allow-Origin": "*",
@@ -11,9 +12,12 @@ const err = (msg: string)   => new Response(JSON.stringify({ error: msg }), { he
 serve(async (req: Request) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: cors });
 
+  const auth = await requireUser(req, cors, { scope: "radar-jobs", max: 20 });
+  if (auth instanceof Response) return auth;
+
   try {
     const { profile } = await req.json();
-    if (!profile) return err("No profile provided.");
+    if (!profile || typeof profile !== "object") return err("No profile provided.");
 
     const apiKey = Deno.env.get("OPENAI_API_KEY");
     if (!apiKey) return err("OPENAI_API_KEY not set.");

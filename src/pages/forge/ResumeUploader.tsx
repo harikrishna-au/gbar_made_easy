@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import { Upload, FileText, X, Loader2 } from "lucide-react";
 import * as pdfjs from "pdfjs-dist";
 import workerSrc from "pdfjs-dist/build/pdf.worker.min.mjs?url";
+import { useAuth } from "@clerk/clerk-react";
 import { supabase } from "@/integrations/supabase/client";
 import { ResumeData } from "./types";
 
@@ -33,7 +34,21 @@ async function extractTextFromDOCX(file: File): Promise<string> {
 
 const ACCEPTED = ["application/pdf", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"];
 
+// supabase-js hides the function's JSON body on non-2xx; pull the message back out
+// so users see "Please sign in again" or the hourly-limit text instead of a generic error.
+async function readFunctionError(err: unknown): Promise<string | null> {
+  const res = (err as { context?: Response } | null)?.context;
+  if (!res || typeof res.json !== "function") return null;
+  try {
+    const body = await res.json();
+    return typeof body?.error === "string" ? body.error : null;
+  } catch {
+    return null;
+  }
+}
+
 export default function ResumeUploader({ onParsed }: Props) {
+  const { getToken } = useAuth();
   const inputRef = useRef<HTMLInputElement>(null);
   const [dragging, setDragging] = useState(false);
   const [file, setFile] = useState<File | null>(null);
@@ -59,11 +74,16 @@ export default function ResumeUploader({ onParsed }: Props) {
 
       setStage("parsing");
 
+      const token = await getToken();
       const { data, error: fnErr } = await supabase.functions.invoke("parse-resume", {
         body: { resumeText: text },
+        headers: { Authorization: `Bearer ${token}` },
       });
 
-      if (fnErr || !data?.data) throw new Error(fnErr?.message || "Parsing failed");
+      if (fnErr || !data?.data) {
+        const reason = await readFunctionError(fnErr);
+        throw new Error(reason || data?.error || "Parsing failed");
+      }
 
       setStage("done");
       onParsed(data.data);

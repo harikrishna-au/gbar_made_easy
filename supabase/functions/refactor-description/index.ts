@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { requireUser } from "../_shared/guard.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -12,12 +13,17 @@ const err = (msg: string)   => new Response(JSON.stringify({ error: msg }), { he
 serve(async (req: Request) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
-  try {
-    const { description, type, label } = await req.json();
+  const auth = await requireUser(req, corsHeaders, { scope: "refactor-description", max: 40 });
+  if (auth instanceof Response) return auth;
 
-    if (!description || description.trim().length < 5) {
+  try {
+    const { description: rawDescription, type, label } = await req.json();
+
+    if (typeof rawDescription !== "string" || rawDescription.trim().length < 5) {
       return err("Description is too short to refactor.");
     }
+    // Resume bullets are short; cap input so one call cannot be made expensive.
+    const description = rawDescription.slice(0, 2000);
 
     const apiKey = Deno.env.get("OPENAI_API_KEY");
     if (!apiKey) return err("OPENAI_API_KEY secret is not configured.");

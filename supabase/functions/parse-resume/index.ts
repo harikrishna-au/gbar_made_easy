@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { requireUser } from "../_shared/guard.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -8,8 +9,17 @@ const corsHeaders = {
 serve(async (req: Request) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
+  const auth = await requireUser(req, corsHeaders, { scope: "parse-resume", max: 10 });
+  if (auth instanceof Response) return auth;
+
   try {
     const { resumeText } = await req.json();
+    if (typeof resumeText !== "string") {
+      return new Response(JSON.stringify({ error: "Invalid resume text" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
 
     // Cap at 6000 chars — resumes don't need more, avoids slow/expensive calls
     const trimmedText = resumeText.trim().slice(0, 6000);
