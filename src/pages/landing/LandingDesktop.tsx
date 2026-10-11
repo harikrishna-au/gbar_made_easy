@@ -9,6 +9,7 @@ import {
 } from "@clerk/clerk-react";
 import { Link, NavigateFunction } from "react-router-dom";
 import { ArrowRight, Sparkles, ShieldCheck, Mail, UserPlus, LogIn, Check } from "lucide-react";
+import { ConnectBenefits } from "./ConnectBenefits";
 import { AuthView, clerkAppearance, AuthSkeleton } from "./authConfig";
 
 interface Feature {
@@ -67,28 +68,51 @@ export const LandingDesktop = ({
       </Rise>
 
       <div className="py-2">
+        <Rise delay={120} className="mb-5">
+          <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-stone-900 text-white font-['Inter'] text-[12px] font-semibold">
+            <span className="relative flex w-2 h-2">
+              <span className="absolute inline-flex w-full h-full rounded-full bg-emerald-400 opacity-75 animate-ping" />
+              <span className="relative inline-flex w-2 h-2 rounded-full bg-emerald-400" />
+            </span>
+            Connect 1:1 is live
+          </span>
+        </Rise>
+
         <Rise
           as="h1"
           delay={160}
           className="font-['Merriweather'] font-black text-stone-900 leading-[1.06] tracking-tight mb-5"
           style={{ fontSize: "clamp(2.4rem, 4vw, 4rem)" }}
         >
-          Practice the
+          Talk 1:1 with
           <br />
-          Accenture 2026
+          someone who just
           <br />
-          rounds. Then talk
-          <br />
-          to someone placed.
+          got placed.
         </Rise>
 
         <Rise
           as="p"
           delay={250}
-          className="font-['Inter'] text-stone-600 leading-relaxed mb-8 max-w-md"
+          className="font-['Inter'] text-stone-600 leading-relaxed mb-6 max-w-md"
           style={{ fontSize: "0.96rem" }}
         >
-          Cognitive games and communication rounds live here. When you want a live senior, book a 20-minute Connect 1:1 — we send one meeting link to both of you.
+          Book a 20-minute Connect 1:1 with a senior who cleared the exact rounds you're preparing for. We send one meeting link to both of you. Practice the Accenture 2026 cognitive and communication rounds here in between.
+        </Rise>
+
+        <Rise delay={280} className="mb-6 max-w-lg">
+          <ConnectBenefits />
+        </Rise>
+
+        <Rise delay={300} className="mb-8">
+          <Link
+            to="/connect"
+            className="group inline-flex items-center gap-2.5 px-6 py-3.5 rounded-2xl bg-stone-900 text-white font-['Inter'] font-semibold text-[15px] hover:bg-stone-700 transition-colors"
+            style={{ boxShadow: "0 12px 32px rgba(28,25,23,0.28)" }}
+          >
+            Book a Connect 1:1
+            <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
+          </Link>
         </Rise>
 
         {/* Interactive feature list */}
@@ -98,7 +122,7 @@ export const LandingDesktop = ({
               key={label}
               type="button"
               onClick={() => to ? navigate(to) : href ? window.open(href, '_blank') : undefined}
-              className="group w-full text-left flex items-center gap-3.5 rounded-2xl px-3.5 py-3.5 -mx-1 mb-2 border-2 border-stone-900 bg-white hover:bg-stone-50 transition-colors"
+              className="group w-full text-left flex items-center gap-3.5 rounded-2xl px-3.5 py-3.5 -mx-1 mb-3 border-2 border-stone-900 bg-white hover:bg-stone-50 transition-colors shadow-[0_8px_24px_rgba(28,25,23,0.12)]"
             >
               <div className="w-10 h-10 rounded-xl bg-stone-900 flex items-center justify-center flex-shrink-0">
                 <Icon className="w-5 h-5 text-white" />
@@ -142,7 +166,7 @@ export const LandingDesktop = ({
         {[
           { label: "About", to: "/about" },
           { label: "Terms", to: "/terms" },
-          { label: "Connect", to: "/connect" },
+          { label: "Connect 1:1", to: "/connect" },
           { label: "Be a Guru", to: "/placed-guru" },
         ].map(({ label, to }) => (
           <Link
@@ -169,16 +193,17 @@ export const LandingDesktop = ({
           className="w-full h-full relative"
         >
         <div
-          className="bg-white rounded-3xl p-8 border border-stone-100 overflow-hidden relative"
+          className="bg-white rounded-3xl p-8 border border-stone-100 relative"
           style={{
             boxShadow:
               "0 24px 64px rgba(0,0,0,0.09), 0 4px 16px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.9)",
           }}
         >
-          {/* top accent line */}
+          {/* top accent line — inset + rounded so it doesn't need overflow-hidden
+              (which was clipping Clerk's form labels) */}
           <div
-            className="absolute top-0 left-0 right-0 h-[3px]"
-            style={{ background: "linear-gradient(90deg, transparent, rgba(28,25,23,0.18), transparent)" }}
+            className="absolute top-0 left-10 right-10 h-[3px] rounded-full"
+            style={{ background: "linear-gradient(90deg, transparent, rgba(201,164,110,0.5), transparent)" }}
           />
 
           <SignedOut>

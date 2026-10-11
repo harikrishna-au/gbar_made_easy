@@ -9,6 +9,7 @@ import {
 } from "@clerk/clerk-react";
 import { Link, NavigateFunction } from "react-router-dom";
 import { ArrowRight, Sparkles, ShieldCheck, Mail } from "lucide-react";
+import { ConnectBenefits } from "./ConnectBenefits";
 import { AuthView, clerkAppearance, AuthSkeleton } from "./authConfig";
 
 interface Feature {
@@ -107,7 +108,7 @@ export const LandingMobile = ({
           delay={50}
           className="font-['Merriweather'] font-black text-stone-900 leading-[1.12] tracking-tight text-[2rem]"
         >
-          Practice Accenture 2026 rounds. Then talk to someone placed.
+          Talk 1:1 with someone who just got placed.
         </Rise>
 
         <Rise
@@ -115,7 +116,22 @@ export const LandingMobile = ({
           delay={100}
           className="font-['Inter'] text-[14px] text-stone-600 leading-relaxed mt-3"
         >
-          Cognitive games and communication live here. Book a 20-minute Connect 1:1 when you want a senior who just got placed.
+          Book a 20-minute Connect 1:1 with a senior who cleared the rounds you're preparing for. Practice Accenture 2026 cognitive and communication rounds here in between.
+        </Rise>
+
+        <Rise delay={110} className="mt-5">
+          <ConnectBenefits compact />
+        </Rise>
+
+        <Rise
+          as="a"
+          href="/connect"
+          onClick={(e: React.MouseEvent) => { e.preventDefault(); navigate("/connect"); }}
+          delay={130}
+          className="mt-6 flex items-center justify-center gap-2 min-h-[48px] rounded-2xl font-['Inter'] font-semibold text-[15px] bg-stone-900 text-white active:scale-[0.98] transition-transform shadow-[0_12px_32px_rgba(28,25,23,0.28)]"
+        >
+          Book a Connect 1:1
+          <ArrowRight className="w-4 h-4" />
         </Rise>
 
         <Rise
@@ -123,9 +139,9 @@ export const LandingMobile = ({
           href="#auth-section"
           onClick={() => setView("sign-up")}
           delay={160}
-          className="mt-6 flex items-center justify-center gap-2 min-h-[48px] rounded-2xl font-['Inter'] font-semibold text-[15px] bg-stone-900 text-white active:scale-[0.98] transition-transform"
+          className="mt-3 flex items-center justify-center gap-2 min-h-[48px] rounded-2xl font-['Inter'] font-semibold text-[15px] text-stone-800 border-2 border-stone-200 bg-white active:scale-[0.98] transition-transform"
         >
-          Get started free
+          Sign up free
           <ArrowRight className="w-4 h-4" />
         </Rise>
 
@@ -258,7 +274,7 @@ export const LandingMobile = ({
           {[
             { label: "About", to: "/about" },
             { label: "Terms", to: "/terms" },
-            { label: "Connect", to: "/connect" },
+            { label: "Connect 1:1", to: "/connect" },
             { label: "Be a Guru", to: "/placed-guru" },
           ].map(({ label, to }) => (
             <Link
