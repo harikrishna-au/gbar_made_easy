@@ -20,8 +20,6 @@ fi
 echo "✅ Credentials loaded for account ending in: ...${AWS_ACCESS_KEY_ID: -4}"
 echo "🌏 Region: $AWS_DEFAULT_REGION"
 
-export AZURE_SPEECH_KEY=$(grep AZURE_SPEECH_KEY backend/.env | cut -d '#' -f1 | awk -F= '{print $2}' | tr -d ' "[:space:]')
-export AZURE_SPEECH_REGION=$(grep AZURE_SPEECH_REGION backend/.env | cut -d '#' -f1 | awk -F= '{print $2}' | tr -d ' "[:space:]')
 export OPENAI_API_KEY=$(grep OPENAI_API_KEY backend/.env | cut -d '#' -f1 | awk -F= '{print $2}' | tr -d ' "[:space:]')
 
 if [ -z "$OPENAI_API_KEY" ]; then
@@ -63,7 +61,7 @@ sam deploy \
     --resolve-s3 \
     --no-confirm-changeset \
     --no-fail-on-empty-changeset \
-    --parameter-overrides OpenAiApiKey=$OPENAI_API_KEY AzureSpeechKey=$AZURE_SPEECH_KEY AzureSpeechRegion=$AZURE_SPEECH_REGION
+    --parameter-overrides OpenAiApiKey=$OPENAI_API_KEY
 
 echo ""
 echo "🌱 Seeding Database..."

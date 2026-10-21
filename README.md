@@ -28,7 +28,7 @@ Connect is operated manually on purpose. Student-facing copy should keep saying 
 ## Features
 
 - **Cognitive games.** Matrix Flow, Balloon Math, Hidden Maze for Accenture. Geo-Sudo, Grid, Motion, Switch, Digit, BART, Mapping, Dual Task and Inductive challenges for Cognizant. Best scores and attempts are saved per game.
-- **Communication rounds.** Two company patterns (Accenture, Cognizant) covering conversation, listening, reading aloud, repeat, fill-in-the-blank, error correction, speaking topic and written email. Speech is scored with Azure Speech and AI feedback.
+- **Communication rounds.** Two company patterns (Accenture, Cognizant) covering conversation, listening, reading aloud, repeat, fill-in-the-blank, error correction, speaking topic and written email. Question audio is Amazon Polly; answers are scored with AI feedback.
 - **Connect 1:1.** Browse seniors, pick a slot, pay, and get a confirmation. Includes an expert onboarding flow (`/placed-guru`) and a super-admin queue at `/admin?tab=connect`.
 - **AI interview**, **Forge** (resume builder), **Radar** (job match) and a **coding-questions checklist** are available to Premium users.
 - **Blog** with write, my-posts and admin views.
@@ -42,7 +42,7 @@ Connect is operated manually on purpose. Student-facing copy should keep saying 
 | Database and functions | [Supabase](https://supabase.com) (Postgres, row-level security, Deno edge functions) |
 | Payments | Razorpay (PayU webhook also present) |
 | Email | Resend |
-| AI backend | FastAPI on AWS Lambda (via Mangum), DynamoDB, S3, Bedrock/OpenAI, Azure Speech |
+| AI backend | FastAPI on AWS Lambda (via Mangum), DynamoDB, S3, Bedrock/OpenAI, Amazon Polly |
 | Hosting | Vercel (frontend), AWS SAM (backend) |
 
 ## Repository layout
@@ -74,7 +74,7 @@ Connect is operated manually on purpose. Student-facing copy should keep saying 
 
 - Node.js 18+ and npm (a `bun.lockb` is also present if you prefer Bun)
 - A Clerk application, a Supabase project and a Razorpay account (test mode is fine)
-- Optional, for the AI backend: Python 3.11+, and AWS and Azure Speech credentials
+- Optional, for the AI backend: Python 3.11+, and AWS credentials
 
 ### 1. Run the frontend
 
@@ -139,7 +139,7 @@ uvicorn backend.main:app --reload --port 8000
 
 Then either set `VITE_BACKEND_URL=http://localhost:8000` or rely on the dev server proxying `/api` to that port. Environment variables read by the backend:
 
-`OPENAI_API_KEY`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_DEFAULT_REGION`, `AZURE_SPEECH_KEY`, `AZURE_SPEECH_REGION`, `INTERVIEW_TABLE`, `RESUME_BUCKET_NAME`, `ALLOWED_ORIGINS` (comma-separated, for CORS).
+`OPENAI_API_KEY`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_DEFAULT_REGION`, `INTERVIEW_TABLE`, `RESUME_BUCKET_NAME`, `ALLOWED_ORIGINS` (comma-separated, for CORS).
 
 The communication grading service is separate:
 

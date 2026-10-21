@@ -5,7 +5,7 @@ import json
 
 # Default to localhost, can be overridden
 BASE_URL = "http://127.0.0.1:8000"
-# BASE_URL = "https://kcg5nbeql3.execute-api.us-east-1.amazonaws.com/Prod"
+# BASE_URL = "https://3evwv4cs9l.execute-api.ap-southeast-2.amazonaws.com/Prod"
 
 def test_feedback_flow():
     print(f"Testing against {BASE_URL}")

@@ -3,7 +3,7 @@ import requests
 import json
 import time
 
-API_URL = "https://kcg5nbeql3.execute-api.us-east-1.amazonaws.com/Prod"
+API_URL = "https://3evwv4cs9l.execute-api.ap-southeast-2.amazonaws.com/Prod"
 
 def test_endpoint(name, method, path, payload=None):
     url = f"{API_URL}{path}"

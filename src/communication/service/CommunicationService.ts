@@ -101,7 +101,7 @@ export class CommunicationBackendService {
         window.speechSynthesis.cancel();
 
         try {
-            // Request Azure TTS Audio
+            // Request Amazon Polly TTS audio
             const response = await fetch(`${this.backendUrl}/api/tts`, {
                 method: 'POST',
                 headers: {
@@ -140,7 +140,7 @@ export class CommunicationBackendService {
             });
 
         } catch (error) {
-            console.error("Azure TTS failed, falling back to browser:", error);
+            console.error("Polly TTS failed, falling back to browser:", error);
             // Fallback to browser TTS
             this.speakFallback(text, voiceType, onEnd);
         }

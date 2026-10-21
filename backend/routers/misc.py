@@ -11,7 +11,7 @@ router = APIRouter(tags=["misc"])
 
 @router.get("/")
 def read_root():
-    return {"status": "online", "message": "Communication Backend Active with Azure AI"}
+    return {"status": "online", "message": "Communication Backend Active with Amazon Polly"}
 
 @router.post("/api/tts")
 def get_tts_audio(body: TTSRequest):

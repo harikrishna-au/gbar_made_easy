@@ -26,12 +26,6 @@ Parameters:
   OpenAiApiKey:
     Type: String
     Description: OpenAI API Key
-  AzureSpeechKey:
-    Type: String
-    Description: Azure Speech Key
-  AzureSpeechRegion:
-    Type: String
-    Description: Azure Speech Region
 
 Resources:
   CommunicationAPI:
@@ -46,8 +40,6 @@ Resources:
           DYNAMODB_TABLE: communication_questions
           BEDROCK_REGION: !Ref AWS::Region
           OPENAI_API_KEY: !Ref OpenAiApiKey
-          AZURE_SPEECH_KEY: !Ref AzureSpeechKey
-          AZURE_SPEECH_REGION: !Ref AzureSpeechRegion
           INTERVIEW_TABLE: interview_sessions
           RESUME_BUCKET_NAME: !Ref ResumeBucket
           ALLOWED_ORIGINS: "https://www.harrytheblaze.site,http://localhost:5173,http://localhost:3000"
@@ -125,7 +117,6 @@ Resources:
   ResumeBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Sub "communication-backend-resumebucket-${AWS::StackName}"
       PublicAccessBlockConfiguration:
         BlockPublicAcls: true
         BlockPublicPolicy: true
