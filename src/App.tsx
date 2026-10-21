@@ -25,6 +25,7 @@ import PremiumRoute from "@/components/PremiumRoute";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import ConnectPage from "./pages/ConnectPage";
 import PlacedGuruPage from "./pages/PlacedGuruPage";
+import Campaign from "./pages/Campaign";
 import GoogleOAuthCallback from "./pages/GoogleOAuthCallback";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
@@ -120,6 +121,8 @@ const App = () => {
               <Route path="/forge" element={<PremiumRoute><ForgePage /></PremiumRoute>} />
               <Route path="/forge/profile" element={<PremiumRoute><ForgeProfilePage /></PremiumRoute>} />
               <Route path="/radar" element={<PremiumRoute><RadarPage /></PremiumRoute>} />
+              <Route path="/share" element={<Campaign />} />
+              <Route path="/campaign" element={<Navigate to="/share" replace />} />
               <Route path="/connect" element={<PrivateRoute><ConnectPage /></PrivateRoute>} />
               <Route path="/connect/:expertId" element={<PrivateRoute><ConnectPage /></PrivateRoute>} />
               <Route path="/placed-guru" element={<PrivateRoute><PlacedGuruPage /></PrivateRoute>} />
