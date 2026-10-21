@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import {
-  X, ChevronLeft, BadgeCheck, TrendingUp, Tag,
-  Clock, Calendar, ArrowRight, Check, Link2,
+  X, ChevronLeft, BadgeCheck, ArrowRight, Check, Link2,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { format, formatDistanceToNow, parseISO } from 'date-fns';
 import { supabase } from '@/integrations/supabase/client';
-import { Expert } from './ExpertCard';
+import { Expert, ExpertAvatar } from './ExpertCard';
 import CalendarPicker from './CalendarPicker';
 import TimeSlotPicker, { TimeSlot } from './TimeSlotPicker';
 import BookingForm, { BookingFormData } from './BookingForm';
@@ -68,11 +67,6 @@ const STEP_SHORT: Record<Step, string> = {
   success: 'Done',
 };
 
-const STONE_STYLE = {
-  pill: 'bg-stone-100 text-stone-700 border border-stone-200',
-  dot: 'bg-stone-500',
-  heroBg: 'from-stone-50 via-[#fcfcf9]/30 to-[#fcfcf9]',
-};
 
 interface BookingScreenProps {
   expert: Expert;
@@ -89,8 +83,6 @@ const BookingScreen = ({ expert, onClose }: BookingScreenProps) => {
   const [slotsLoading, setSlotsLoading] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState<TimeSlot | null>(null);
   const [formData, setFormData] = useState<BookingFormData>({ name: '', email: '', message: '' });
-
-  const style = STONE_STYLE;
 
   useEffect(() => {
     const accountEmail = user?.primaryEmailAddress?.emailAddress;
@@ -167,6 +159,23 @@ const BookingScreen = ({ expert, onClose }: BookingScreenProps) => {
     });
   };
 
+  const bookCta = (padding: string) => {
+    const cls = `w-full ${padding} bg-stone-900 text-white rounded-2xl text-[15px] font-semibold font-['Inter'] hover:bg-stone-700 active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-stone-900`;
+    return user ? (
+      <button onClick={() => setStep('date')} className={cls}>
+        Choose a time
+        <ArrowRight className="w-4 h-4" />
+      </button>
+    ) : (
+      <SignInButton mode="modal">
+        <button className={cls}>
+          Sign in to book
+          <ArrowRight className="w-4 h-4" />
+        </button>
+      </SignInButton>
+    );
+  };
+
   const currentIdx = STEP_ORDER.indexOf(step);
   const canGoBack = step !== 'details' && step !== 'success';
 
@@ -232,7 +241,7 @@ const BookingScreen = ({ expert, onClose }: BookingScreenProps) => {
                     {isDone ? <Check className="w-3.5 h-3.5" /> : i + 1}
                   </div>
                   <span
-                    className={`text-[11px] font-['Inter'] transition-colors duration-200 ${
+                    className={`${isActive ? 'inline' : 'hidden sm:inline'} text-[11px] font-['Inter'] transition-colors duration-200 ${
                       isActive
                         ? 'text-stone-700 font-semibold'
                         : isDone
@@ -246,7 +255,7 @@ const BookingScreen = ({ expert, onClose }: BookingScreenProps) => {
 
                 {i < FLOW_STEPS.length - 1 && (
                   <div
-                    className={`h-px w-8 mb-4 mx-1.5 transition-colors duration-500 ${
+                    className={`h-px w-6 sm:w-8 sm:mb-4 mx-1.5 transition-colors duration-500 ${
                       nextIdx <= currentIdx ? 'bg-stone-800' : 'bg-stone-200'
                     }`}
                   />
@@ -288,139 +297,136 @@ const BookingScreen = ({ expert, onClose }: BookingScreenProps) => {
 
         {/* ════ DETAILS STEP ════ */}
         {step === 'details' && (
-          <div className="max-w-2xl mx-auto w-full pb-12">
+          <div className="max-w-5xl mx-auto w-full px-5 sm:px-8 pt-8 sm:pt-12 pb-32 lg:pb-16 grid lg:grid-cols-[1fr_340px] gap-10 lg:gap-14 items-start">
 
-            {/* Hero banner */}
-            <div className={`bg-gradient-to-b ${style.heroBg} pt-10 pb-8 px-6 flex flex-col items-center text-center border-b border-stone-100/60`}>
-              {expert.photo_url ? (
-                <img
-                  src={expert.photo_url}
-                  alt={expert.name}
-                  className="w-28 h-28 rounded-3xl object-cover shadow-xl mb-5 border-4 border-white ring-1 ring-stone-100"
-                />
-              ) : (
-                <div className="w-28 h-28 rounded-3xl bg-gradient-to-br from-stone-100 to-stone-200 flex items-center justify-center text-4xl font-['Merriweather'] text-stone-500 shadow-xl mb-5 border-4 border-white">
-                  {expert.name.charAt(0)}
+            {/* Profile */}
+            <div className="min-w-0">
+              <div className="flex items-start gap-5">
+                <ExpertAvatar expert={expert} size="lg" />
+                <div className="min-w-0 pt-1">
+                  <h2 className="text-3xl sm:text-4xl font-['Merriweather'] text-stone-900 leading-tight tracking-tight">
+                    {expert.name}
+                  </h2>
+                  {expert.title && (
+                    <p className="text-[15px] text-stone-500 mt-2 font-['Inter'] leading-relaxed">
+                      {expert.title}
+                    </p>
+                  )}
                 </div>
+              </div>
+
+              {/* Placement facts */}
+              {(expert.company || expert.package_lpa || placedAgo) && (
+                <dl className="mt-8 grid grid-cols-2 sm:grid-cols-3 gap-px rounded-2xl overflow-hidden border border-stone-200 bg-stone-200">
+                  {expert.company && (
+                    <div className="bg-white px-4 py-3.5">
+                      <dt className="text-[10.5px] uppercase tracking-[0.12em] font-semibold text-[#43695a] font-['Inter']">Placed at</dt>
+                      <dd className="font-['Merriweather'] text-lg text-stone-900 mt-1 leading-tight">{expert.company}</dd>
+                    </div>
+                  )}
+                  {expert.package_lpa && (
+                    <div className="bg-white px-4 py-3.5">
+                      <dt className="text-[10.5px] uppercase tracking-[0.12em] font-semibold text-stone-400 font-['Inter']">Package</dt>
+                      <dd className="font-['Merriweather'] text-lg text-stone-900 mt-1 leading-tight tabular-nums">₹{expert.package_lpa} LPA</dd>
+                    </div>
+                  )}
+                  {placedAgo && (
+                    <div className="bg-white px-4 py-3.5 col-span-2 sm:col-span-1">
+                      <dt className="text-[10.5px] uppercase tracking-[0.12em] font-semibold text-stone-400 font-['Inter']">Interviewed</dt>
+                      <dd className="font-['Merriweather'] text-lg text-stone-900 mt-1 leading-tight">{placedAgo}</dd>
+                    </div>
+                  )}
+                </dl>
               )}
 
-              <h2 className="text-2xl font-['Merriweather'] text-stone-900 leading-tight">
-                {expert.name}
-              </h2>
-
-              {expert.title && (
-                <p className="text-sm text-stone-500 mt-1.5 font-['Inter'] max-w-xs leading-relaxed">
-                  {expert.title}
+              {expert.proof_url && (
+                <p className="mt-4 inline-flex items-center gap-2 text-sm text-[#43695a] font-medium font-['Inter']">
+                  <BadgeCheck className="w-4 h-4" />
+                  Placement proof is on file with the Connect team
                 </p>
               )}
 
-              {placedAgo && (
-                <div className="flex items-center gap-1.5 mt-2.5 text-stone-400 font-['Inter']">
-                  <Calendar className="w-3 h-3" />
-                  <span className="text-xs">Placed {placedAgo}</span>
-                </div>
-              )}
-
-              {/* Badges */}
-              <div className="flex items-center gap-2 mt-5 flex-wrap justify-center">
-                {expert.company && (
-                  <div className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold ${style.pill} font-['Inter']`}>
-                    <span className={`w-1.5 h-1.5 rounded-full ${style.dot}`} />
-                    <BadgeCheck className="w-3 h-3" />
-                    Placed at {expert.company}
-                  </div>
-                )}
-                {expert.package_lpa && (
-                  <div className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-stone-100 border border-stone-200 text-xs font-semibold text-stone-600 font-['Inter']">
-                    <TrendingUp className="w-3 h-3" />
-                    ₹{expert.package_lpa} LPA
-                  </div>
-                )}
-                {expert.proof_url && (
-                  <div className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-stone-100 border border-stone-200 text-xs font-semibold text-stone-600 font-['Inter']">
-                    <BadgeCheck className="w-3 h-3" />
-                    Placement Verified
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Body content */}
-            <div className="px-6 pt-8 space-y-8">
-
-              {/* About */}
               {expert.bio && (
-                <div>
-                  <h3 className="text-[11px] uppercase tracking-widest text-stone-400 font-semibold font-['Inter'] mb-3">
-                    About
+                <div className="mt-10">
+                  <h3 className="text-[11px] uppercase tracking-[0.14em] text-stone-400 font-semibold font-['Inter'] mb-3">
+                    About {expert.name.split(' ')[0]}
                   </h3>
-                  <p className="text-stone-700 text-[15px] leading-relaxed font-['Inter']">
+                  <p className="text-stone-700 text-base leading-[1.75] font-['Inter'] whitespace-pre-line">
                     {expert.bio}
                   </p>
                 </div>
               )}
 
-              {/* Skills */}
               {expert.skills && expert.skills.length > 0 && (
-                <div>
-                  <h3 className="text-[11px] uppercase tracking-widest text-stone-400 font-semibold font-['Inter'] mb-3">
-                    Skills & Topics
+                <div className="mt-10">
+                  <h3 className="text-[11px] uppercase tracking-[0.14em] text-stone-400 font-semibold font-['Inter'] mb-3">
+                    You can ask about
                   </h3>
-                  <div className="flex flex-wrap gap-2">
-                    {expert.skills.map((skill, i) => (
-                      <span
-                        key={i}
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white text-stone-600 rounded-full text-xs font-medium border border-stone-200 font-['Inter'] shadow-sm"
+                  <ul className="flex flex-wrap gap-2">
+                    {expert.skills.map((skill) => (
+                      <li
+                        key={skill}
+                        className="px-3.5 py-1.5 bg-white text-stone-700 rounded-full text-sm font-medium border border-stone-200 font-['Inter']"
                       >
-                        <Tag className="w-2.5 h-2.5 text-stone-400" />
                         {skill}
-                      </span>
+                      </li>
                     ))}
-                  </div>
+                  </ul>
                 </div>
               )}
+            </div>
 
-              {/* Session card */}
-              <div className="bg-white rounded-2xl p-5 border border-stone-100 shadow-sm flex items-center justify-between">
-                <div className="flex items-center gap-3.5">
-                  <div className="w-10 h-10 rounded-xl bg-stone-50 border border-stone-100 flex items-center justify-center flex-shrink-0">
-                    <Clock className="w-4.5 h-4.5 text-stone-400" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold text-stone-800 font-['Inter']">20-minute session</p>
-                    <p className="text-xs text-stone-400 font-['Inter'] mt-0.5">1-on-1 voice or video call</p>
-                  </div>
+            {/* Booking panel (desktop: sticky card, mobile: bottom bar below) */}
+            <aside className="hidden lg:block lg:sticky lg:top-6">
+              <div className="rounded-3xl border border-stone-200 bg-white p-6 shadow-[0_24px_48px_-32px_rgba(28,25,23,0.35)]">
+                <div className="flex items-baseline justify-between">
+                  <p className="font-['Merriweather'] text-4xl text-stone-900 tabular-nums">₹{expert.price_inr}</p>
+                  <p className="text-sm text-stone-500 font-['Inter']">20-minute call</p>
                 </div>
-                <div className="text-right">
-                  <p className="text-xl font-['Merriweather'] text-stone-900">₹{expert.price_inr}</p>
-                  <p className="text-[11px] text-stone-400 font-['Inter']">one-time</p>
-                </div>
+                <p className="text-xs text-stone-400 font-['Inter'] mt-1.5">
+                  A 10% platform fee is added at checkout.
+                </p>
+
+                <ol className="mt-6 space-y-4 border-t border-stone-100 pt-6">
+                  {[
+                    ['Pick a date and time', 'From the slots this senior has open.'],
+                    ['Pay securely', 'Your request is saved once payment clears.'],
+                    ['Get one meeting link', 'Our team confirms and emails you both.'],
+                  ].map(([t, d], i) => (
+                    <li key={t} className="flex gap-3">
+                      <span className="w-6 h-6 rounded-full bg-stone-100 text-stone-700 text-xs font-semibold font-['Inter'] flex items-center justify-center flex-shrink-0 mt-0.5">
+                        {i + 1}
+                      </span>
+                      <span>
+                        <span className="block text-sm font-semibold text-stone-800 font-['Inter']">{t}</span>
+                        <span className="block text-[13px] text-stone-500 font-['Inter'] leading-snug mt-0.5">{d}</span>
+                      </span>
+                    </li>
+                  ))}
+                </ol>
+
+                <div className="mt-6">{bookCta('py-4')}</div>
               </div>
+            </aside>
 
-              {/* CTA */}
-              {user ? (
-                <button
-                  onClick={() => setStep('date')}
-                  className="w-full py-4 bg-stone-900 text-white rounded-2xl text-[15px] font-semibold font-['Inter'] hover:bg-stone-700 active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2 shadow-sm"
-                >
-                  Book a Session
-                  <ArrowRight className="w-4 h-4" />
-                </button>
-              ) : (
-                <SignInButton mode="modal">
-                  <button className="w-full py-4 bg-stone-900 text-white rounded-2xl text-[15px] font-semibold font-['Inter'] hover:bg-stone-700 active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2 shadow-sm">
-                    Sign in to book
-                    <ArrowRight className="w-4 h-4" />
-                  </button>
-                </SignInButton>
-              )}
+            {/* Mobile sticky bar */}
+            <div className="lg:hidden fixed bottom-0 inset-x-0 z-10 bg-white/95 backdrop-blur border-t border-stone-200 px-5 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] flex items-center gap-4">
+              <div className="flex-shrink-0">
+                <p className="font-['Merriweather'] text-2xl text-stone-900 leading-none tabular-nums">₹{expert.price_inr}</p>
+                <p className="text-[11px] text-stone-500 font-['Inter'] mt-1">20 min · +10% fee</p>
+              </div>
+              <div className="flex-1">{bookCta('py-3.5')}</div>
             </div>
           </div>
         )}
 
         {/* ════ DATE STEP ════ */}
         {step === 'date' && (
-          <div className="max-w-lg mx-auto px-5 py-6">
+          <div className="max-w-lg mx-auto px-5 py-8">
+            <h3 className="font-['Merriweather'] text-2xl text-stone-900 text-center">When works for you?</h3>
+            <p className="text-sm text-stone-500 font-['Inter'] text-center mt-2 mb-6">
+              Days {expert.name.split(' ')[0]} is free are selectable. The rest are greyed out.
+            </p>
             {availableDays.length === 0 ? (
               <div className="text-center py-16">
                 <p className="text-stone-400 text-sm font-['Inter']">
@@ -428,10 +434,7 @@ const BookingScreen = ({ expert, onClose }: BookingScreenProps) => {
                 </p>
               </div>
             ) : (
-              <div className="space-y-3">
-                <p className="text-xs text-stone-400 font-['Inter'] text-center">
-                  Available days are highlighted
-                </p>
+              <div className="rounded-3xl border border-stone-200 bg-white p-3 sm:p-5">
                 <CalendarPicker
                   availableDays={availableDays}
                   selectedDate={selectedDate}
@@ -444,7 +447,11 @@ const BookingScreen = ({ expert, onClose }: BookingScreenProps) => {
 
         {/* ════ TIME STEP ════ */}
         {step === 'time' && (
-          <div className="max-w-lg mx-auto px-5 py-6">
+          <div className="max-w-lg mx-auto px-5 py-8">
+            <h3 className="font-['Merriweather'] text-2xl text-stone-900">
+              {selectedDate ? format(selectedDate, 'EEEE, MMMM d') : 'Choose a slot'}
+            </h3>
+            <p className="text-sm text-stone-500 font-['Inter'] mt-2 mb-6">Pick the start time for your 20-minute call.</p>
             <TimeSlotPicker
               slots={slots}
               selectedSlot={selectedSlot}
@@ -456,7 +463,13 @@ const BookingScreen = ({ expert, onClose }: BookingScreenProps) => {
 
         {/* ════ FORM STEP ════ */}
         {step === 'form' && (
-          <div className="max-w-lg mx-auto px-5 py-6 space-y-5">
+          <div className="max-w-lg mx-auto px-5 py-8 space-y-6">
+            <div>
+              <h3 className="font-['Merriweather'] text-2xl text-stone-900">Tell {expert.name.split(' ')[0]} what you need</h3>
+              <p className="text-sm text-stone-500 font-['Inter'] mt-2">
+                The more specific you are, the more useful the 20 minutes will be.
+              </p>
+            </div>
             <BookingForm data={formData} onChange={setFormData} emailLocked={Boolean(user?.primaryEmailAddress?.emailAddress)} />
             <button
               onClick={() => setStep('payment')}

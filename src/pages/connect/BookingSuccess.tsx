@@ -24,7 +24,7 @@ const BookingSuccess = ({ expertName, date, startTime, endTime, userEmail, meetL
 
       {/* Title */}
       <div>
-        <h3 className="text-2xl font-['Merriweather'] text-stone-900 mb-2">Booking received!</h3>
+        <h3 className="text-2xl font-['Merriweather'] text-stone-900 mb-2">Request received.</h3>
         <p className="text-stone-500 text-sm leading-relaxed font-['Inter']">
           Your payment is verified. Our Connect team will coordinate with{' '}
           <span className="font-semibold text-stone-700">{expertName}</span>, confirm the session,
@@ -59,6 +59,25 @@ const BookingSuccess = ({ expertName, date, startTime, endTime, userEmail, meetL
           </span>
         </div>
       </div>
+
+      {/* What happens next */}
+      <ol className="w-full text-left space-y-3 border-t border-stone-100 pt-5">
+        {[
+          ['Payment received', 'Your request is saved.'],
+          ['Team confirms with ' + expertName, 'We email you if anything changes.'],
+          ['One meeting link', 'Sent to your email and shown in My Bookings.'],
+        ].map(([t, d], i) => (
+          <li key={t} className="flex gap-3">
+            <span className={`w-6 h-6 rounded-full text-xs font-semibold font-['Inter'] flex items-center justify-center flex-shrink-0 mt-0.5 ${i === 0 ? 'bg-[#557d6b] text-white' : 'bg-stone-100 text-stone-600'}`}>
+              {i === 0 ? <CheckCircle2 className="w-3.5 h-3.5" /> : i + 1}
+            </span>
+            <span>
+              <span className="block text-sm font-semibold text-stone-800 font-['Inter']">{t}</span>
+              <span className="block text-[13px] text-stone-500 font-['Inter'] leading-snug">{d}</span>
+            </span>
+          </li>
+        ))}
+      </ol>
 
       {/* Google Meet link */}
       {meetLink ? (

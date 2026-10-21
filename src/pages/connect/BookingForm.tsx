@@ -53,9 +53,28 @@ const BookingForm = ({ data, onChange, emailLocked = false }: BookingFormProps) 
           value={data.message}
           onChange={(e) => onChange({ ...data, message: e.target.value })}
           placeholder="e.g. I have an Accenture interview next week and want tips on the technical rounds..."
-          rows={3}
+          rows={4}
+          maxLength={500}
           className="w-full px-3.5 py-2.5 bg-stone-50 border border-stone-200 rounded-xl text-stone-900 text-sm placeholder:text-stone-400 resize-none focus:outline-none focus:ring-2 focus:ring-stone-300 focus:border-transparent transition-all font-['Inter']"
         />
+        <div className="flex flex-wrap items-center gap-1.5 mt-2.5">
+          {['Interview rounds', 'Resume review', 'Aptitude prep', 'Communication round'].map((topic) => (
+            <button
+              key={topic}
+              type="button"
+              onClick={() =>
+                onChange({
+                  ...data,
+                  message: data.message.trim() ? `${data.message.trim()} ${topic}.` : `I would like to talk about: ${topic.toLowerCase()}.`,
+                })
+              }
+              className="px-2.5 py-1 rounded-full border border-stone-200 bg-white text-xs text-stone-600 font-['Inter'] hover:border-stone-400 hover:text-stone-900 transition-colors"
+            >
+              + {topic}
+            </button>
+          ))}
+          <span className="ml-auto text-[11px] text-stone-400 font-['Inter'] tabular-nums">{data.message.length}/500</span>
+        </div>
       </div>
     </div>
   );
