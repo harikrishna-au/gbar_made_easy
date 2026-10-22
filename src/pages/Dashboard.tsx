@@ -17,6 +17,7 @@ import { CompanySelection } from "@/components/dashboard/CompanySelection";
 import { TestimonialScroller } from "@/components/dashboard/TestimonialScroller";
 import { CognitiveGamesPage } from "@/components/dashboard/CognitiveGamesPage";
 import PaymentPopup from "@/components/PaymentPopup";
+import { PromoBanner } from "@/components/PromoBanner";
 
 
 import { useSearchParams, useParams, useNavigate } from "react-router-dom";
@@ -117,6 +118,12 @@ const Dashboard = () => {
         description="Your central hub for MNC cognitive practice. Track progress, access games, and sharpen your skills for top company assessments."
       />
       <LandingBackground />
+
+      {!companyId && !isPremium && !premiumLoading && (
+        <div className="w-full z-50">
+          <PromoBanner onClaim={handleSubscribe} />
+        </div>
+      )}
 
       {!companyId && (
         <div className={`w-full flex flex-col items-center transition-all duration-700 z-50`}>
