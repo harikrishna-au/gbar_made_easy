@@ -21,14 +21,18 @@ export function PromoBanner({ onClaim }: PromoBannerProps) {
         @media (prefers-reduced-motion: reduce) { .promo-marquee { animation: none !important } }
       `}</style>
 
-      {/* scrolling ticker */}
+      {/* scrolling ticker: two identical groups, each wider than the screen, shifted by exactly one group */}
       <div className="overflow-hidden border-b border-white/10 py-1.5" aria-hidden="true">
         <div
-          className="promo-marquee flex w-max gap-6 whitespace-nowrap text-[11px] font-black tracking-[0.28em] text-[#8fb5a3]"
-          style={{ animation: "promo-marquee 22s linear infinite" }}
+          className="promo-marquee flex w-max whitespace-nowrap text-[11px] font-black tracking-[0.28em] text-[#8fb5a3]"
+          style={{ animation: "promo-marquee 30s linear infinite" }}
         >
-          {[...TICKER, ...TICKER].map((t, i) => (
-            <span key={i}>{t}</span>
+          {[0, 1].map((g) => (
+            <div key={g} className="flex shrink-0 gap-6 pr-6">
+              {[...TICKER, ...TICKER, ...TICKER].map((t, i) => (
+                <span key={i}>{t}</span>
+              ))}
+            </div>
           ))}
         </div>
       </div>
