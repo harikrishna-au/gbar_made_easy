@@ -119,7 +119,7 @@ const Dashboard = () => {
       />
       <LandingBackground />
 
-      {!companyId && !isPremium && !premiumLoading && (
+      {!companyId && (searchParams.get("promo") === "1" || (!isPremium && !premiumLoading)) && (
         <div className="w-full z-50">
           <PromoBanner onClaim={handleSubscribe} />
         </div>
