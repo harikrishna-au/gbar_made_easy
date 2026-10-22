@@ -11,8 +11,9 @@ interface PaymentPopupProps {
     onClose: () => void;
 }
 
-const LIST_PRICE = 500;
-const BASE_PRICE = 299;
+import { LIST_PRICE, PROMO_ACTIVE, PROMO_PRICE, REGULAR_PRICE } from "@/lib/promo";
+
+const currentBasePrice = () => (PROMO_ACTIVE ? PROMO_PRICE : REGULAR_PRICE);
 
 async function validateCouponServer(code: string): Promise<number | null> {
     try {
@@ -56,7 +57,7 @@ const PaymentPopup = ({ isOpen, onClose }: PaymentPopupProps) => {
 
     if (!isOpen) return null;
 
-    const finalAmount = appliedAmount ?? BASE_PRICE;
+    const finalAmount = appliedAmount ?? currentBasePrice();
     const savings = LIST_PRICE - finalAmount;
 
     const handleApplyCoupon = async () => {

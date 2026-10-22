@@ -13,6 +13,7 @@ import { LandingBackground } from "./landing/LandingBackground";
 import { LandingMobile } from "./landing/LandingMobile";
 import { LandingDesktop } from "./landing/LandingDesktop";
 import { ProductHuntBadge } from "@/components/ProductHuntBadge";
+import { PromoBanner } from "@/components/PromoBanner";
 
 const features = [
   { icon: Brain, label: "Cognitive games", sub: "Accenture-style matrix, balloon math, maze" },
@@ -93,11 +94,19 @@ export default function Landing() {
     }
   }, [searchParams]);
 
+  const claimOffer = () => {
+    setView("sign-up");
+    localStorage.setItem("auto_open_payment", "true");
+    const el = document.getElementById("auth-section");
+    if (el) el.scrollIntoView({ behavior: "smooth" });
+  };
+
   const sharedProps = { view, setView, navigate, isPremium, isLoaded, isClerkVerificationStep, features };
 
   return (
     <div className="min-h-screen relative overflow-hidden" style={{ background: "#fcfcf9" }}>
       <LandingBackground />
+      <PromoBanner onClaim={claimOffer} />
       {isDesktop ? (
         <LandingDesktop {...sharedProps} sX={sX} sY={sY} onMove={onMove} onLeave={onLeave} />
       ) : (
