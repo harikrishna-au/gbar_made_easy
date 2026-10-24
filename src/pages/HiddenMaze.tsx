@@ -7,6 +7,7 @@ import Header from "@/components/Header";
 import { usePremiumStatus } from "@/hooks/usePremiumStatus";
 // import { useRazorpay } from "@/hooks/useRazorpay";
 import PaymentPopup from "@/components/PaymentPopup";
+import { FREE_LEVELS, PREMIUM_LEVELS_QUOTE } from "@/lib/freeTier";
 import { toast } from "sonner";
 import { useRecordOnFinish } from "@/hooks/useActivityResults";
 
@@ -200,6 +201,10 @@ const HiddenMaze = () => {
     };
 
     const handleLevelSelect = (levelIdx: number) => {
+        if (!isPremium && levelIdx >= FREE_LEVELS) {
+            setShowPaymentPopup(true);
+            return;
+        }
         setLevel(levelIdx + 1);
         setShowLevelSelect(false);
         setGameFinished(false);
@@ -256,7 +261,7 @@ const HiddenMaze = () => {
         }
 
         // CHECK PREMIUM STATUS (Arcade Only Gate)
-        if (gameMode === 'arcade' && won && level === 3 && !isPremium) {
+        if (gameMode === 'arcade' && won && level === FREE_LEVELS && !isPremium) {
             setTimeout(() => {
                 setShowLockModal(true);
             }, 500);
@@ -519,13 +524,14 @@ const HiddenMaze = () => {
                                 <div className="text-center">
                                     <div className="font-bold text-lg">Level {idx + 1}</div>
                                     <div className="text-xs text-neutral-400 font-medium uppercase tracking-wider mt-1">
-                                        {idx < 3 ? 'Standard' : 'Advanced'}
+                                        {idx < FREE_LEVELS ? 'Free' : 'Premium'}
                                     </div>
                                 </div>
                             </div>
                         ))}
                     </div>
                 </div>
+                <PaymentPopup isOpen={showPaymentPopup} onClose={() => setShowPaymentPopup(false)} />
             </div>
         );
     }
@@ -723,9 +729,12 @@ const HiddenMaze = () => {
                             <Lock className="w-8 h-8 text-amber-500" />
                         </div>
                         <div>
-                            <h2 className="text-2xl font-black text-neutral-900">Level 4 Locked</h2>
+                            <h2 className="text-2xl font-black text-neutral-900">Level {FREE_LEVELS + 1} Locked</h2>
                             <p className="text-neutral-600 mt-2">
-                                You've mastered the basics! Subscribe to <strong>Premium</strong> to unlock Levels 4-6 and challenge yourself with advanced puzzles.
+                                You've cleared the {FREE_LEVELS} free levels. Go <strong>Premium</strong> to unlock Levels {FREE_LEVELS + 1}-6 — the ones that decide your placement.
+                            </p>
+                            <p className="text-neutral-500 text-sm italic mt-3">
+                                “{PREMIUM_LEVELS_QUOTE}”
                             </p>
                         </div>
                         <Button
