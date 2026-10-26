@@ -41,7 +41,7 @@ export const InterviewFeedback = ({ feedback }: InterviewFeedbackProps) => {
 
     return (
         <PageWrapper>
-            <div className="min-h-screen bg-[#fcfcf9] py-12 px-4 sm:px-6 lg:px-8 font-sans">
+            <div className="min-h-screen bg-[#fbf6ea] py-12 px-4 sm:px-6 lg:px-8 font-sans">
                 <div className="max-w-5xl mx-auto space-y-12">
 
                     {/* Minimal Header */}

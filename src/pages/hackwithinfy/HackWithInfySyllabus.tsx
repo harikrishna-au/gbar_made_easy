@@ -189,7 +189,7 @@ const HackWithInfySyllabus = () => {
 
   return (
     <>
-      <div className="fixed inset-0 -z-10 bg-[#fcfcf9]" />
+      <div className="fixed inset-0 -z-10 bg-[#fbf6ea]" />
 
       <div ref={containerRef} className="w-full max-w-4xl mx-auto px-6 py-12 opacity-0 min-h-screen">
 

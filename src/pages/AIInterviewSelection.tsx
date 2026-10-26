@@ -68,7 +68,7 @@ const AIInterviewSelection = () => {
   return (
     <>
       {/* Background */}
-      <div className="fixed inset-0 -z-10 bg-[#fcfcf9]">
+      <div className="fixed inset-0 -z-10 bg-[#fbf6ea]">
         <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-stone-50 to-transparent opacity-60" />
       </div>
 

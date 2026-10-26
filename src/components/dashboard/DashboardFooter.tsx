@@ -12,7 +12,7 @@ export const DashboardFooter = ({ onFeedbackClick, onSupportClick, }: DashboardF
 
     return (
         <div
-            className="w-full bg-[#fcfcf9] relative overflow-hidden"
+            className="w-full bg-[#fbf6ea] relative overflow-hidden"
         >
 
             <div className="relative z-10 max-w-5xl mx-auto px-6 py-24 flex flex-col items-center gap-10">

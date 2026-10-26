@@ -88,7 +88,7 @@ export const LandingDesktop = ({
           <br />
           someone who just
           <br />
-          got placed.
+          <span className="bg-brand-sun px-2 -mx-2 rounded-md box-decoration-clone">got placed.</span>
         </Rise>
 
         <Rise
@@ -107,8 +107,7 @@ export const LandingDesktop = ({
         <Rise delay={300} className="mb-8">
           <Link
             to="/connect"
-            className="group inline-flex items-center gap-2.5 px-6 py-3.5 rounded-2xl bg-stone-900 text-white font-['Inter'] font-semibold text-[15px] hover:bg-stone-700 transition-colors"
-            style={{ boxShadow: "0 12px 32px rgba(28,25,23,0.28)" }}
+            className="poster group inline-flex items-center gap-2.5 px-6 py-3.5 rounded-2xl bg-brand-coral text-stone-900 font-['Inter'] font-bold text-[15px]"
           >
             Book a Connect 1:1
             <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
@@ -122,7 +121,7 @@ export const LandingDesktop = ({
               key={label}
               type="button"
               onClick={() => to ? navigate(to) : href ? window.open(href, '_blank') : undefined}
-              className="group w-full text-left flex items-center gap-3.5 rounded-2xl px-3.5 py-3.5 -mx-1 mb-3 border-2 border-stone-900 bg-white hover:bg-stone-50 transition-colors shadow-[0_8px_24px_rgba(28,25,23,0.12)]"
+              className="poster group w-full text-left flex items-center gap-3.5 rounded-2xl px-3.5 py-3.5 -mx-1 mb-3 bg-brand-sky"
             >
               <div className="w-10 h-10 rounded-xl bg-stone-900 flex items-center justify-center flex-shrink-0">
                 <Icon className="w-5 h-5 text-white" />
@@ -130,9 +129,9 @@ export const LandingDesktop = ({
               <div className="flex-1 min-w-0">
                 <span className="flex items-center gap-2">
                   <span className="font-['Inter'] text-[14px] font-bold text-stone-900 leading-tight">{label}</span>
-                  <span className="text-[11px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded-full bg-stone-100 text-stone-600">Live</span>
+                  <span className="text-[11px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded-full bg-white border border-stone-900 text-stone-900">Live</span>
                 </span>
-                <span className="font-['Inter'] text-[12px] text-stone-500">{sub}</span>
+                <span className="font-['Inter'] text-[12px] text-stone-800">{sub}</span>
               </div>
               <ArrowRight className="w-4 h-4 text-stone-900 flex-shrink-0" />
             </button>
@@ -193,17 +192,14 @@ export const LandingDesktop = ({
           className="w-full h-full relative"
         >
         <div
-          className="bg-white rounded-3xl p-8 border border-stone-100 relative"
-          style={{
-            boxShadow:
-              "0 24px 64px rgba(0,0,0,0.09), 0 4px 16px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.9)",
-          }}
+          className="bg-white rounded-3xl p-8 border-2 border-stone-900 relative"
+          style={{ boxShadow: "8px 8px 0 #1c1917" }}
         >
           {/* top accent line — inset + rounded so it doesn't need overflow-hidden
               (which was clipping Clerk's form labels) */}
           <div
-            className="absolute top-0 left-10 right-10 h-[3px] rounded-full"
-            style={{ background: "linear-gradient(90deg, transparent, rgba(201,164,110,0.5), transparent)" }}
+            className="absolute top-0 left-10 right-10 h-[4px] rounded-b-full"
+            style={{ background: "linear-gradient(90deg, #ff7a59 0 25%, #ffd23f 25% 50%, #9adb84 50% 75%, #7cc4f2 75% 100%)" }}
           />
 
           <SignedOut>
@@ -353,7 +349,7 @@ export const LandingDesktop = ({
                 whileHover={{ scale: 1.01 }}
                 whileTap={{ scale: 0.97 }}
                 onClick={() => navigate("/dashboard")}
-                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl font-['Inter'] font-semibold text-[14px] bg-stone-900 text-white hover:bg-stone-700 transition-colors duration-200"
+                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl font-['Inter'] font-semibold text-[14px] poster bg-brand-coral hover:bg-brand-coral text-stone-900 font-bold transition-colors duration-200"
               >
                 Go to Dashboard
                 <ArrowRight className="w-4 h-4" />
@@ -370,8 +366,7 @@ export const LandingDesktop = ({
 
         {/* card glow */}
         <div
-          className="absolute -inset-4 -z-10 blur-[40px] opacity-30 rounded-3xl"
-          style={{ background: "radial-gradient(ellipse, rgba(28,25,23,0.08) 0%, transparent 70%)" }}
+          className="hidden"
         />
         </motion.div>
       </Rise>

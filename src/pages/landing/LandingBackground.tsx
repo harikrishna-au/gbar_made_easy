@@ -2,11 +2,11 @@ import { motion } from "framer-motion";
 import { Zap } from "lucide-react";
 
 const shapes = [
-  { w: 72, h: 72, top: "32%", left: "4%", rz: 18, delay: 0, dur: 5.5 },
-  { w: 48, h: 48, top: "22%", right: "5%", rz: -22, delay: 1.1, dur: 6.2 },
-  { w: 36, h: 36, top: "68%", left: "2%", rz: 40, delay: 2.3, dur: 5 },
-  { w: 60, h: 60, top: "72%", right: "8%", rz: -12, delay: 0.6, dur: 6.8 },
-  { w: 28, h: 28, top: "50%", left: "10%", rz: 60, delay: 1.8, dur: 4.5 },
+  { w: 72, h: 72, top: "32%", left: "4%", rz: 18, delay: 0, dur: 5.5, color: "#ff7a59", round: false },
+  { w: 48, h: 48, top: "22%", right: "5%", rz: -22, delay: 1.1, dur: 6.2, color: "#7cc4f2", round: true },
+  { w: 36, h: 36, top: "68%", left: "2%", rz: 40, delay: 2.3, dur: 5, color: "#ffd23f", round: false },
+  { w: 60, h: 60, top: "72%", right: "8%", rz: -12, delay: 0.6, dur: 6.8, color: "#9adb84", round: true },
+  { w: 28, h: 28, top: "50%", left: "10%", rz: 60, delay: 1.8, dur: 4.5, color: "#f6a9c6", round: false },
 ];
 
 export const LandingBackground = () => (
@@ -20,20 +20,12 @@ export const LandingBackground = () => (
       }}
     />
 
-    <div
-      className="absolute -top-40 -right-40 w-[640px] h-[640px] blur-[130px] opacity-40"
-      style={{ background: "radial-gradient(ellipse, rgba(28,25,23,0.05) 0%, transparent 70%)" }}
-    />
-    <div
-      className="absolute -bottom-32 -left-32 w-[500px] h-[500px] blur-[100px] opacity-30"
-      style={{ background: "radial-gradient(ellipse, rgba(28,25,23,0.04) 0%, transparent 70%)" }}
-    />
 
-    {/* 3-D floating glass cubes — desktop only */}
+    {/* flat poster shapes — desktop only */}
     {shapes.map((s, i) => (
       <motion.div
         key={i}
-        className="absolute rounded-2xl hidden lg:block"
+        className={`absolute hidden lg:block ${s.round ? "rounded-full" : "rounded-xl"}`}
         style={{
           width: s.w,
           height: s.h,
@@ -41,31 +33,22 @@ export const LandingBackground = () => (
           left: (s as any).left,
           right: (s as any).right,
           rotate: s.rz,
-          background: "rgba(255,255,255,0.45)",
-          border: "1px solid rgba(28,25,23,0.08)",
-          backdropFilter: "blur(6px)",
-          WebkitBackdropFilter: "blur(6px)",
-          boxShadow: "0 8px 32px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.8)",
-          transformStyle: "preserve-3d",
+          background: s.color,
+          border: "2px solid #1c1917",
+          boxShadow: "4px 4px 0 #1c1917",
         }}
-        animate={{ y: [0, -(14 + i * 2), 0], rotateX: [0, 14, 0], rotateY: [0, 9, 0] }}
+        animate={{ y: [0, -(10 + i * 2), 0] }}
         transition={{ duration: s.dur, delay: s.delay, repeat: Infinity, ease: "easeInOut" }}
-      >
-        <div
-          className="absolute inset-x-3 top-2 h-px rounded-full"
-          style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.9), transparent)" }}
-        />
-      </motion.div>
+      />
     ))}
 
     {/* floating stat badge — desktop only */}
     <motion.div
       className="absolute top-[18%] right-[10%] hidden lg:flex items-center gap-2 px-3.5 py-2 rounded-xl"
       style={{
-        background: "rgba(255,255,255,0.75)",
-        border: "1px solid rgba(228,224,218,0.9)",
-        backdropFilter: "blur(12px)",
-        boxShadow: "0 4px 20px rgba(0,0,0,0.06)",
+        background: "#ffd23f",
+        border: "2px solid #1c1917",
+        boxShadow: "3px 3px 0 #1c1917",
       }}
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0, y: [0, -8, 0] }}
@@ -75,10 +58,10 @@ export const LandingBackground = () => (
         y: { duration: 4, delay: 0.9, repeat: Infinity, ease: "easeInOut" },
       }}
     >
-      <span className="flex items-center justify-center w-5 h-5 rounded-md bg-stone-100 border border-stone-200">
-        <Zap className="w-3 h-3 text-stone-700" />
+      <span className="flex items-center justify-center w-5 h-5 rounded-md bg-white border-2 border-stone-900">
+        <Zap className="w-3 h-3 text-stone-900" />
       </span>
-      <span className="text-[12px] font-['Inter'] font-semibold text-stone-700">Accenture 2026 rounds</span>
+      <span className="text-[12px] font-['Inter'] font-bold text-stone-900">Accenture 2026 rounds</span>
     </motion.div>
   </div>
 );

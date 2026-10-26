@@ -124,7 +124,7 @@ export default function SwitchChallenge() {
 
   if (phase === 'intro') {
     return (
-      <div style={{ background: '#fcfcf9', minHeight: '100vh' }}>
+      <div style={{ background: '#fbf6ea', minHeight: '100vh' }}>
         <Header />
         <div className="max-w-sm mx-auto px-4 pt-28 pb-12 text-center">
           <div className="w-16 h-16 rounded-2xl mx-auto mb-6 flex items-center justify-center text-3xl"
@@ -165,7 +165,7 @@ export default function SwitchChallenge() {
       if (taskHistory[i] !== taskHistory[i - 1]) switches++;
     }
     return (
-      <div style={{ background: '#fcfcf9', minHeight: '100vh' }}>
+      <div style={{ background: '#fbf6ea', minHeight: '100vh' }}>
         <Header />
         <div className="max-w-sm mx-auto px-4 pt-28 pb-12 text-center">
           <Trophy className="w-14 h-14 mx-auto text-amber-500 mb-4" />
@@ -202,7 +202,7 @@ export default function SwitchChallenge() {
   const taskBg = trial.task === 'number' ? 'rgba(124,58,237,0.08)' : 'rgba(8,145,178,0.08)';
 
   return (
-    <div style={{ background: '#fcfcf9', minHeight: '100vh' }}>
+    <div style={{ background: '#fbf6ea', minHeight: '100vh' }}>
       <Header />
       <div className="max-w-sm mx-auto px-4 pt-20 pb-16">
 

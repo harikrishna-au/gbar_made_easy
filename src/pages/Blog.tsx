@@ -44,7 +44,7 @@ export default function Blog() {
   };
 
   return (
-    <div className="min-h-screen relative" style={{ background: '#fcfcf9' }}>
+    <div className="min-h-screen relative" style={{ background: '#fbf6ea' }}>
       <SEO
         title="Campus Placement Blogs | Harry The Blaze"
         description="Real interview experiences, aptitude strategies, resume tips, and placement success stories — shared by students, for students."

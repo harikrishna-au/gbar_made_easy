@@ -95,7 +95,7 @@ export default function CustomerSupport() {
             style={{ boxShadow: "0 20px 60px rgba(0,0,0,0.12)" }}
           >
             {/* Header */}
-            <div className="px-5 py-4 border-b border-stone-100 flex items-center justify-between" style={{ background: "#fcfcf9" }}>
+            <div className="px-5 py-4 border-b border-stone-100 flex items-center justify-between" style={{ background: "#fbf6ea" }}>
               <div>
                 <p className="font-['Merriweather'] font-bold text-[14px] text-stone-900">Support</p>
                 <p className="font-['Inter'] text-[11px] text-stone-400 mt-0.5">We reply within 24 hours</p>

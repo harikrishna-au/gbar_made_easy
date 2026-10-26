@@ -81,7 +81,7 @@ export default function ForgeProfilePage() {
   const p = savedData?.personal;
 
   return (
-    <div className="min-h-screen" style={{ background: "#fcfcf9" }}>
+    <div className="min-h-screen" style={{ background: "#fbf6ea" }}>
       <Header />
 
       <SignedOut>

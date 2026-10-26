@@ -446,7 +446,7 @@ export default function ForgePage() {
   };
 
   return (
-    <div className="min-h-screen" style={{ background: "#fcfcf9" }}>
+    <div className="min-h-screen" style={{ background: "#fbf6ea" }}>
       <Header />
 
       <div className="pt-20 pb-16 px-4 max-w-2xl mx-auto">
@@ -568,7 +568,7 @@ export default function ForgePage() {
 
                   {step < STEPS.length - 1 ? (
                     <button onClick={next}
-                      className="flex items-center gap-1.5 px-5 py-2 rounded-xl text-sm font-['Inter'] font-semibold text-white bg-stone-900 hover:bg-stone-700 active:scale-95 transition-all">
+                      className="flex items-center gap-1.5 px-5 py-2 rounded-xl text-sm font-['Inter'] font-semibold poster bg-brand-coral hover:bg-brand-coral text-stone-900 font-bold active:scale-95 transition-all">
                       Next <ChevronRight className="w-4 h-4" />
                     </button>
                   ) : (

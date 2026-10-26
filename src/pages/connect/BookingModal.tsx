@@ -139,7 +139,7 @@ const BookingModal = ({ expert, onClose }: BookingModalProps) => {
         if (e.target === e.currentTarget && step !== 'success') onClose();
       }}
     >
-      <div className="bg-[#fcfcf9] w-full sm:max-w-[420px] rounded-t-3xl sm:rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[95dvh]">
+      <div className="bg-[#fbf6ea] w-full sm:max-w-[420px] rounded-t-3xl sm:rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[95dvh]">
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-stone-100 bg-white flex-shrink-0">
           <div className="flex items-center gap-2.5">

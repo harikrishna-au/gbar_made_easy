@@ -172,7 +172,7 @@ export default function SwithChallenge() {
   // ── Intro ──────────────────────────────────────────────────────────────────
   if (phase === 'intro') {
     return (
-      <div style={{ background: '#fcfcf9', minHeight: '100vh' }}>
+      <div style={{ background: '#fbf6ea', minHeight: '100vh' }}>
         <Header />
         <div className="max-w-sm mx-auto px-4 pt-28 pb-12 text-center">
           <div
@@ -244,7 +244,7 @@ export default function SwithChallenge() {
   if (phase === 'end') {
     const accuracy = Math.round((correct / TOTAL_ROUNDS) * 100);
     return (
-      <div style={{ background: '#fcfcf9', minHeight: '100vh' }}>
+      <div style={{ background: '#fbf6ea', minHeight: '100vh' }}>
         <Header />
         <div className="max-w-sm mx-auto px-4 pt-28 pb-12 text-center">
           <Trophy className="w-14 h-14 mx-auto text-amber-500 mb-4" />
@@ -282,7 +282,7 @@ export default function SwithChallenge() {
   const timerColor = timeLeft <= 5 ? '#ef4444' : timeLeft <= 10 ? '#f59e0b' : '#ca8a04';
 
   return (
-    <div style={{ background: '#fcfcf9', minHeight: '100vh' }}>
+    <div style={{ background: '#fbf6ea', minHeight: '100vh' }}>
       <Header />
       <div className="max-w-sm mx-auto px-4 pt-20 pb-16">
 

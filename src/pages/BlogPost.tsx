@@ -60,7 +60,7 @@ export default function BlogPost() {
 
   if (loading) {
     return (
-      <div className="min-h-screen" style={{ background: '#fcfcf9' }}>
+      <div className="min-h-screen" style={{ background: '#fbf6ea' }}>
         <Header />
         <main className="container mx-auto px-6 pt-28 pb-20 max-w-2xl">
           <div className="animate-pulse space-y-5">
@@ -81,7 +81,7 @@ export default function BlogPost() {
 
   if (error || !blog) {
     return (
-      <div className="min-h-screen" style={{ background: '#fcfcf9' }}>
+      <div className="min-h-screen" style={{ background: '#fbf6ea' }}>
         <Header />
         <main className="container mx-auto px-6 pt-28 pb-20 max-w-2xl text-center">
           <div className="w-16 h-16 rounded-2xl bg-white border border-stone-200 flex items-center justify-center mx-auto mb-5 shadow-sm">
@@ -138,7 +138,7 @@ export default function BlogPost() {
   };
 
   return (
-    <div className="min-h-screen relative" style={{ background: '#fcfcf9' }}>
+    <div className="min-h-screen relative" style={{ background: '#fbf6ea' }}>
       <SEO
         title={`${blog.title} | Harry The Blaze`}
         description={blog.excerpt ?? `${blogTypeLabel} — ${blog.title}`}

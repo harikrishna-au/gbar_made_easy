@@ -47,7 +47,7 @@ const GuruLoginForm = ({ onSuccess }: GuruLoginFormProps) => {
   const labelCls = "block text-sm font-medium text-stone-700 mb-1.5 font-['Inter']";
 
   return (
-    <div className="min-h-screen bg-[#fcfcf9] flex flex-col">
+    <div className="min-h-screen bg-[#fbf6ea] flex flex-col">
       <div className="w-full flex flex-col items-center z-50">
         <Header onStartTour={() => {}} />
       </div>

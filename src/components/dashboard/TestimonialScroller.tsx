@@ -268,7 +268,7 @@ export const TestimonialScroller = () => {
   const r2 = [...ROW_2, ...ROW_2];
 
   return (
-    <div className="w-full overflow-hidden bg-[#fcfcf9]">
+    <div className="w-full overflow-hidden bg-[#fbf6ea]">
       <style>{STYLES}</style>
 
       {/* Top divider */}
@@ -294,8 +294,8 @@ export const TestimonialScroller = () => {
         {/* Brick scroller */}
         <div className="relative">
           {/* Edge fade masks */}
-          <div className="absolute left-0 top-0 bottom-0 w-24 md:w-44 z-10 bg-gradient-to-r from-[#fcfcf9] to-transparent pointer-events-none" />
-          <div className="absolute right-0 top-0 bottom-0 w-24 md:w-44 z-10 bg-gradient-to-l from-[#fcfcf9] to-transparent pointer-events-none" />
+          <div className="absolute left-0 top-0 bottom-0 w-24 md:w-44 z-10 bg-gradient-to-r from-[#fbf6ea] to-transparent pointer-events-none" />
+          <div className="absolute right-0 top-0 bottom-0 w-24 md:w-44 z-10 bg-gradient-to-l from-[#fbf6ea] to-transparent pointer-events-none" />
 
           {/* Row 1 */}
           <div className="ts-row-a flex w-max gap-3.5 px-4 mb-3.5 items-stretch">

@@ -180,7 +180,7 @@ const BookingScreen = ({ expert, onClose }: BookingScreenProps) => {
   const canGoBack = step !== 'details' && step !== 'success';
 
   return (
-    <div className="fixed inset-0 z-[100] bg-[#fcfcf9] flex flex-col animate-slide-in-right">
+    <div className="fixed inset-0 z-[100] bg-[#fbf6ea] flex flex-col animate-slide-in-right">
 
       {/* ── Top navigation bar ── */}
       <div className="flex items-center justify-between px-5 py-4 border-b border-stone-100 bg-white/90 backdrop-blur-sm flex-shrink-0">

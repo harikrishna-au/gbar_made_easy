@@ -108,7 +108,8 @@ export const LandingMobile = ({
           delay={50}
           className="font-['Merriweather'] font-black text-stone-900 leading-[1.12] tracking-tight text-[2rem]"
         >
-          Talk 1:1 with someone who just got placed.
+          Talk 1:1 with someone who just{" "}
+          <span className="bg-brand-sun px-1.5 rounded-md box-decoration-clone">got placed.</span>
         </Rise>
 
         <Rise
@@ -128,7 +129,7 @@ export const LandingMobile = ({
           href="/connect"
           onClick={(e: React.MouseEvent) => { e.preventDefault(); navigate("/connect"); }}
           delay={130}
-          className="mt-6 flex items-center justify-center gap-2 min-h-[48px] rounded-2xl font-['Inter'] font-semibold text-[15px] bg-stone-900 text-white active:scale-[0.98] transition-transform shadow-[0_12px_32px_rgba(28,25,23,0.28)]"
+          className="mt-6 flex items-center justify-center gap-2 min-h-[48px] rounded-2xl font-['Inter'] font-semibold text-[15px] poster bg-brand-coral text-stone-900 font-bold"
         >
           Book a Connect 1:1
           <ArrowRight className="w-4 h-4" />
@@ -151,7 +152,7 @@ export const LandingMobile = ({
               key={label}
               type="button"
               onClick={() => to ? navigate(to) : href ? window.open(href, '_blank') : undefined}
-              className="flex items-center gap-3 w-full text-left p-3.5 rounded-2xl border-2 border-stone-900 bg-white active:scale-[0.99] transition-transform"
+              className="flex items-center gap-3 w-full text-left poster p-3.5 rounded-2xl bg-brand-sky"
             >
               <div className="w-10 h-10 rounded-xl bg-stone-900 flex items-center justify-center flex-shrink-0">
                 <Icon className="w-5 h-5 text-white" />

@@ -143,7 +143,7 @@ const ConnectPage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#fcfcf9] text-stone-900 font-sans selection:bg-stone-200 overflow-x-hidden">
+        <div className="min-h-screen bg-[#fbf6ea] text-stone-900 font-sans selection:bg-stone-200 overflow-x-hidden">
             <Header onStartTour={() => { }} />
 
             <main className="max-w-6xl mx-auto px-4 sm:px-6">

@@ -317,7 +317,7 @@ const BookingsPanel = () => {
                 href={booking.meet_link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center gap-1.5 w-full py-2 bg-stone-900 hover:bg-stone-700 text-white rounded-xl text-xs font-medium font-['Inter'] transition-colors"
+                className="flex items-center justify-center gap-1.5 w-full py-2 poster bg-brand-coral hover:bg-brand-coral text-stone-900 font-bold rounded-xl text-xs font-medium font-['Inter'] transition-colors"
               >
                 <Video className="w-3 h-3" />
                 Join Google Meet
@@ -644,14 +644,14 @@ const PlacedGuruPage = () => {
   // Still resolving Clerk session OR about to redirect
   if (!isLoaded || !user) {
     return (
-      <div className="min-h-screen bg-[#fcfcf9] flex items-center justify-center">
+      <div className="min-h-screen bg-[#fbf6ea] flex items-center justify-center">
         <div className="w-6 h-6 border-2 border-stone-200 border-t-stone-700 rounded-full animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#fcfcf9]">
+    <div className="min-h-screen bg-[#fbf6ea]">
       <div className="w-full flex flex-col items-center z-50">
         <Header onStartTour={() => { }} />
       </div>

@@ -55,7 +55,7 @@ const GoogleOAuthCallback = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#fcfcf9] flex items-center justify-center px-4">
+    <div className="min-h-screen bg-[#fbf6ea] flex items-center justify-center px-4">
       <div className="bg-white rounded-3xl p-10 shadow-sm border border-stone-100 flex flex-col items-center text-center max-w-sm w-full space-y-5">
         {status === 'loading' && (
           <>

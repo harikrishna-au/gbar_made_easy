@@ -14,6 +14,15 @@ export default {
     },
     extend: {
       colors: {
+        brand: {
+          ink: "#1c1917",
+          paper: "#fbf6ea",
+          coral: "#ff7a59",
+          sky: "#7cc4f2",
+          leaf: "#9adb84",
+          sun: "#ffd23f",
+          rose: "#f6a9c6",
+        },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

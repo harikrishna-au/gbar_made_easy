@@ -168,7 +168,7 @@ function BlogPreviewDrawer({ blog, onClose }: { blog: Blog; onClose: () => void 
       {/* Drawer panel */}
       <div
         className="fixed top-0 right-0 bottom-0 z-50 w-full max-w-2xl shadow-2xl overflow-y-auto"
-        style={{ background: '#fcfcf9' }}
+        style={{ background: '#fbf6ea' }}
       >
         {/* Dot grid */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">

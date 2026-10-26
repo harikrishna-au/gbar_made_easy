@@ -118,7 +118,7 @@ export default function CodingQuestionsPage() {
     <div
       ref={containerRef}
       className="min-h-screen w-full font-['Inter'] opacity-0"
-      style={{ background: "#fcfcf9" }}
+      style={{ background: "#fbf6ea" }}
     >
       {/* ── Fixed background wash ── */}
       <div className="fixed inset-0 -z-10"

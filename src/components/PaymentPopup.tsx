@@ -84,7 +84,7 @@ const PaymentPopup = ({ isOpen, onClose }: PaymentPopupProps) => {
 
     return (
         <div role="dialog" aria-modal="true" aria-labelledby="payment-title" className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-            <div className="bg-[#fcfcf9] rounded-2xl w-full max-w-md p-6 relative shadow-2xl space-y-5 max-h-[92vh] overflow-y-auto">
+            <div className="bg-[#fbf6ea] rounded-2xl w-full max-w-md p-6 relative shadow-2xl space-y-5 max-h-[92vh] overflow-y-auto">
                 <button
                     onClick={onClose}
                     aria-label="Close"
@@ -147,7 +147,7 @@ const PaymentPopup = ({ isOpen, onClose }: PaymentPopupProps) => {
                 <Button
                     onClick={handlePayment}
                     disabled={isLoading}
-                    className="w-full h-12 text-base font-semibold bg-stone-900 hover:bg-stone-700 text-white"
+                    className="w-full h-12 text-base font-semibold poster bg-brand-coral hover:bg-brand-coral text-stone-900 font-bold"
                 >
                     {isLoading ? "Processing..." : `Pay ₹${finalAmount} — Get Full Access`}
                 </Button>

@@ -158,7 +158,7 @@ const Header = ({ onStartTour }: HeaderProps) => {
 {!premiumLoading && (
               isPremium ? (
                 /* ── Premium badge ── */
-                <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-stone-900 text-white">
+                <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-brand-sun text-stone-900 border-2 border-stone-900">
                   <Sparkles className="w-4 h-4 flex-shrink-0" />
                   <span className="text-[13px] font-bold font-['Inter'] hidden sm:inline tracking-wide">
                     PREMIUM
@@ -168,7 +168,7 @@ const Header = ({ onStartTour }: HeaderProps) => {
                 /* ── Get Premium CTA ── */
                 <button
                   onClick={() => setShowPayment(true)}
-                  className="flex items-center gap-2 px-4 py-2 rounded-xl font-bold text-[13px] font-['Inter'] text-white bg-stone-900 hover:bg-stone-700 transition-all duration-200 active:scale-95"
+                  className="flex items-center gap-2 px-4 py-2 rounded-xl font-bold text-[13px] font-['Inter'] poster bg-brand-coral hover:bg-brand-coral text-stone-900 font-bold transition-all duration-200 active:scale-95"
                 >
                   <Sparkles className="w-3.5 h-3.5 flex-shrink-0" />
                   <span className="hidden sm:inline">Get Premium</span>

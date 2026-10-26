@@ -128,7 +128,7 @@ const MyBookingsModal = ({ onClose }: MyBookingsModalProps) => {
         className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center bg-black/40 backdrop-blur-sm p-0 sm:p-4"
         onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
       >
-        <div className="bg-[#fcfcf9] w-full sm:max-w-[440px] rounded-t-3xl sm:rounded-3xl shadow-2xl flex flex-col max-h-[90dvh] overflow-hidden">
+        <div className="bg-[#fbf6ea] w-full sm:max-w-[440px] rounded-t-3xl sm:rounded-3xl shadow-2xl flex flex-col max-h-[90dvh] overflow-hidden">
           {/* Header */}
           <div className="flex items-center justify-between px-5 py-4 border-b border-stone-100 bg-white flex-shrink-0">
             <h2 className="text-sm font-['Merriweather'] text-stone-900">My Bookings</h2>
@@ -269,7 +269,7 @@ const MyBookingsModal = ({ onClose }: MyBookingsModalProps) => {
                               href={booking.meet_link}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="flex items-center justify-center gap-1.5 w-full py-2 bg-stone-900 hover:bg-stone-700 text-white rounded-lg text-xs font-medium font-['Inter'] transition-colors"
+                              className="flex items-center justify-center gap-1.5 w-full py-2 poster bg-brand-coral hover:bg-brand-coral text-stone-900 font-bold rounded-lg text-xs font-medium font-['Inter'] transition-colors"
                             >
                               <Video className="w-3 h-3" />
                               Join Google Meet

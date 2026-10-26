@@ -11,7 +11,7 @@ const NotFound = () => {
   }, [location.pathname]);
 
   return (
-    <div className="min-h-screen relative overflow-hidden" style={{ background: "#fcfcf9" }}>
+    <div className="min-h-screen relative overflow-hidden" style={{ background: "#fbf6ea" }}>
       <Header />
 
       {/* Background */}

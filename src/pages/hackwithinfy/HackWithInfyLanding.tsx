@@ -87,7 +87,7 @@ const HackWithInfyLanding = () => {
 
   return (
     <>
-      <div className="fixed inset-0 -z-10 bg-[#fcfcf9]">
+      <div className="fixed inset-0 -z-10 bg-[#fbf6ea]">
         <div className="absolute top-0 left-0 w-full h-[400px]" style={{ background: `radial-gradient(ellipse 70% 40% at 50% 0%, rgba(0,124,195,0.06) 0%, transparent 70%)` }} />
       </div>
 

@@ -95,7 +95,7 @@ const AIInterview = () => {
     return (
         <>
             {/* Japandi Background */}
-            <div className="fixed inset-0 -z-10 h-full w-full bg-[#fcfcf9] overflow-hidden pointer-events-none">
+            <div className="fixed inset-0 -z-10 h-full w-full bg-[#fbf6ea] overflow-hidden pointer-events-none">
                 <div className="absolute top-0 left-0 w-full h-[600px] bg-gradient-to-b from-stone-50 to-transparent opacity-60"></div>
             </div>
 

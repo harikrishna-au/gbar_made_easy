@@ -101,7 +101,7 @@ export default function BARTGame() {
 
   if (phase === 'intro') {
     return (
-      <div style={{ background: '#fcfcf9', minHeight: '100vh' }}>
+      <div style={{ background: '#fbf6ea', minHeight: '100vh' }}>
         <Header />
         <div className="max-w-sm mx-auto px-4 pt-28 pb-12 text-center">
           <div className="text-5xl mb-4">🎈</div>
@@ -138,7 +138,7 @@ export default function BARTGame() {
     const poppedCount = history.filter(h => h.state === 'popped').length;
     const riskProfile = avgPumps < 20 ? 'Conservative 🛡️' : avgPumps < 45 ? 'Balanced ⚖️' : 'Risk-Taker 🔥';
     return (
-      <div style={{ background: '#fcfcf9', minHeight: '100vh' }}>
+      <div style={{ background: '#fbf6ea', minHeight: '100vh' }}>
         <Header />
         <div className="max-w-sm mx-auto px-4 pt-28 pb-12 text-center">
           <Trophy className="w-14 h-14 mx-auto text-amber-500 mb-4" />
@@ -194,7 +194,7 @@ export default function BARTGame() {
   }
 
   return (
-    <div style={{ background: '#fcfcf9', minHeight: '100vh' }}>
+    <div style={{ background: '#fbf6ea', minHeight: '100vh' }}>
       <Header />
       <div className="max-w-sm mx-auto px-4 pt-20 pb-16">
 

@@ -84,7 +84,7 @@ function AdminLogin({ onLogin }: { onLogin: () => void }) {
   };
 
   return (
-    <div className="min-h-screen relative flex items-center justify-center px-6" style={{ background: '#fcfcf9' }}>
+    <div className="min-h-screen relative flex items-center justify-center px-6" style={{ background: '#fbf6ea' }}>
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <div className="absolute inset-0 opacity-[0.25]"
           style={{ backgroundImage: 'radial-gradient(circle, #c4bdb4 1px, transparent 1px)', backgroundSize: '28px 28px' }} />
@@ -756,7 +756,7 @@ function AdminDashboard() {
   if (!authed) return <AdminLogin onLogin={() => setAuthed(true)} />;
 
   return (
-    <div className="min-h-screen relative" style={{ background: '#fcfcf9' }}>
+    <div className="min-h-screen relative" style={{ background: '#fbf6ea' }}>
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <div className="absolute inset-0 opacity-[0.22]"
           style={{ backgroundImage: 'radial-gradient(circle, #c4bdb4 1px, transparent 1px)', backgroundSize: '28px 28px' }} />

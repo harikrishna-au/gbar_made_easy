@@ -31,7 +31,7 @@ export default function BlogMyPosts() {
   const { blogs, loading } = useMyBlogs(user?.id ?? '');
 
   return (
-    <div className="min-h-screen relative" style={{ background: '#fcfcf9' }}>
+    <div className="min-h-screen relative" style={{ background: '#fbf6ea' }}>
       {/* Background — matches Blog.tsx */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <div
