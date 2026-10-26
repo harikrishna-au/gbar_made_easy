@@ -185,6 +185,8 @@ interface TiltCardProps {
   style?: React.CSSProperties;
   id?: string;
   label: string;
+  /** Flat fill colour. Switches the card to the ink-outlined poster look. */
+  tone?: string;
 }
 
 const TiltCard = ({
@@ -196,6 +198,7 @@ const TiltCard = ({
   style: extra = {},
   id,
   label,
+  tone,
 }: TiltCardProps) => {
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const [light, setLight] = useState({ x: 50, y: 35 });
@@ -233,20 +236,32 @@ const TiltCard = ({
         }
       }}
       className={`relative overflow-hidden cursor-pointer group ${className}`}
-      style={{
-        ...extra,
-        transform: `perspective(1000px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) translateY(${on ? -8 : 0}px)`,
-        transition: on
-          ? "transform 0.1s ease-out, box-shadow 0.22s ease"
-          : "transform 0.5s cubic-bezier(0.19, 1, 0.22, 1), box-shadow 0.38s ease",
-        boxShadow: on
-          ? `0 28px 72px ${glow}, 0 0 0 1.5px ${border}, 0 8px 22px rgba(0,0,0,0.04)`
-          : `0 2px 14px rgba(0,0,0,0.04), 0 0 0 1px rgba(0,0,0,0.05)`,
-      }}
+      style={
+        tone
+          ? {
+              ...extra,
+              background: tone,
+              border: "2px solid #1c1917",
+              transform: on ? "translate(-3px, -3px)" : "none",
+              transition: "transform 0.15s ease-out, box-shadow 0.15s ease-out",
+              boxShadow: on ? "9px 9px 0 #1c1917" : "5px 5px 0 #1c1917",
+            }
+          : {
+              ...extra,
+              transform: `perspective(1000px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) translateY(${on ? -8 : 0}px)`,
+              transition: on
+                ? "transform 0.1s ease-out, box-shadow 0.22s ease"
+                : "transform 0.5s cubic-bezier(0.19, 1, 0.22, 1), box-shadow 0.38s ease",
+              boxShadow: on
+                ? `0 28px 72px ${glow}, 0 0 0 1.5px ${border}, 0 8px 22px rgba(0,0,0,0.04)`
+                : `0 2px 14px rgba(0,0,0,0.04), 0 0 0 1px rgba(0,0,0,0.05)`,
+            }
+      }
     >
       {/* Specular light follows cursor */}
       <div
         className="absolute inset-0 pointer-events-none z-10"
+        hidden={!!tone}
         style={{
           background: `radial-gradient(circle at ${light.x}% ${light.y}%, rgba(255,255,255,0.24) 0%, transparent 52%)`,
           opacity: on ? 1 : 0,
@@ -254,7 +269,7 @@ const TiltCard = ({
         }}
       />
       {/* Shimmer sweep */}
-      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-[920ms] ease-in-out pointer-events-none z-10" />
+      <div hidden={!!tone} className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-[920ms] ease-in-out pointer-events-none z-10" />
       {children}
     </div>
   );
@@ -315,10 +330,11 @@ export const CompanySelection = ({ onSelectCompany, isPremium, onSubscribe }: Co
           <div className="md:flex-[1.4] flex flex-col">
             <TiltCard
               label="Cognitive Puzzles"
+              tone="#FF7A59"
               onClick={() => onSelectCompany("accenture")}
               glow="rgba(28,25,23,0.12)"
               border="rgba(28,25,23,0.18)"
-              className="flex-1 rounded-2xl bg-white"
+              className="flex-1 rounded-2xl"
             >
               {/* Top wash */}
               <div
@@ -417,10 +433,11 @@ export const CompanySelection = ({ onSelectCompany, isPremium, onSubscribe }: Co
             {/* ── Card 02: Communication Tests ── */}
             <TiltCard
               label="Communication Tests"
+              tone="#7CC4F2"
               onClick={() => navigate("/game/communication-patterns")}
               glow="rgba(28,25,23,0.12)"
               border="rgba(28,25,23,0.18)"
-              className="flex-1 rounded-2xl bg-white"
+              className="flex-1 rounded-2xl"
             >
               <div
                 className="absolute inset-0 pointer-events-none"
@@ -500,10 +517,11 @@ export const CompanySelection = ({ onSelectCompany, isPremium, onSubscribe }: Co
             {/* ── Card 03: AI Mock Interview ── */}
             <TiltCard
               label="AI Mock Interview"
+              tone="#9ADB84"
               onClick={() => navigate("/ai-interview")}
               glow="rgba(28,25,23,0.12)"
               border="rgba(28,25,23,0.18)"
-              className="flex-1 rounded-2xl bg-white"
+              className="flex-1 rounded-2xl"
             >
               <div
                 className="absolute inset-0 pointer-events-none"
@@ -585,11 +603,11 @@ export const CompanySelection = ({ onSelectCompany, isPremium, onSubscribe }: Co
         {/* ── Card 04: Connect 1:1 — full-width banner ── */}
         <TiltCard
           label="Connect 1:1"
+          tone="#FFD23F"
           onClick={() => navigate("/connect")}
           glow="rgba(28,25,23,0.12)"
           border="rgba(28,25,23,0.22)"
           className="w-full rounded-2xl"
-          style={{ background: "#ffffff" }}
         >
           <div
             className="absolute inset-0 pointer-events-none"
@@ -665,11 +683,11 @@ export const CompanySelection = ({ onSelectCompany, isPremium, onSubscribe }: Co
         {/* ── Card 05: Important Coding Questions Checklist — full-width banner ── */}
         <TiltCard
           label="Important Coding Questions"
+          tone="#F6A9C6"
           onClick={() => navigate("/coding-questions")}
           glow="rgba(28,25,23,0.12)"
           border="rgba(28,25,23,0.22)"
           className="w-full rounded-2xl"
-          style={{ background: "#ffffff" }}
         >
           <div
             className="absolute inset-0 pointer-events-none"
@@ -748,6 +766,7 @@ export const CompanySelection = ({ onSelectCompany, isPremium, onSubscribe }: Co
         {/* ── Card: Premium Resources — full-width banner ── */}
         <TiltCard
           label="Premium Resources"
+          tone="#F4EBD8"
           onClick={() => {
             if (isPremium) window.open(PREMIUM_RESOURCES_URL, "_blank", "noopener,noreferrer");
             else onSubscribe();
@@ -755,7 +774,6 @@ export const CompanySelection = ({ onSelectCompany, isPremium, onSubscribe }: Co
           glow="rgba(28,25,23,0.12)"
           border="rgba(28,25,23,0.22)"
           className="w-full rounded-2xl"
-          style={{ background: "#ffffff" }}
         >
           <div className="relative z-10 p-5 sm:p-7 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-6">
             <div className="flex items-center gap-5">
@@ -856,10 +874,11 @@ export const CompanySelection = ({ onSelectCompany, isPremium, onSubscribe }: Co
           <TiltCard
             id="onboarding-radar-card"
             label="Job Match"
+            tone="#BFE0CF"
             onClick={() => navigate("/radar")}
             glow="rgba(28,25,23,0.08)"
             border="rgba(28,25,23,0.07)"
-            className="flex-1 rounded-2xl bg-white"
+            className="flex-1 rounded-2xl"
           >
             <div className="absolute top-4 right-4 pointer-events-none" style={{ opacity: 0.45 }}>
               <div style={{ width: 78, height: 78, animation: "scanRotate 8s linear infinite" }}>
