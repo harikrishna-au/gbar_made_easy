@@ -1,8 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import { useRef, useState, useCallback } from "react";
-import { Layers, Mic2, Bot, Users, ArrowUpRight, Code2, Hammer, Radar } from "lucide-react";
+import { Layers, Mic2, Bot, Users, ArrowUpRight, Code2, Hammer, Radar, BookOpen, Lock } from "lucide-react";
 import { Rise } from "cube-motion/react";
 import { WaitlistPopup } from "./WaitlistPopup";
+
+const PREMIUM_RESOURCES_URL =
+  "https://drive.google.com/drive/folders/1wepyyapyvzyUR9T26CZJjQE-fGesd3A3?usp=sharing";
 
 // ─── CSS animations ───────────────────────────────────────────────────────────
 
@@ -263,9 +266,11 @@ interface CompanySelectionProps {
   onSelectCompany: (companyId: string) => void;
   onFeedbackClick: () => void;
   onSupportClick: () => void;
+  isPremium: boolean;
+  onSubscribe: () => void;
 }
 
-export const CompanySelection = ({ onSelectCompany }: CompanySelectionProps) => {
+export const CompanySelection = ({ onSelectCompany, isPremium, onSubscribe }: CompanySelectionProps) => {
   const navigate = useNavigate();
 
   const [showWaitlist, setShowWaitlist] = useState(false);
@@ -732,6 +737,78 @@ export const CompanySelection = ({ onSelectCompany }: CompanySelectionProps) => 
                 <ArrowUpRight className="w-4 h-4 transition-transform duration-300 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
               </span>
             </div>
+          </div>
+
+          <div
+            className="absolute bottom-0 left-0 right-0 h-[1.5px] opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            style={{ background: "linear-gradient(90deg, #1c1917, transparent 70%)" }}
+          />
+        </TiltCard>
+
+        {/* ── Card: Premium Resources — full-width banner ── */}
+        <TiltCard
+          label="Premium Resources"
+          onClick={() => {
+            if (isPremium) window.open(PREMIUM_RESOURCES_URL, "_blank", "noopener,noreferrer");
+            else onSubscribe();
+          }}
+          glow="rgba(28,25,23,0.12)"
+          border="rgba(28,25,23,0.22)"
+          className="w-full rounded-2xl"
+          style={{ background: "#ffffff" }}
+        >
+          <div className="relative z-10 p-5 sm:p-7 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-6">
+            <div className="flex items-center gap-5">
+              <div
+                className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
+                style={{
+                  background: "rgba(28,25,23,0.06)",
+                  border: "1px solid rgba(28,25,23,0.12)",
+                }}
+              >
+                <BookOpen className="w-5 h-5" style={{ color: "#1c1917" }} />
+              </div>
+              <div>
+                <div className="flex items-center gap-2.5 mb-0.5">
+                  <span
+                    className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold tracking-wide border font-['Inter']"
+                    style={{
+                      color: "#44403c",
+                      background: "#f5f5f4",
+                      borderColor: "#e7e5e4",
+                    }}
+                  >
+                    PREMIUM
+                  </span>
+                </div>
+                <h3
+                  className="text-xl font-bold tracking-tight font-['Inter'] mb-1"
+                  style={{ color: "#1c1c1e", letterSpacing: "-0.015em" }}
+                >
+                  Study Resources
+                </h3>
+                <p className="text-stone-500 text-[13px] font-['Inter']">
+                  Prep materials and guides for Accenture 2026. Open to premium members only.
+                </p>
+              </div>
+            </div>
+
+            <span
+              className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-white text-[13px] font-semibold font-['Inter'] group/btn flex-shrink-0"
+              style={{ background: "#1c1917" }}
+            >
+              {isPremium ? (
+                <>
+                  Open Resources
+                  <ArrowUpRight className="w-4 h-4 transition-transform duration-300 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
+                </>
+              ) : (
+                <>
+                  <Lock className="w-4 h-4" />
+                  Unlock with Premium
+                </>
+              )}
+            </span>
           </div>
 
           <div

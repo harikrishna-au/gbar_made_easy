@@ -160,6 +160,8 @@ const Dashboard = () => {
                   setShowFeedbackPopup(true);
                 }}
                 onSupportClick={() => setShowSupportPopup(true)}
+                isPremium={isPremium}
+                onSubscribe={handleSubscribe}
               />
             ) : (
               // VIEW 2: Cognitive Games
