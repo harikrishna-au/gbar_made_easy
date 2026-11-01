@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { ClerkProvider } from "@clerk/clerk-react";
 import Landing from "./pages/Landing";
+import Home from "./pages/Home";
 import Guidelines from "./pages/Guidelines";
 import Dashboard from "./pages/Dashboard";
 import FindMin from "./pages/findmin";
@@ -87,8 +88,8 @@ const App = () => {
   return (
     <ClerkProvider
       publishableKey={clerkPubKey}
-      signInUrl="/"
-      signUpUrl="/"
+      signInUrl="/login"
+      signUpUrl="/login"
       localization={clerkLocalization}
       appearance={{
         baseTheme: undefined,
@@ -109,7 +110,8 @@ const App = () => {
           >
             <MetaPixelTracker />
             <Routes>
-              <Route path="/" element={<Landing />} />
+              <Route path="/" element={<Home />} />
+              <Route path="/login" element={<Landing />} />
               <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
               <Route path="/dashboard/:companyId" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
               <Route path="/terms" element={<TermsOfService />} />

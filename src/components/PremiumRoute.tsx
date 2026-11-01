@@ -23,7 +23,7 @@ const PremiumRoute = ({ children }: PremiumRouteProps) => {
     }
 
     if (!isSignedIn) {
-        return <Navigate to="/" replace />;
+        return <Navigate to="/login" replace />;
     }
 
     if (!isPremium) {
