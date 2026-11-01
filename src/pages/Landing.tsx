@@ -104,7 +104,7 @@ export default function Landing() {
   const sharedProps = { view, setView, navigate, isPremium, isLoaded, isClerkVerificationStep, features };
 
   return (
-    <div className="min-h-screen relative overflow-hidden" style={{ background: "#fbf6ea" }}>
+    <div className="min-h-screen relative overflow-hidden" style={{ background: "#fcfcf9" }}>
       <LandingBackground />
       <PromoBanner onClaim={claimOffer} />
       {isDesktop ? (

@@ -62,7 +62,7 @@ export default function BlogWrite() {
   };
 
   return (
-    <div className="min-h-screen relative" style={{ background: '#fbf6ea' }}>
+    <div className="min-h-screen relative" style={{ background: '#fcfcf9' }}>
       <SEO
         title="Write a Blog | Harry The Blaze"
         description="Share your campus placement experience with the Harry The Blaze community."

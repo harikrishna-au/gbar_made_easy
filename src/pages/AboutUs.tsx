@@ -19,7 +19,7 @@ const sections = [
 
 const AboutUs = () => (
   <PageWrapper>
-    <div className="min-h-screen w-full relative overflow-hidden" style={{ background: "#fbf6ea" }}>
+    <div className="min-h-screen w-full relative overflow-hidden" style={{ background: "#fcfcf9" }}>
       <Header />
 
       {/* Background */}
