@@ -58,3 +58,6 @@ samconfig.toml.user_backup
 .impeccable/live/cache/
 .impeccable/live/*.png
 # impeccable-ignore-end
+
+# Razorpay earnings reports (contain customer emails)
+razorpay-earnings/
