@@ -9,7 +9,6 @@ import {
 } from "@clerk/clerk-react";
 import { Link, NavigateFunction } from "react-router-dom";
 import { ArrowRight, Sparkles, ShieldCheck, Mail, UserPlus, LogIn, Check } from "lucide-react";
-import { ConnectBenefits } from "./ConnectBenefits";
 import { AuthView, clerkAppearance, AuthSkeleton } from "./authConfig";
 
 interface Feature {
@@ -84,11 +83,13 @@ export const LandingDesktop = ({
           className="font-['Merriweather'] font-black text-stone-900 leading-[1.06] tracking-tight mb-5"
           style={{ fontSize: "clamp(2.4rem, 4vw, 4rem)" }}
         >
-          Talk 1:1 with
+          Practice the real
           <br />
-          someone who just
+          Accenture rounds.
           <br />
-          got placed.
+          Then talk to someone
+          <br />
+          who just got placed.
         </Rise>
 
         <Rise
@@ -97,11 +98,7 @@ export const LandingDesktop = ({
           className="font-['Inter'] text-stone-600 leading-relaxed mb-6 max-w-md"
           style={{ fontSize: "0.96rem" }}
         >
-          Book a 20-minute Connect 1:1 with a senior who cleared the exact rounds you're preparing for. We send one meeting link to both of you. Practice the Accenture 2026 cognitive and communication rounds here in between.
-        </Rise>
-
-        <Rise delay={280} className="mb-6 max-w-lg">
-          <ConnectBenefits />
+          Cognitive games and communication rounds modelled on the 2026 assessment, plus a 20-minute Connect 1:1 with a senior who cleared them. We confirm the slot and send one meeting link to both of you.
         </Rise>
 
         <Rise delay={300} className="mb-8">
@@ -113,75 +110,21 @@ export const LandingDesktop = ({
             Book a Connect 1:1
             <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
           </Link>
+          <a
+            href="#practice"
+            className="ml-3 inline-flex items-center gap-2 px-5 py-3.5 rounded-2xl border-2 border-stone-200 bg-white text-stone-800 font-['Inter'] font-semibold text-[15px] hover:border-stone-900 transition-colors"
+          >
+            See the rounds
+          </a>
         </Rise>
 
-        {/* Interactive feature list */}
-        <Rise targets="children" delay={380} stagger={60} className="space-y-1">
-          {features.filter((f) => f.featured).map(({ icon: Icon, label, sub, to, href }) => (
-            <button
-              key={label}
-              type="button"
-              onClick={() => to ? navigate(to) : href ? window.open(href, '_blank') : undefined}
-              className="group w-full text-left flex items-center gap-3.5 rounded-2xl px-3.5 py-3.5 -mx-1 mb-3 border-2 border-stone-900 bg-white hover:bg-stone-50 transition-colors shadow-[0_8px_24px_rgba(28,25,23,0.12)]"
-            >
-              <div className="w-10 h-10 rounded-xl bg-stone-900 flex items-center justify-center flex-shrink-0">
-                <Icon className="w-5 h-5 text-white" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <span className="flex items-center gap-2">
-                  <span className="font-['Inter'] text-[14px] font-bold text-stone-900 leading-tight">{label}</span>
-                  <span className="text-[11px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded-full bg-stone-100 text-stone-600">Live</span>
-                </span>
-                <span className="font-['Inter'] text-[12px] text-stone-500">{sub}</span>
-              </div>
-              <ArrowRight className="w-4 h-4 text-stone-900 flex-shrink-0" />
-            </button>
-          ))}
-          {features.filter((f) => !f.featured).map(({ icon: Icon, label, sub, to, href }) => (
-            <div
-              key={label}
-              className={`group flex items-center gap-3.5 rounded-xl px-3 py-2.5 -mx-3 transition-all duration-200 hover:bg-white/70 hover:translate-x-1${to || href ? " cursor-pointer" : ""}`}
-              onClick={to ? () => navigate(to) : href ? () => window.open(href, '_blank') : undefined}
-            >
-              <div
-                className="w-9 h-9 rounded-lg bg-white border border-stone-200 flex items-center justify-center flex-shrink-0 shadow-sm transition-all duration-200 group-hover:border-stone-400 group-hover:shadow-md"
-                style={{ transition: "all 0.2s" }}
-              >
-                <Icon className="w-4 h-4 text-stone-600 transition-colors duration-200 group-hover:text-stone-900" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <span className="font-['Inter'] text-[13.5px] font-semibold text-stone-800 block leading-tight">{label}</span>
-                <span className="font-['Inter'] text-[11.5px] text-stone-400">{sub}</span>
-              </div>
-              <ArrowRight className="w-4 h-4 text-stone-300 flex-shrink-0 opacity-0 -translate-x-1 transition-all duration-200 group-hover:opacity-100 group-hover:translate-x-0 group-hover:text-stone-500" />
-            </div>
-          ))}
-        </Rise>
       </div>
 
-      <Rise
-        delay={850}
-        className="flex items-center gap-5 flex-wrap"
-      >
-        {[
-          { label: "About", to: "/about" },
-          { label: "Terms", to: "/terms" },
-          { label: "Connect 1:1", to: "/connect" },
-          { label: "Be a Guru", to: "/placed-guru" },
-        ].map(({ label, to }) => (
-          <Link
-            key={label}
-            to={to}
-            className="text-[11.5px] font-['Inter'] text-stone-400 hover:text-stone-600 transition-colors"
-          >
-            {label}
-          </Link>
-        ))}
-      </Rise>
+      <a href="#practice" className="font-['Inter'] text-[12px] text-stone-400 hover:text-stone-600">Scroll for how it works ↓</a>
     </div>
 
     {/* Right: auth card */}
-    <div className="flex-1 flex flex-col items-center justify-center px-8 gap-4">
+    <div id="auth-section" className="flex-1 flex flex-col items-center justify-center px-8 gap-4 scroll-mt-4">
       <Rise
         delay={220}
         className="w-full max-w-[390px] relative"

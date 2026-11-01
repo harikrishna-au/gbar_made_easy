@@ -9,7 +9,6 @@ import {
 } from "@clerk/clerk-react";
 import { Link, NavigateFunction } from "react-router-dom";
 import { ArrowRight, Sparkles, ShieldCheck, Mail } from "lucide-react";
-import { ConnectBenefits } from "./ConnectBenefits";
 import { AuthView, clerkAppearance, AuthSkeleton } from "./authConfig";
 
 interface Feature {
@@ -108,7 +107,7 @@ export const LandingMobile = ({
           delay={50}
           className="font-['Merriweather'] font-black text-stone-900 leading-[1.12] tracking-tight text-[2rem]"
         >
-          Talk 1:1 with someone who just got placed.
+          Practice the real Accenture rounds. Then talk to someone who just got placed.
         </Rise>
 
         <Rise
@@ -116,11 +115,7 @@ export const LandingMobile = ({
           delay={100}
           className="font-['Inter'] text-[14px] text-stone-600 leading-relaxed mt-3"
         >
-          Book a 20-minute Connect 1:1 with a senior who cleared the rounds you're preparing for. Practice Accenture 2026 cognitive and communication rounds here in between.
-        </Rise>
-
-        <Rise delay={110} className="mt-5">
-          <ConnectBenefits compact />
+          Cognitive games and communication rounds modelled on the 2026 assessment, plus a 20-minute Connect 1:1 with a senior who cleared them.
         </Rise>
 
         <Rise
@@ -145,43 +140,6 @@ export const LandingMobile = ({
           <ArrowRight className="w-4 h-4" />
         </Rise>
 
-        <Rise targets="children" delay={200} stagger={40} className="mt-8 space-y-2.5">
-          {features.filter((f) => f.featured).map(({ icon: Icon, label, sub, to, href }) => (
-            <button
-              key={label}
-              type="button"
-              onClick={() => to ? navigate(to) : href ? window.open(href, '_blank') : undefined}
-              className="flex items-center gap-3 w-full text-left p-3.5 rounded-2xl border-2 border-stone-900 bg-white active:scale-[0.99] transition-transform"
-            >
-              <div className="w-10 h-10 rounded-xl bg-stone-900 flex items-center justify-center flex-shrink-0">
-                <Icon className="w-5 h-5 text-white" />
-              </div>
-              <div className="min-w-0 flex-1">
-                <div className="flex items-center gap-2">
-                  <p className="font-['Inter'] text-[13.5px] font-bold text-stone-900">{label}</p>
-                  <span className="text-[11px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded-full bg-stone-100 text-stone-600">Live</span>
-                </div>
-                <p className="font-['Inter'] text-[12px] text-stone-500">{sub}</p>
-              </div>
-              <ArrowRight className="w-4 h-4 text-stone-900 flex-shrink-0" />
-            </button>
-          ))}
-          {features.filter((f) => !f.featured).map(({ icon: Icon, label, sub, to, href }) => (
-            <div
-              key={label}
-              className={`flex items-center gap-3 p-3 bg-white rounded-2xl border border-stone-100${to || href ? " cursor-pointer active:scale-[0.99]" : ""}`}
-              onClick={to ? () => navigate(to) : href ? () => window.open(href, '_blank') : undefined}
-            >
-              <div className="w-9 h-9 rounded-xl bg-stone-50 border border-stone-200 flex items-center justify-center flex-shrink-0">
-                <Icon className="w-4 h-4 text-stone-600" />
-              </div>
-              <div className="min-w-0">
-                <p className="font-['Inter'] text-[13px] font-semibold text-stone-800">{label}</p>
-                <p className="font-['Inter'] text-[12px] text-stone-400">{sub}</p>
-              </div>
-            </div>
-          ))}
-        </Rise>
       </section>
 
       <section id="auth-section" className="px-5 pt-4 pb-24 scroll-mt-4">
@@ -270,22 +228,6 @@ export const LandingMobile = ({
             Secure · We never share your data
           </span>
         </div>
-        <nav className="flex flex-wrap items-center justify-center gap-x-1 pt-1">
-          {[
-            { label: "About", to: "/about" },
-            { label: "Terms", to: "/terms" },
-            { label: "Connect 1:1", to: "/connect" },
-            { label: "Be a Guru", to: "/placed-guru" },
-          ].map(({ label, to }) => (
-            <Link
-              key={label}
-              to={to}
-              className="inline-flex items-center justify-center min-h-[44px] px-2.5 text-[12px] font-['Inter'] text-stone-400"
-            >
-              {label}
-            </Link>
-          ))}
-        </nav>
       </section>
     </SignedOut>
   </div>
