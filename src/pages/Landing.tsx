@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { usePremiumStatus } from "@/hooks/usePremiumStatus";
-import { useAuth, SignedOut } from "@clerk/clerk-react";
+import { useAuth } from "@clerk/clerk-react";
 import {
   useMotionValue,
   useTransform,
@@ -12,7 +12,6 @@ import { AuthView } from "./landing/authConfig";
 import { LandingBackground } from "./landing/LandingBackground";
 import { LandingMobile } from "./landing/LandingMobile";
 import { LandingDesktop } from "./landing/LandingDesktop";
-import { LandingSections } from "./landing/LandingSections";
 import { ProductHuntBadge } from "@/components/ProductHuntBadge";
 import { PromoBanner } from "@/components/PromoBanner";
 
@@ -102,11 +101,6 @@ export default function Landing() {
     if (el) el.scrollIntoView({ behavior: "smooth" });
   };
 
-  const claimSignUp = () => {
-    setView("sign-up");
-    document.getElementById("auth-section")?.scrollIntoView({ behavior: "smooth" });
-  };
-
   const sharedProps = { view, setView, navigate, isPremium, isLoaded, isClerkVerificationStep, features };
 
   return (
@@ -118,9 +112,6 @@ export default function Landing() {
       ) : (
         <LandingMobile {...sharedProps} />
       )}
-      <SignedOut>
-        <LandingSections navigate={navigate} features={features} onSignUp={claimSignUp} />
-      </SignedOut>
       <ProductHuntBadge />
     </div>
   );

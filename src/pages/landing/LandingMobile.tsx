@@ -101,53 +101,14 @@ export const LandingMobile = ({
         </a>
       </header>
 
-      <section className="px-5 pt-6 pb-8">
-        <Rise
-          as="h1"
-          delay={50}
-          className="font-['Merriweather'] font-black text-stone-900 leading-[1.12] tracking-tight text-[2rem]"
-        >
-          Practice the real Accenture rounds. Then talk to someone who just got placed.
-        </Rise>
-
-        <Rise
-          as="p"
-          delay={100}
-          className="font-['Inter'] text-[14px] text-stone-600 leading-relaxed mt-3"
-        >
-          Cognitive games and communication rounds modelled on the 2026 assessment, plus a 20-minute Connect 1:1 with a senior who cleared them.
-        </Rise>
-
-        <Rise
-          as="a"
-          href="/connect"
-          onClick={(e: React.MouseEvent) => { e.preventDefault(); navigate("/connect"); }}
-          delay={130}
-          className="mt-6 flex items-center justify-center gap-2 min-h-[48px] rounded-2xl font-['Inter'] font-semibold text-[15px] bg-stone-900 text-white active:scale-[0.98] transition-transform shadow-[0_12px_32px_rgba(28,25,23,0.28)]"
-        >
-          Book a Connect 1:1
-          <ArrowRight className="w-4 h-4" />
-        </Rise>
-
-        <Rise
-          as="a"
-          href="#auth-section"
-          onClick={() => setView("sign-up")}
-          delay={160}
-          className="mt-3 flex items-center justify-center gap-2 min-h-[48px] rounded-2xl font-['Inter'] font-semibold text-[15px] text-stone-800 border-2 border-stone-200 bg-white active:scale-[0.98] transition-transform"
-        >
-          Sign up free
-          <ArrowRight className="w-4 h-4" />
-        </Rise>
-
-      </section>
-
-      <section id="auth-section" className="px-5 pt-4 pb-24 scroll-mt-4">
-        <h2 className="font-['Merriweather'] font-black text-[1.35rem] text-stone-900 leading-tight">
-          {view === "sign-in" ? "Welcome back" : "Create your free account"}
-        </h2>
-        <p className="font-['Inter'] text-[13px] text-stone-500 mt-1 mb-5">
-          {view === "sign-in" ? "Sign in to continue your prep." : "Takes under a minute. No credit card."}
+      <section id="auth-section" className="px-5 pt-4 pb-16 scroll-mt-4">
+        <h1 className="font-['Merriweather'] font-black text-[1.6rem] text-stone-900 leading-tight">
+          {view === "sign-in" ? "Welcome back" : "Practice the real rounds."}
+        </h1>
+        <p className="font-['Inter'] text-[14px] text-stone-600 mt-1.5 mb-5 leading-snug">
+          {view === "sign-in"
+            ? "Sign in to continue your prep."
+            : "Free account in under a minute. No credit card. Then book a 1:1 with someone who just got placed."}
         </p>
 
         <div
@@ -228,6 +189,18 @@ export const LandingMobile = ({
             Secure · We never share your data
           </span>
         </div>
+        <nav className="flex flex-wrap items-center justify-center gap-x-1 pt-1" aria-label="More">
+          {[
+            { label: "How it works", to: "/" },
+            { label: "Connect 1:1", to: "/connect" },
+            { label: "About", to: "/about" },
+            { label: "Terms", to: "/terms" },
+          ].map(({ label, to }) => (
+            <Link key={label} to={to} className="inline-flex items-center justify-center min-h-[44px] px-2.5 text-[12px] font-['Inter'] text-stone-500">
+              {label}
+            </Link>
+          ))}
+        </nav>
       </section>
     </SignedOut>
   </div>

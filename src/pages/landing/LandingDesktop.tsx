@@ -110,17 +110,28 @@ export const LandingDesktop = ({
             Book a Connect 1:1
             <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
           </Link>
-          <a
-            href="#practice"
+          <Link
+            to="/"
             className="ml-3 inline-flex items-center gap-2 px-5 py-3.5 rounded-2xl border-2 border-stone-200 bg-white text-stone-800 font-['Inter'] font-semibold text-[15px] hover:border-stone-900 transition-colors"
           >
-            See the rounds
-          </a>
+            See how it works
+          </Link>
         </Rise>
 
       </div>
 
-      <a href="#practice" className="font-['Inter'] text-[12px] text-stone-400 hover:text-stone-600">Scroll for how it works ↓</a>
+      <nav className="flex items-center gap-5 flex-wrap" aria-label="More">
+        {[
+          { label: "About", to: "/about" },
+          { label: "Terms", to: "/terms" },
+          { label: "Connect 1:1", to: "/connect" },
+          { label: "Be a Guru", to: "/placed-guru" },
+        ].map(({ label, to }) => (
+          <Link key={label} to={to} className="text-[11.5px] font-['Inter'] text-stone-400 hover:text-stone-600 transition-colors">
+            {label}
+          </Link>
+        ))}
+      </nav>
     </div>
 
     {/* Right: auth card */}
