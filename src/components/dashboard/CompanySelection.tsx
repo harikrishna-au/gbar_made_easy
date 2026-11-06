@@ -47,10 +47,23 @@ const CardLink = ({ id, to, onClick, ariaLabel, className, children }: CardLinkP
     </button>
   );
 
-const Tag = ({ children }: { children: ReactNode }) => (
-  <span className="inline-flex items-center rounded-full border border-stone-200 bg-stone-50 px-2.5 py-1 font-['Inter'] text-xs font-medium text-stone-700">
-    {children}
-  </span>
+// ─── Section heading ──────────────────────────────────────────────────────────
+
+const SectionHeading = ({ step, title, hint }: { step?: string; title: string; hint?: string }) => (
+  <div className="mb-5 mt-14 flex items-end justify-between gap-4 border-b border-stone-200 pb-3">
+    <div className="flex items-center gap-3">
+      {step && (
+        <span
+          aria-hidden
+          className="flex h-7 w-7 items-center justify-center rounded-full bg-stone-900 font-['Inter'] text-xs font-bold text-white"
+        >
+          {step}
+        </span>
+      )}
+      <h2 className="font-['Inter'] text-xl font-bold tracking-tight text-stone-900">{title}</h2>
+    </div>
+    {hint && <p className="hidden text-right font-['Inter'] text-sm text-stone-600 sm:block">{hint}</p>}
+  </div>
 );
 
 // ─── Practice round card ──────────────────────────────────────────────────────
@@ -58,34 +71,51 @@ const Tag = ({ children }: { children: ReactNode }) => (
 interface PracticeCardProps {
   id?: string;
   icon: IconType;
+  label: string;
   title: string;
   body: string;
-  tags: string;
+  tags: string[];
   cta: string;
   to?: string;
   onClick?: () => void;
 }
 
-const PracticeCard = ({ id, icon: Icon, title, body, tags, cta, to, onClick }: PracticeCardProps) => (
-  <CardLink id={id} to={to} onClick={onClick} className={`${CARD_BASE} flex-col gap-4 p-5 sm:p-6`}>
-    <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-stone-100 text-stone-900">
-      <Icon className="h-5 w-5" />
+// Fixed anatomy so the three cards line up: header row, title+body, then a footer pinned to the bottom.
+const PracticeCard = ({ id, icon: Icon, label, title, body, tags, cta, to, onClick }: PracticeCardProps) => (
+  <CardLink id={id} to={to} onClick={onClick} className={`${CARD_BASE} h-full flex-col p-5 sm:p-6`}>
+    <span className="mb-5 flex items-center justify-between">
+      <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-stone-100 text-stone-900">
+        <Icon className="h-5 w-5" />
+      </span>
+      <span className="font-['Inter'] text-xs font-semibold uppercase tracking-wider text-stone-500">{label}</span>
     </span>
+
     <span className="block">
-      <span className="mb-1.5 block font-['Inter'] text-lg font-bold tracking-tight text-stone-900">{title}</span>
+      <span className="mb-2 block font-['Inter'] text-lg font-bold tracking-tight text-stone-900">{title}</span>
       <span className="block font-['Inter'] text-sm leading-relaxed text-stone-600">{body}</span>
     </span>
-    <span className="mt-auto flex flex-col gap-3 pt-2">
-      <Tag>{tags}</Tag>
-      <span className="inline-flex min-h-[44px] items-center gap-1.5 font-['Inter'] text-sm font-semibold text-stone-900">
-        {cta}
-        <ArrowUpRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 motion-reduce:transform-none" />
+
+    <span className="mb-6 mt-5 flex flex-wrap gap-1.5">
+      {tags.map((t) => (
+        <span
+          key={t}
+          className="rounded-full border border-stone-200 bg-stone-50 px-2.5 py-1 font-['Inter'] text-xs font-medium text-stone-700"
+        >
+          {t}
+        </span>
+      ))}
+    </span>
+
+    <span className="mt-auto flex items-center justify-between border-t border-stone-100 pt-4">
+      <span className="font-['Inter'] text-sm font-semibold text-stone-900">{cta}</span>
+      <span className="flex h-9 w-9 items-center justify-center rounded-full bg-stone-900 text-white transition-colors duration-200 group-hover:bg-[#43695a]">
+        <ArrowUpRight className="h-4 w-4" aria-hidden />
       </span>
     </span>
   </CardLink>
 );
 
-// ─── Compact tool row ─────────────────────────────────────────────────────────
+// ─── Tool row (lives inside one shared panel) ─────────────────────────────────
 
 interface ToolRowProps {
   id?: string;
@@ -93,36 +123,43 @@ interface ToolRowProps {
   title: string;
   body: string;
   badge: string;
-  cta?: ReactNode;
+  locked?: boolean;
   to?: string;
   onClick?: () => void;
 }
 
-const ToolRow = ({ id, icon: Icon, title, body, badge, cta, to, onClick }: ToolRowProps) => (
-  <CardLink id={id} to={to} onClick={onClick} className={`${CARD_BASE} items-center gap-4 p-4 sm:p-5`}>
+const ToolRow = ({ id, icon: Icon, title, body, badge, locked, to, onClick }: ToolRowProps) => (
+  <CardLink
+    id={id}
+    to={to}
+    onClick={onClick}
+    className={
+      "group flex w-full items-center gap-4 p-4 text-left sm:p-5 transition-colors duration-200 hover:bg-stone-50 " +
+      "border-b border-stone-200 last:border-b-0 md:[&:nth-child(3)]:border-b-0 md:odd:border-r " +
+      "focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-[#43695a]"
+    }
+  >
     <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-stone-100 text-stone-900">
       <Icon className="h-5 w-5" />
     </span>
     <span className="min-w-0 flex-1">
-      <span className="flex items-center gap-2">
+      <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
         <span className="font-['Inter'] text-base font-bold tracking-tight text-stone-900">{title}</span>
         <span className="rounded-full bg-stone-100 px-2 py-0.5 font-['Inter'] text-[11px] font-semibold uppercase tracking-wide text-stone-600">
           {badge}
         </span>
       </span>
-      <span className="mt-0.5 block font-['Inter'] text-sm leading-snug text-stone-600">{body}</span>
+      <span className="mt-1 block font-['Inter'] text-sm leading-snug text-stone-600">{body}</span>
     </span>
-    <span className="flex-shrink-0 text-stone-500 group-hover:text-stone-900">
-      {cta ?? <ArrowUpRight className="h-5 w-5" aria-hidden />}
-    </span>
+    {locked ? (
+      <Lock className="h-5 w-5 flex-shrink-0 text-stone-500" aria-label="Locked: premium only" />
+    ) : (
+      <ArrowUpRight
+        className="h-5 w-5 flex-shrink-0 text-stone-400 transition-colors duration-200 group-hover:text-stone-900"
+        aria-hidden
+      />
+    )}
   </CardLink>
-);
-
-const SectionHeading = ({ title, hint }: { title: string; hint?: string }) => (
-  <div className="mb-4 mt-12 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-    <h2 className="font-['Inter'] text-xl font-bold tracking-tight text-stone-900">{title}</h2>
-    {hint && <p className="font-['Inter'] text-sm text-stone-600">{hint}</p>}
-  </div>
 );
 
 // ─── Main component ───────────────────────────────────────────────────────────
@@ -149,40 +186,43 @@ export const CompanySelection = ({ onSelectCompany, isPremium, onSubscribe }: Co
       {/* ── Featured: Connect 1:1 ── */}
       <ConnectFeature />
 
-      {/* ── Practice the rounds ── */}
-      <SectionHeading title="Practice the rounds first" hint="The same round types you will face" />
-      <div className="grid gap-4 md:grid-cols-3">
+      {/* ── 1. Practice the rounds ── */}
+      <SectionHeading step="1" title="Practice the rounds first" hint="The same round types you will face" />
+      <div className="grid items-stretch gap-4 md:grid-cols-3">
         <PracticeCard
           icon={Layers}
+          label="Round 1"
           title="Cognitive Puzzles"
           body="Game-based simulations of how top MNCs test reasoning speed, memory and problem-solving."
-          tags="Matrix Flow · Balloon Math · Maze"
+          tags={["Matrix Flow", "Balloon Math", "Maze"]}
           cta="Start practicing"
           onClick={() => onSelectCompany("accenture")}
         />
         <PracticeCard
           id="onboarding-comm-card"
           icon={Mic2}
+          label="Round 2"
           title="Communication Tests"
           body="Reading, listening and speaking simulations from real MNC assessment rounds."
-          tags="Reading · Listening · Speaking"
+          tags={["Reading", "Listening", "Speaking"]}
           cta="Start round"
           to="/game/communication-patterns"
         />
         <PracticeCard
           id="onboarding-ai-card"
           icon={Bot}
+          label="Interview"
           title="AI Mock Interview"
           body="Face a live interviewer and get instant feedback on answers, confidence and communication."
-          tags="Live · Instant feedback"
+          tags={["Live", "Instant feedback"]}
           cta="Start interview"
           to="/ai-interview"
         />
       </div>
 
-      {/* ── More tools ── */}
-      <SectionHeading title="More tools" />
-      <div className="grid gap-4 md:grid-cols-2">
+      {/* ── 2. Toolkit ── */}
+      <SectionHeading step="2" title="Toolkit" hint="Extra prep alongside the rounds" />
+      <div className="grid overflow-hidden rounded-2xl border border-stone-200 bg-white md:grid-cols-2">
         <ToolRow
           icon={Code2}
           title="Important Coding Questions"
@@ -195,13 +235,7 @@ export const CompanySelection = ({ onSelectCompany, isPremium, onSubscribe }: Co
           title="Study Resources"
           body="Prep materials and guides for Accenture 2026."
           badge="Premium"
-          cta={
-            isPremium ? (
-              <ArrowUpRight className="h-5 w-5" aria-hidden />
-            ) : (
-              <Lock className="h-5 w-5" aria-label="Locked: premium only" />
-            )
-          }
+          locked={!isPremium}
           onClick={() => {
             if (isPremium) window.open(PREMIUM_RESOURCES_URL, "_blank", "noopener,noreferrer");
             else onSubscribe();
