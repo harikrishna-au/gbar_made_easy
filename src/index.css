@@ -59,7 +59,7 @@ All colors MUST be HSL.
     /* Moss Focus Ring */
 
     /* Radius: Gentle, crafted curves (not fully round, not sharp) */
-    --radius: 0.75rem;
+    --radius: 0.375rem;
 
     /* Transition: Slow design, gentle easing */
     --transition-smooth: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);

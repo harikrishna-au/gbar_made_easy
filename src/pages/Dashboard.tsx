@@ -10,7 +10,6 @@ import SEO from "@/components/SEO";
 import { usePremiumStatus } from "@/hooks/usePremiumStatus";
 import { toast } from "sonner";
 import { OnboardingTour } from "@/components/OnboardingTour";
-import { LandingBackground } from "@/pages/landing/LandingBackground";
 import { DashboardHero } from "@/components/dashboard/DashboardHero";
 import { DashboardFooter } from "@/components/dashboard/DashboardFooter";
 import { CompanySelection } from "@/components/dashboard/CompanySelection";
@@ -117,8 +116,6 @@ const Dashboard = () => {
         title="Harry The Blaze | Dashboard"
         description="Your central hub for MNC cognitive practice. Track progress, access games, and sharpen your skills for top company assessments."
       />
-      <LandingBackground />
-
       {!companyId && (searchParams.get("promo") === "1" || (!isPremium && !premiumLoading)) && (
         <div className="w-full relative z-40 mt-[72px] -mb-12">
           <PromoBanner onClaim={handleSubscribe} />
