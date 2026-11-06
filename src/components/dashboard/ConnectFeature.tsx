@@ -1,7 +1,13 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, BadgeCheck, CalendarCheck, CreditCard, Link2 } from "lucide-react";
-import { supabase } from "@/lib/supabaseClient";
+import { supabase } from "@/integrations/supabase/client";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface FeaturedExpert {
   id: string;
@@ -13,12 +19,7 @@ interface FeaturedExpert {
   proof_url: string | null;
 }
 
-const TOPICS = [
-  "What was actually asked",
-  "How the rounds ran",
-  "Resume feedback",
-  "What to prep first",
-];
+const TOPICS = ["What was actually asked", "How the rounds ran", "Resume feedback", "What to prep first"];
 
 // Matches the real Connect flow: pay first, the team confirms, one link goes to both sides.
 const STEPS = [
@@ -29,31 +30,12 @@ const STEPS = [
 
 const inr = (n: number) => `₹${n.toLocaleString("en-IN")}`;
 
-const Avatar = ({ expert }: { expert: FeaturedExpert }) =>
-  expert.photo_url ? (
-    <img
-      src={expert.photo_url}
-      alt=""
-      width={48}
-      height={48}
-      loading="lazy"
-      className="h-12 w-12 flex-shrink-0 rounded-xl bg-stone-700 object-cover"
-    />
-  ) : (
-    <span
-      aria-hidden
-      className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-stone-700 font-['Merriweather'] text-lg text-stone-100"
-    >
-      {expert.name.charAt(0)}
-    </span>
-  );
-
 const ExpertRowSkeleton = () => (
-  <div className="flex h-[72px] animate-pulse items-center gap-3 rounded-2xl bg-white/5 p-3">
-    <div className="h-12 w-12 rounded-xl bg-white/10" />
+  <div className="flex h-[72px] items-center gap-3 rounded-2xl border border-white/10 p-3">
+    <Skeleton className="h-12 w-12 rounded-xl bg-white/10" />
     <div className="flex-1 space-y-2">
-      <div className="h-3 w-2/5 rounded bg-white/10" />
-      <div className="h-3 w-3/5 rounded bg-white/10" />
+      <Skeleton className="h-3 w-2/5 bg-white/10" />
+      <Skeleton className="h-3 w-3/5 bg-white/10" />
     </div>
   </div>
 );
@@ -95,27 +77,31 @@ export const ConnectFeature = () => {
   const fromPrice = experts.length ? Math.min(...experts.map((e) => e.price_inr)) : null;
 
   return (
-    <section
+    <Card
       id="onboarding-connect-card"
+      role="region"
       aria-labelledby="connect-feature-title"
-      className="relative overflow-hidden rounded-3xl bg-stone-900 text-stone-50 shadow-[0_24px_60px_-24px_rgba(28,25,23,0.55)]"
+      className="relative overflow-hidden rounded-3xl border-0 bg-stone-900 text-stone-50 shadow-[0_24px_60px_-24px_rgba(28,25,23,0.55)]"
     >
-      {/* Soft moss glow behind the expert list; decorative only */}
+      {/* Soft moss glow; decorative only */}
       <div
         aria-hidden
-        className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-[#557d6b]/25 blur-3xl"
+        className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-primary/25 blur-3xl"
       />
 
-      <div className="relative grid gap-8 p-6 sm:p-9 lg:grid-cols-[1.15fr_1fr] lg:gap-12 lg:p-12">
+      <div className="relative grid grid-cols-1 gap-8 p-5 sm:p-9 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:gap-12 lg:p-12">
         {/* Left: the offer */}
-        <div className="flex flex-col">
-          <div className="mb-5 inline-flex items-center gap-2 self-start rounded-full border border-white/15 bg-white/5 px-3 py-1 font-['Inter'] text-xs font-semibold uppercase tracking-wider text-stone-200">
+        <div className="flex min-w-0 flex-col">
+          <Badge
+            variant="outline"
+            className="mb-5 gap-2 self-start border-white/15 bg-white/5 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-stone-200"
+          >
             <span className="relative flex h-2 w-2" aria-hidden>
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#8fb5a3] opacity-70 motion-reduce:animate-none" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-[#8fb5a3]" />
             </span>
             Connect 1:1 · Live call
-          </div>
+          </Badge>
 
           <h2
             id="connect-feature-title"
@@ -124,41 +110,40 @@ export const ConnectFeature = () => {
             Talk to someone who just got placed.
           </h2>
 
-          <p className="mt-4 max-w-lg font-['Inter'] text-base leading-relaxed text-stone-300">
-            20 minutes, live, with a senior who cleared the round you are facing. Ask what was
-            actually asked and what to prep first.
+          <p className="mt-4 max-w-lg text-base leading-relaxed text-stone-300">
+            20 minutes, live, with a senior who cleared the round you are facing. Ask what was actually asked and
+            what to prep first.
           </p>
 
           <ul className="mt-5 flex flex-wrap gap-2" aria-label="What you can ask">
             {TOPICS.map((t) => (
-              <li
-                key={t}
-                className="rounded-full border border-white/15 px-3 py-1 font-['Inter'] text-[13px] text-stone-200"
-              >
-                {t}
+              <li key={t}>
+                <Badge variant="outline" className="border-white/15 px-3 py-1 text-[13px] font-normal text-stone-200">
+                  {t}
+                </Badge>
               </li>
             ))}
           </ul>
 
           <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3">
-            <Link
-              to="/connect"
-              className="group inline-flex min-h-[48px] items-center gap-2 rounded-xl bg-[#43695a] px-6 font-['Inter'] text-[15px] font-semibold text-white transition-colors duration-200 hover:bg-[#4d7869] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#8fb5a3]"
-            >
-              Book a 20-min call
-              <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
-            </Link>
+            <Button asChild size="lg" className="group h-12 gap-2 px-6 text-[15px] font-semibold">
+              <Link to="/connect">
+                Book a 20-min call
+                <ArrowRight className="transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden />
+              </Link>
+            </Button>
             {fromPrice !== null && (
-              <span className="font-['Inter'] text-sm text-stone-300">
+              <span className="text-sm text-stone-300">
                 from <span className="font-semibold tabular-nums text-white">{inr(fromPrice)}</span> per call
               </span>
             )}
           </div>
 
-          {/* How it works: matches the manual ops flow described on /connect */}
-          <ol className="mt-8 grid gap-3 border-t border-white/10 pt-6 sm:grid-cols-3">
+          <Separator className="mb-6 mt-8 bg-white/10" />
+
+          <ol className="grid gap-3 sm:grid-cols-3">
             {STEPS.map(({ icon: Icon, label }, i) => (
-              <li key={label} className="flex items-center gap-3 font-['Inter'] text-[13px] text-stone-300">
+              <li key={label} className="flex items-center gap-3 text-[13px] text-stone-300">
                 <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-white/10 text-stone-100">
                   <Icon className="h-4 w-4" aria-hidden />
                 </span>
@@ -172,10 +157,8 @@ export const ConnectFeature = () => {
         </div>
 
         {/* Right: real seniors */}
-        <div className="flex flex-col justify-center">
-          <p className="mb-3 font-['Inter'] text-xs font-semibold uppercase tracking-wider text-stone-400">
-            Seniors you can book
-          </p>
+        <div className="flex min-w-0 flex-col justify-center">
+          <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-stone-400">Seniors you can book</p>
 
           <div className="space-y-3">
             {loading && [0, 1, 2].map((i) => <ExpertRowSkeleton key={i} />)}
@@ -185,11 +168,16 @@ export const ConnectFeature = () => {
                 <Link
                   key={e.id}
                   to={`/connect/${e.id}`}
-                  className="group flex min-h-[72px] items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-3 transition-colors duration-200 hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#8fb5a3]"
+                  className="flex min-h-[72px] items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-3 transition-colors duration-200 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#8fb5a3]"
                 >
-                  <Avatar expert={e} />
+                  <Avatar className="h-12 w-12 rounded-xl">
+                    {e.photo_url && <AvatarImage src={e.photo_url} alt="" className="object-cover" />}
+                    <AvatarFallback className="rounded-xl bg-stone-700 font-['Merriweather'] text-lg text-stone-100">
+                      {e.name.charAt(0)}
+                    </AvatarFallback>
+                  </Avatar>
                   <span className="min-w-0 flex-1">
-                    <span className="flex items-center gap-1.5 font-['Inter'] text-[15px] font-semibold text-white">
+                    <span className="flex items-center gap-1.5 text-[15px] font-semibold text-white">
                       <span className="truncate">{e.name}</span>
                       {e.proof_url && (
                         <BadgeCheck
@@ -198,34 +186,37 @@ export const ConnectFeature = () => {
                         />
                       )}
                     </span>
-                    <span className="block truncate font-['Inter'] text-[13px] text-stone-300">
+                    <span className="block truncate text-[13px] text-stone-300">
                       {[e.title, e.company].filter(Boolean).join(" · ") || "Recently placed"}
                     </span>
                   </span>
-                  <span className="flex-shrink-0 font-['Inter'] text-sm font-semibold tabular-nums text-stone-100">
+                  <span className="flex-shrink-0 text-sm font-semibold tabular-nums text-stone-100">
                     {inr(e.price_inr)}
                   </span>
                 </Link>
               ))}
 
             {!loading && preview.length === 0 && (
-              <div className="rounded-2xl border border-dashed border-white/20 p-5 font-['Inter'] text-sm leading-relaxed text-stone-300">
+              <div className="rounded-2xl border border-dashed border-white/20 p-5 text-sm leading-relaxed text-stone-300">
                 New seniors are added regularly. Open Connect to see who is available this week.
               </div>
             )}
           </div>
 
           {!loading && extra > 0 && (
-            <Link
-              to="/connect"
-              className="mt-4 inline-flex min-h-[44px] items-center gap-1.5 self-start font-['Inter'] text-sm font-semibold text-[#8fb5a3] underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#8fb5a3]"
+            <Button
+              asChild
+              variant="link"
+              className="mt-3 h-11 gap-1.5 self-start px-0 font-semibold text-[#8fb5a3] hover:text-[#a9c9ba]"
             >
-              See all {experts.length} seniors
-              <ArrowRight className="h-4 w-4" aria-hidden />
-            </Link>
+              <Link to="/connect">
+                See all {experts.length} seniors
+                <ArrowRight aria-hidden />
+              </Link>
+            </Button>
           )}
         </div>
       </div>
-    </section>
+    </Card>
   );
 };

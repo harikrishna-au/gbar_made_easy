@@ -2,6 +2,8 @@ import { useNavigate } from "react-router-dom";
 import { useRef } from "react";
 import { ArrowLeft, ArrowUpRight, Users, Code2, Briefcase, Presentation } from "lucide-react";
 import gsap from "gsap";
+import Header from "@/components/Header";
+import { Button } from "@/components/ui/button";
 import { useGSAP } from "@gsap/react";
 
 // ─── Interview types ──────────────────────────────────────────────────────────
@@ -67,21 +69,23 @@ const AIInterviewSelection = () => {
 
   return (
     <>
+      <Header />
       {/* Background */}
       <div className="fixed inset-0 -z-10 bg-[#fcfcf9]">
         <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-stone-50 to-transparent opacity-60" />
       </div>
 
-      <div ref={containerRef} className="w-full max-w-4xl mx-auto px-6 py-12 opacity-0 min-h-screen">
+      <div ref={containerRef} className="w-full max-w-4xl mx-auto px-4 sm:px-6 pb-12 pt-24 opacity-0 min-h-screen">
 
         {/* Back */}
-        <button
+        <Button
+          variant="ghost"
           onClick={() => navigate("/dashboard")}
-          className="flex items-center gap-1.5 text-stone-400 hover:text-stone-700 text-[13px] font-medium font-['Inter'] transition-colors mb-10 group"
+          className="group -ml-3 mb-6 h-11 gap-1.5 text-muted-foreground hover:text-foreground"
         >
-          <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-0.5" />
-          Back
-        </button>
+          <ArrowLeft className="transition-transform group-hover:-translate-x-0.5" aria-hidden />
+          Back to dashboard
+        </Button>
 
         {/* Hero */}
         <div className="mb-10">

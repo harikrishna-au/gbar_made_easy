@@ -1,16 +1,10 @@
 import { Link } from "react-router-dom";
 import type { ComponentType, ReactNode } from "react";
-import {
-  Layers,
-  Mic2,
-  Bot,
-  ArrowUpRight,
-  Code2,
-  Hammer,
-  Radar,
-  BookOpen,
-  Lock,
-} from "lucide-react";
+import { ArrowUpRight, Bot, BookOpen, Code2, Hammer, Layers, Lock, Mic2, Radar } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { cn } from "@/lib/utils";
 import { ConnectFeature } from "./ConnectFeature";
 
 const PREMIUM_RESOURCES_URL =
@@ -18,31 +12,25 @@ const PREMIUM_RESOURCES_URL =
 
 type IconType = ComponentType<{ className?: string }>;
 
-// Shared surface for every secondary card: one border, one radius, one hover state.
-const CARD_BASE =
-  "group relative flex w-full text-left rounded-2xl border border-stone-200 bg-white " +
-  "transition-[border-color,box-shadow,transform] duration-200 " +
-  "hover:border-stone-300 hover:shadow-[0_10px_30px_-18px_rgba(28,25,23,0.35)] hover:-translate-y-0.5 " +
-  "motion-reduce:transition-none motion-reduce:hover:translate-y-0 " +
-  "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#43695a]";
+const FOCUS =
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2";
 
 interface CardLinkProps {
   id?: string;
   to?: string;
   onClick?: () => void;
-  ariaLabel?: string;
-  className: string;
+  className?: string;
   children: ReactNode;
 }
 
-// Real <a>/<button> instead of div[role=button]: keyboard, middle-click and deep links work.
-const CardLink = ({ id, to, onClick, ariaLabel, className, children }: CardLinkProps) =>
+// Real <a>/<button> wrapper around a shadcn Card: keyboard, middle-click and deep links work.
+const CardLink = ({ id, to, onClick, className, children }: CardLinkProps) =>
   to ? (
-    <Link id={id} to={to} aria-label={ariaLabel} className={className}>
+    <Link id={id} to={to} className={cn("group block rounded-2xl", FOCUS, className)}>
       {children}
     </Link>
   ) : (
-    <button id={id} type="button" onClick={onClick} aria-label={ariaLabel} className={className}>
+    <button id={id} type="button" onClick={onClick} className={cn("group block w-full rounded-2xl text-left", FOCUS, className)}>
       {children}
     </button>
   );
@@ -50,19 +38,19 @@ const CardLink = ({ id, to, onClick, ariaLabel, className, children }: CardLinkP
 // ─── Section heading ──────────────────────────────────────────────────────────
 
 const SectionHeading = ({ step, title, hint }: { step?: string; title: string; hint?: string }) => (
-  <div className="mb-5 mt-14 flex items-end justify-between gap-4 border-b border-stone-200 pb-3">
-    <div className="flex items-center gap-3">
-      {step && (
-        <span
-          aria-hidden
-          className="flex h-7 w-7 items-center justify-center rounded-full bg-stone-900 font-['Inter'] text-xs font-bold text-white"
-        >
-          {step}
-        </span>
-      )}
-      <h2 className="font-['Inter'] text-xl font-bold tracking-tight text-stone-900">{title}</h2>
+  <div className="mb-5 mt-14">
+    <div className="flex items-end justify-between gap-4 pb-3">
+      <div className="flex items-center gap-3">
+        {step && (
+          <Badge aria-hidden className="h-7 w-7 justify-center rounded-full bg-foreground p-0 text-xs text-background hover:bg-foreground">
+            {step}
+          </Badge>
+        )}
+        <h2 className="text-xl font-bold tracking-tight text-foreground">{title}</h2>
+      </div>
+      {hint && <p className="hidden text-right text-sm text-muted-foreground sm:block">{hint}</p>}
     </div>
-    {hint && <p className="hidden text-right font-['Inter'] text-sm text-stone-600 sm:block">{hint}</p>}
+    <Separator />
   </div>
 );
 
@@ -80,42 +68,40 @@ interface PracticeCardProps {
   onClick?: () => void;
 }
 
-// Fixed anatomy so the three cards line up: header row, title+body, then a footer pinned to the bottom.
+// Fixed anatomy so the three cards line up: header row, title+body, tags, footer pinned to the bottom.
 const PracticeCard = ({ id, icon: Icon, label, title, body, tags, cta, to, onClick }: PracticeCardProps) => (
-  <CardLink id={id} to={to} onClick={onClick} className={`${CARD_BASE} h-full flex-col p-5 sm:p-6`}>
-    <span className="mb-5 flex items-center justify-between">
-      <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-stone-100 text-stone-900">
-        <Icon className="h-5 w-5" />
-      </span>
-      <span className="font-['Inter'] text-xs font-semibold uppercase tracking-wider text-stone-500">{label}</span>
-    </span>
-
-    <span className="block">
-      <span className="mb-2 block font-['Inter'] text-lg font-bold tracking-tight text-stone-900">{title}</span>
-      <span className="block font-['Inter'] text-sm leading-relaxed text-stone-600">{body}</span>
-    </span>
-
-    <span className="mb-6 mt-5 flex flex-wrap gap-1.5">
-      {tags.map((t) => (
-        <span
-          key={t}
-          className="rounded-full border border-stone-200 bg-stone-50 px-2.5 py-1 font-['Inter'] text-xs font-medium text-stone-700"
-        >
-          {t}
+  <CardLink id={id} to={to} onClick={onClick} className="h-full">
+    <Card className="flex h-full flex-col rounded-2xl p-5 shadow-none transition-[border-color,box-shadow,transform] duration-200 group-hover:-translate-y-0.5 group-hover:border-stone-300 group-hover:shadow-[0_10px_30px_-18px_rgba(28,25,23,0.35)] motion-reduce:transform-none motion-reduce:transition-none sm:p-6">
+      <div className="mb-5 flex items-center justify-between">
+        <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-muted text-foreground">
+          <Icon className="h-5 w-5" />
         </span>
-      ))}
-    </span>
+        <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{label}</span>
+      </div>
 
-    <span className="mt-auto flex items-center justify-between border-t border-stone-100 pt-4">
-      <span className="font-['Inter'] text-sm font-semibold text-stone-900">{cta}</span>
-      <span className="flex h-9 w-9 items-center justify-center rounded-full bg-stone-900 text-white transition-colors duration-200 group-hover:bg-[#43695a]">
-        <ArrowUpRight className="h-4 w-4" aria-hidden />
-      </span>
-    </span>
+      <h3 className="mb-2 text-lg font-bold tracking-tight text-foreground">{title}</h3>
+      <p className="text-sm leading-relaxed text-muted-foreground">{body}</p>
+
+      <div className="mb-6 mt-5 flex flex-wrap gap-1.5">
+        {tags.map((t) => (
+          <Badge key={t} variant="outline" className="bg-muted/40 px-2.5 py-1 text-xs font-medium text-foreground">
+            {t}
+          </Badge>
+        ))}
+      </div>
+
+      <Separator className="mt-auto" />
+      <div className="flex items-center justify-between pt-4">
+        <span className="text-sm font-semibold text-foreground">{cta}</span>
+        <span className="flex h-9 w-9 items-center justify-center rounded-full bg-foreground text-background transition-colors duration-200 group-hover:bg-primary">
+          <ArrowUpRight className="h-4 w-4" aria-hidden />
+        </span>
+      </div>
+    </Card>
   </CardLink>
 );
 
-// ─── Tool row (lives inside one shared panel) ─────────────────────────────────
+// ─── Tool row (lives inside one shared Card) ──────────────────────────────────
 
 interface ToolRowProps {
   id?: string;
@@ -133,32 +119,33 @@ const ToolRow = ({ id, icon: Icon, title, body, badge, locked, to, onClick }: To
     id={id}
     to={to}
     onClick={onClick}
-    className={
-      "group flex w-full items-center gap-4 p-4 text-left sm:p-5 transition-colors duration-200 hover:bg-stone-50 " +
-      "border-b border-stone-200 last:border-b-0 md:[&:nth-child(3)]:border-b-0 md:odd:border-r " +
-      "focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-[#43695a]"
-    }
-  >
-    <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-stone-100 text-stone-900">
-      <Icon className="h-5 w-5" />
-    </span>
-    <span className="min-w-0 flex-1">
-      <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
-        <span className="font-['Inter'] text-base font-bold tracking-tight text-stone-900">{title}</span>
-        <span className="rounded-full bg-stone-100 px-2 py-0.5 font-['Inter'] text-[11px] font-semibold uppercase tracking-wide text-stone-600">
-          {badge}
-        </span>
-      </span>
-      <span className="mt-1 block font-['Inter'] text-sm leading-snug text-stone-600">{body}</span>
-    </span>
-    {locked ? (
-      <Lock className="h-5 w-5 flex-shrink-0 text-stone-500" aria-label="Locked: premium only" />
-    ) : (
-      <ArrowUpRight
-        className="h-5 w-5 flex-shrink-0 text-stone-400 transition-colors duration-200 group-hover:text-stone-900"
-        aria-hidden
-      />
+    className={cn(
+      "rounded-none transition-colors duration-200 hover:bg-muted/50 focus-visible:ring-inset focus-visible:ring-offset-0",
+      "border-b last:border-b-0 md:[&:nth-child(3)]:border-b-0 md:odd:border-r",
     )}
+  >
+    <div className="flex items-center gap-4 p-4 sm:p-5">
+      <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-muted text-foreground">
+        <Icon className="h-5 w-5" />
+      </span>
+      <span className="min-w-0 flex-1">
+        <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
+          <span className="text-base font-bold tracking-tight text-foreground">{title}</span>
+          <Badge variant="secondary" className="px-2 py-0.5 text-[11px] uppercase tracking-wide">
+            {badge}
+          </Badge>
+        </span>
+        <span className="mt-1 block text-sm leading-snug text-muted-foreground">{body}</span>
+      </span>
+      {locked ? (
+        <Lock className="h-5 w-5 flex-shrink-0 text-muted-foreground" aria-label="Locked: premium only" />
+      ) : (
+        <ArrowUpRight
+          className="h-5 w-5 flex-shrink-0 text-muted-foreground transition-colors duration-200 group-hover:text-foreground"
+          aria-hidden
+        />
+      )}
+    </div>
   </CardLink>
 );
 
@@ -175,12 +162,9 @@ interface CompanySelectionProps {
 export const CompanySelection = ({ onSelectCompany, isPremium, onSubscribe }: CompanySelectionProps) => {
   return (
     <div className="mx-auto w-full max-w-6xl px-1 py-6 sm:px-6 sm:py-12">
-      {/* Short page title: the Connect card below is the main event */}
       <header className="mb-6 sm:mb-8">
-        <p className="mb-1 font-['Inter'] text-xs font-semibold uppercase tracking-wider text-stone-600">
-          Accenture 2026
-        </p>
-        <h1 className="font-serif text-3xl tracking-tight text-stone-900 sm:text-4xl">Your prep dashboard</h1>
+        <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Accenture 2026</p>
+        <h1 className="font-serif text-3xl tracking-tight text-foreground sm:text-4xl">Your prep dashboard</h1>
       </header>
 
       {/* ── Featured: Connect 1:1 ── */}
@@ -222,7 +206,7 @@ export const CompanySelection = ({ onSelectCompany, isPremium, onSubscribe }: Co
 
       {/* ── 2. Toolkit ── */}
       <SectionHeading step="2" title="Toolkit" hint="Extra prep alongside the rounds" />
-      <div className="grid overflow-hidden rounded-2xl border border-stone-200 bg-white md:grid-cols-2">
+      <Card className="grid overflow-hidden rounded-2xl shadow-none md:grid-cols-2">
         <ToolRow
           icon={Code2}
           title="Important Coding Questions"
@@ -257,7 +241,7 @@ export const CompanySelection = ({ onSelectCompany, isPremium, onSubscribe }: Co
           badge="Radar"
           to="/radar"
         />
-      </div>
+      </Card>
     </div>
   );
 };

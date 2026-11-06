@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import Header from "@/components/Header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface CouponUsage {
@@ -59,7 +60,8 @@ const CouponDashboard = () => {
     }
 
     return (
-        <div className="min-h-screen bg-neutral-50 p-8">
+        <div className="min-h-screen bg-neutral-50 px-4 pb-8 pt-24 sm:px-8">
+            <Header />
             <div className="max-w-5xl mx-auto space-y-8">
                 <div className="text-center space-y-2">
                     <h1 className="text-3xl font-bold text-neutral-900">Coupon Usage Analytics</h1>

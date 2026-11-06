@@ -205,7 +205,7 @@ export const CognitiveGamesPage = ({ isPremium, onSubscribe }: Props) => {
       {/* Back */}
       <button
         onClick={() => navigate("/dashboard")}
-        className="flex items-center gap-1.5 text-stone-400 hover:text-stone-700 text-[13px] font-medium font-['Inter'] transition-colors mb-10 group"
+        className="flex items-center gap-1.5 min-h-[44px] pr-3 text-stone-600 hover:text-stone-900 text-[14px] font-medium font-['Inter'] transition-colors mb-6 group"
       >
         <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-0.5" />
         Back
@@ -223,7 +223,7 @@ export const CognitiveGamesPage = ({ isPremium, onSubscribe }: Props) => {
         <h1 className="text-3xl md:text-4xl font-serif text-stone-800 tracking-tight leading-[1.15] mb-2">
           Cognitive Games
         </h1>
-        <p className="text-stone-400 text-[0.88rem] font-['Inter'] font-light">
+        <p className="text-stone-600 text-[0.88rem] font-['Inter'] font-normal">
           Game-based simulations modelled on the exact cognitive tests used in MNC assessments.
         </p>
 
@@ -316,7 +316,7 @@ function CompanyHeader({
           </span>
         )}
       </div>
-      <p className="text-stone-400 text-[12.5px] font-['Inter'] font-light">{blurb}</p>
+      <p className="text-stone-600 text-[12.5px] font-['Inter'] font-normal">{blurb}</p>
     </div>
   );
 }
