@@ -133,6 +133,19 @@ All colors MUST be HSL.
     @apply bg-background text-foreground;
     margin: 0;
   }
+
+  /* Keyboard users always get a visible focus ring; mouse clicks do not. */
+  :focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+  }
+
+  /* Remove the 300ms tap delay on touch devices. */
+  a,
+  button,
+  [role="button"] {
+    touch-action: manipulation;
+  }
 }
 
 

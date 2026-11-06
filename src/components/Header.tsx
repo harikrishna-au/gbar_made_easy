@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/clerk-react";
 
-import { Maximize, Minimize, LogOut, HelpCircle, Sparkles, FileText, BookOpen } from "lucide-react";
+import { Maximize, Minimize, LogOut, HelpCircle, Sparkles, FileText, BookOpen, Users } from "lucide-react";
 
 import { useLocation } from "react-router-dom";
 import { usePremiumStatus } from "@/hooks/usePremiumStatus";
@@ -65,7 +65,8 @@ const Header = ({ onStartTour }: HeaderProps) => {
         {/* ── Logo ── */}
         <button
           onClick={() => navigate("/")}
-          className="flex items-center group"
+          aria-label="Harry The Blaze home"
+          className="flex items-center group min-h-[44px] rounded-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#43695a]"
         >
           {/* Mobile: just the icon mark */}
           <img
@@ -85,11 +86,22 @@ const Header = ({ onStartTour }: HeaderProps) => {
         {/* ── Actions ── */}
         <div className="flex items-center gap-1.5">
 
+          {/* Connect 1:1: the featured offer, always one tap away */}
+          <Link
+            to="/connect"
+            aria-label="Connect 1:1"
+            aria-current={location.pathname.startsWith("/connect") ? "page" : undefined}
+            className="flex items-center gap-1.5 px-3.5 min-h-[44px] rounded-xl bg-[#43695a] hover:bg-[#4d7869] text-white font-semibold transition-colors duration-200 text-[13px] font-['Inter'] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#43695a]"
+          >
+            <Users className="w-4 h-4" aria-hidden="true" />
+            <span>Connect<span className="hidden sm:inline"> 1:1</span></span>
+          </Link>
+
           {/* Blog nav link */}
           <Link
             to="/blog"
             aria-label="Blog"
-            className="flex items-center gap-1.5 px-3.5 py-2 text-stone-500 hover:text-stone-800 hover:bg-stone-100 rounded-xl font-medium transition-all duration-200 text-[13px] font-['Inter']"
+            className="flex items-center gap-1.5 px-3.5 py-2 min-h-[44px] text-stone-600 hover:text-stone-900 hover:bg-stone-100 rounded-xl font-medium transition-all duration-200 text-[13px] font-['Inter']"
           >
             <BookOpen className="w-4 h-4" />
             <span className="hidden sm:inline">Blog</span>
@@ -98,7 +110,7 @@ const Header = ({ onStartTour }: HeaderProps) => {
           {onStartTour && (
             <button
               onClick={onStartTour}
-              className="flex items-center gap-1.5 px-3.5 py-2 text-stone-500 hover:text-stone-800 hover:bg-stone-100 rounded-xl font-medium transition-all duration-200 text-[13px] font-['Inter']"
+              className="flex items-center gap-1.5 px-3.5 py-2 min-h-[44px] text-stone-600 hover:text-stone-900 hover:bg-stone-100 rounded-xl font-medium transition-all duration-200 text-[13px] font-['Inter']"
             >
               <HelpCircle className="w-4 h-4" />
               <span className="hidden sm:inline">Tour</span>
@@ -116,7 +128,7 @@ const Header = ({ onStartTour }: HeaderProps) => {
                   navigate('/dashboard');
                 }
               }}
-              className="flex items-center gap-1.5 px-3.5 py-2 text-stone-500 hover:text-stone-800 hover:bg-stone-100 rounded-xl font-medium transition-all duration-200 text-[13px] font-['Inter']"
+              className="flex items-center gap-1.5 px-3.5 py-2 min-h-[44px] text-stone-600 hover:text-stone-900 hover:bg-stone-100 rounded-xl font-medium transition-all duration-200 text-[13px] font-['Inter']"
             >
               <LogOut className="w-4 h-4" aria-hidden="true" />
               <span className="hidden sm:inline">Exit</span>
@@ -126,7 +138,7 @@ const Header = ({ onStartTour }: HeaderProps) => {
           <button
             onClick={toggleFullscreen}
             aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
-            className="hidden sm:flex p-2 text-stone-400 hover:text-stone-700 hover:bg-stone-100 rounded-xl transition-all duration-200"
+            className="hidden sm:flex p-2.5 text-stone-500 hover:text-stone-700 hover:bg-stone-100 rounded-xl transition-all duration-200"
             title={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
           >
             {isFullscreen ? <Minimize className="w-4 h-4" /> : <Maximize className="w-4 h-4" />}
@@ -149,7 +161,7 @@ const Header = ({ onStartTour }: HeaderProps) => {
           <SignedIn>
             <button
               onClick={() => navigate("/forge/profile")}
-              className="flex items-center gap-1.5 px-3.5 py-2 text-stone-500 hover:text-stone-800 hover:bg-stone-100 rounded-xl font-medium transition-all duration-200 text-[13px] font-['Inter']"
+              className="flex items-center gap-1.5 px-3.5 py-2 min-h-[44px] text-stone-600 hover:text-stone-900 hover:bg-stone-100 rounded-xl font-medium transition-all duration-200 text-[13px] font-['Inter']"
             >
               <FileText className="w-4 h-4" />
               <span className="hidden sm:inline">Profile</span>
