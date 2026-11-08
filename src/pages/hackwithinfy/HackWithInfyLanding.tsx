@@ -1,431 +1,281 @@
-import { useNavigate } from "react-router-dom";
-import { useRef } from "react";
-import {
-  ArrowLeft, ArrowUpRight, Code2, FileText,
-  Trophy, Clock, Target, ChevronRight, Zap, Sparkles,
-  ExternalLink, BadgeCheck, Star,
-} from "lucide-react";
-import gsap from "gsap";
-import { useGSAP } from "@gsap/react";
+import { useRef, useState } from "react";
+import { Link } from "react-router-dom";
+import { ArrowRight, ArrowUpRight, ExternalLink } from "lucide-react";
+import Header from "@/components/Header";
+import SEO from "@/components/SEO";
+import { useGsapReveal } from "@/hooks/useGsapReveal";
+import { CODING_TOPICS, TOTAL_PROBLEMS, FREE_COUNT } from "@/pages/coding-questions/data";
 
-import {
-  INFY_BLUE, INFY_BG, INFY_BDR, INFY_GLOW, INFY_DARK,
-  GOLD, GOLD_BG, GOLD_BDR,
-  PRIMARY_TONE, ACCENT_TONE, NEUTRAL_TONE,
-} from "./theme";
+// ─── Content ──────────────────────────────────────────────────────────────────
 
-// ─── Data ─────────────────────────────────────────────────────────────────────
+// "Round 1 prep" video, opened at 0:15 as requested; the interview-experience video follows it.
+const PREP_VIDEO = "https://www.youtube.com/embed/CUORoppFNGM?start=15";
+const EXPERIENCE_VIDEO = "https://www.youtube.com/embed/50mbEzZHekQ";
+
 const ROLES = [
-  { label: "DSE",   lpa: "₹7 LPA",  sub: "6.25L + ₹75K joining",    ...NEUTRAL_TONE },
-  { label: "SP L1", lpa: "₹11 LPA", sub: "10L + ₹1L joining · campus offers vary", ...ACCENT_TONE, gold: true },
-  { label: "SP L2", lpa: "₹16 LPA", sub: "Post probation (6 months)", ...PRIMARY_TONE },
-  { label: "SP L3", lpa: "₹21 LPA", sub: "Post probation (6 months)", ...PRIMARY_TONE },
+  { label: "DSE", lpa: "₹7 LPA", sub: "6.25L + ₹75K joining" },
+  { label: "SP L1", lpa: "₹11 LPA", sub: "10L + ₹1L joining, campus offers vary", hero: true },
+  { label: "SP L2", lpa: "₹16 LPA", sub: "After probation (6 months)" },
+  { label: "SP L3", lpa: "₹21 LPA", sub: "After probation (6 months)" },
 ];
 
 const ROUNDS = [
   {
-    num: "01", title: "Round 1 — Online Coding Test",
-    desc: "3 questions in 3 hours (Virtual). Easy → Medium → Hard. Shortlisting for DSE & SP roles. Languages: C, C++, Java, Python, JavaScript.",
-    badge: "3 Qs · 3 hrs · Virtual", ...PRIMARY_TONE,
+    num: "01",
+    title: "Online coding test",
+    badge: "3 Qs · 3 hrs · Virtual",
+    desc: "Three questions in three hours, easy to hard. Shortlists for DSE and SP roles. Languages: C, C++, Java, Python, JavaScript.",
   },
   {
-    num: "02", title: "Round 2 — Advanced Coding Test",
-    desc: "4 questions (Easy, Medium, Hard, Complex) — choose any 3 to solve in 3 hours. Mode: Physical (on-site). Shortlisting for SP roles.",
-    badge: "4 Qs choose 3 · 3 hrs · Physical", ...PRIMARY_TONE,
+    num: "02",
+    title: "Advanced coding test",
+    badge: "4 Qs, pick 3 · 3 hrs · On-site",
+    desc: "Four questions (easy, medium, hard, complex). Choose any three to solve in three hours. Shortlists for SP roles.",
   },
   {
-    num: "03", title: "Interview Round",
-    desc: "~1 hour: technical and behavioral. CS/IT: DSA, automata, compilers, OS, networks, OOP. Other streams: DSA, digital electronics, math, control systems.",
-    badge: "~1 hr · Technical + Behavioral", ...PRIMARY_TONE,
+    num: "03",
+    title: "Interview",
+    badge: "About 1 hr · Technical + HR",
+    desc: "Technical and behavioral. CS/IT: DSA, automata, compilers, OS, networks, OOP. Other streams: DSA, digital electronics, math, control systems.",
   },
 ];
 
 const SECTIONS = [
-  { icon: Target,   title: "Role-wise Syllabus",      desc: "Exact topics for DSE & SP (CS/IT and other streams). Know what to study — no guessing.",                      path: "/hackwithinfy/syllabus",       tag: "DSE · SP L1 · SP L2/L3"  },
-  { icon: FileText, title: "Study Resources",         desc: "Curated PDFs: DSA notes, CS fundamentals, SP interview guide, last-mile prep.",                                path: "/hackwithinfy/resources",      tag: "PDFs · Notes · Guides"    },
-  { icon: Clock,    title: "Previous Year Questions", desc: "Real HackWithInfy questions (2019–2025) with solutions and topic analysis.",                                   path: "/hackwithinfy/previous-years", tag: "2019–2025 · Solutions"    },
-  { icon: Zap,      title: "Strategy & Tips",         desc: "Time management, scoring system, role selection guidance, and common mistakes.",                               path: "/hackwithinfy/tips",           tag: "Round 1 · Round 2 · Interview" },
-  { icon: Code2,    title: "Practice Questions",      desc: "330+ DSA problems across 16 topics — Arrays, Trees, Graphs, DP and more. Track your progress with a checklist.", path: "/coding-questions",          tag: "330+ Problems · LeetCode · GFG" },
-  { icon: Sparkles, title: "Resume Builder",          desc: "Don't have a resume? Build an ATS-friendly one in minutes — tailored for Infosys DSE & SP roles.",             path: "/forge",                       tag: "ATS-ready · LaTeX · Free" },
+  { title: "Infosys coding questions", path: "/coding-questions", tag: `${FREE_COUNT} free · ${TOTAL_PROBLEMS} in the full set`, desc: `Collected from people who got the SP and DSE roles, across ${CODING_TOPICS.length} topics, with a progress checklist.`, free: true },
+  { title: "Role-wise syllabus", path: "/hackwithinfy/syllabus", tag: "DSE · SP L1 · SP L2/L3", desc: "Exact topics for DSE and SP, for CS/IT and other streams. Know what to study." },
+  { title: "Previous year questions", path: "/hackwithinfy/previous-years", tag: "2019 to 2025 · Solutions", desc: "Real HackWithInfy questions with solutions and a topic breakdown." },
+  { title: "Strategy and tips", path: "/hackwithinfy/tips", tag: "Round 1 · Round 2 · Interview", desc: "Time management, scoring, how to choose a role, and the common mistakes." },
+  { title: "Study resources", path: "/hackwithinfy/resources", tag: "PDFs · Notes · Guides", desc: "Curated PDFs: DSA notes, CS fundamentals, the SP interview guide, last-mile prep." },
+  { title: "Resume builder", path: "/forge", tag: "ATS-ready · LaTeX · Free", desc: "Build an ATS-friendly resume in minutes, tailored for Infosys DSE and SP roles." },
 ];
 
 const WHY = [
-  { emoji: "🎯", title: "Real, Not Recycled",     desc: "Harry went through every round. These resources reflect what actually worked — not generic prep." },
-  { emoji: "⚡", title: "Last-Minute Friendly",   desc: "Structured for quick revision. 48 hours before the test? This is where you start." },
-  { emoji: "📋", title: "Every Round Covered",    desc: "Online test, advanced round, and interview — all three, role-by-role, stream-by-stream." },
+  ["Real, not recycled", "Harry went through every round. These resources reflect what actually worked."],
+  ["Last-minute friendly", "Built for quick revision. 48 hours before the test? Start here."],
+  ["Every round covered", "Online test, advanced round and interview, role by role and stream by stream."],
 ];
 
-// ─── CodeViz ──────────────────────────────────────────────────────────────────
-const CodeViz = () => {
-  const lines = [
-    { text: "def solve(n, arr):", w: 88 },
-    { text: "  dp = [0] * (n + 1)", w: 74 },
-    { text: "  for i in range(n):", w: 66 },
-    { text: "    dp[i+1] = max(...)", w: 80 },
-    { text: "  return dp[n]", w: 56 },
-  ];
-  return (
-    <div style={{ background: "rgba(0,0,0,0.03)", border: `1px solid ${INFY_BDR}`, borderRadius: 10, padding: "10px 14px", fontFamily: "'JetBrains Mono', 'Fira Code', monospace", fontSize: 10.5 }}>
-      {lines.map((l, i) => (
-        <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: i < lines.length - 1 ? 5 : 0 }}>
-          <span style={{ color: "rgba(0,124,195,0.3)", minWidth: 14, textAlign: "right", fontSize: 9 }}>{i + 1}</span>
-          <div style={{ height: 8, borderRadius: 4, background: `rgba(0,124,195,${0.12 + (l.w / 100) * 0.22})`, width: `${l.w}%` }} />
-        </div>
-      ))}
+// ─── Shared bits ──────────────────────────────────────────────────────────────
+
+const DISPLAY = "font-display font-normal uppercase leading-[0.95] tracking-[0.005em] [text-wrap:balance]";
+const WRAP = "mx-auto w-full max-w-[1180px] px-4 sm:px-8";
+const SHEET = "bg-[var(--color-paper-3)] shadow-[var(--shadow-sheet)]";
+const BTN =
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap px-6 py-3.5 text-[15px] font-semibold text-[var(--color-ink)] " +
+  "shadow-[var(--shadow-offset)] transition-[transform,box-shadow] duration-[120ms] hover:translate-x-px hover:translate-y-px " +
+  "hover:shadow-[3px_3px_0_var(--color-ink)] active:translate-x-1 active:translate-y-1 active:shadow-none " +
+  "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--color-focus)]";
+
+// Falls back to an initial tile if the photo file is missing or broken.
+const AuthorPhoto = () => {
+  const [failed, setFailed] = useState(false);
+  return failed ? (
+    <div
+      aria-label="Nalla Harikrishna"
+      className="mx-auto mt-4 flex h-28 w-28 items-center justify-center bg-[var(--color-accent)] font-display text-6xl shadow-[var(--shadow-offset)]"
+    >
+      N
     </div>
+  ) : (
+    <img
+      src="/harry.png"
+      alt="Nalla Harikrishna"
+      onError={() => setFailed(true)}
+      className="mx-auto mt-4 h-28 w-28 object-cover shadow-[var(--shadow-offset)]"
+    />
   );
 };
 
-// ─── Component ────────────────────────────────────────────────────────────────
-const HackWithInfyLanding = () => {
-  const navigate     = useNavigate();
-  const containerRef = useRef<HTMLDivElement>(null);
+const Video = ({ src, title }: { src: string; title: string }) => (
+  <div className="relative bg-[var(--color-ink)] p-1.5 shadow-[var(--shadow-offset)]">
+    <div className="aspect-video w-full">
+      <iframe
+        className="block h-full w-full"
+        src={src}
+        title={title}
+        loading="lazy"
+        allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerPolicy="strict-origin-when-cross-origin"
+        allowFullScreen
+      />
+    </div>
+  </div>
+);
 
-  useGSAP(() => {
-    gsap.fromTo(containerRef.current, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.55, ease: "power3.out" });
-  }, { scope: containerRef });
+// ─── Page ─────────────────────────────────────────────────────────────────────
+
+const HackWithInfyLanding = () => {
+  const page = useRef<HTMLDivElement>(null);
+  useGsapReveal(page);
 
   return (
-    <>
-      <div className="fixed inset-0 -z-10 bg-[#fcfcf9]">
-        <div className="absolute top-0 left-0 w-full h-[400px]" style={{ background: `radial-gradient(ellipse 70% 40% at 50% 0%, rgba(0,124,195,0.06) 0%, transparent 70%)` }} />
-      </div>
+    <div ref={page} className="min-h-screen bg-[var(--color-paper)] font-sans text-[var(--color-ink)]">
+      <SEO
+        title="Infosys HackWithInfy Prep: SP and DSE | Harry The Blaze"
+        description="How to prepare for the Infosys coding round, from someone who got the SP role. Free questions, syllabus, previous-year questions and strategy."
+      />
+      <Header />
 
-      <div ref={containerRef} className="w-full max-w-4xl mx-auto px-6 py-12 opacity-0 min-h-screen">
-
-        {/* Back */}
-        <button
-          onClick={() => navigate("/dashboard")}
-          className="flex items-center gap-1.5 text-stone-400 hover:text-stone-700 text-[13px] font-medium font-['Inter'] transition-colors mb-10 group"
-        >
-          <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-0.5" />
-          Back to Dashboard
-        </button>
-
-        {/* ══ HERO ══════════════════════════════════════════════════════════════ */}
-        <div className="flex flex-col md:flex-row md:items-start gap-8 mb-10">
-
-          {/* Left copy */}
-          <div className="flex-1">
-            <div
-              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[11px] font-semibold tracking-[0.2em] uppercase font-['Inter'] mb-5"
-              style={{ background: INFY_BG, color: INFY_BLUE, border: `1px solid ${INFY_BDR}` }}
-            >
-              <Trophy className="w-3 h-3" />
-              All about Infosys
-            </div>
-
-            <h1 className="text-3xl md:text-4xl font-serif text-stone-800 tracking-tight leading-[1.15] mb-3">
+      <main>
+        {/* ── Hero ── */}
+        <section className={`${WRAP} grid items-start gap-10 pb-16 pt-28 lg:grid-cols-12 lg:gap-8 lg:pb-24 lg:pt-32`}>
+          <div className="lg:col-span-8">
+            <p data-intro className="text-base font-medium text-[var(--color-muted)]">All about Infosys</p>
+            <h1 data-intro className={`${DISPLAY} mt-3 text-[clamp(3.25rem,9vw,7.5rem)] leading-[0.92]`}>
               Crack HackWithInfy.
-              <br />
-              <span className="text-stone-400 font-light italic">Made by someone who did.</span>
+              <span className="mt-2 block text-[0.6em] text-[var(--color-muted)]">Made by someone who did.</span>
             </h1>
-
-            <p className="text-stone-500 text-[0.9rem] font-['Inter'] font-light max-w-lg leading-relaxed mb-5">
-              These resources were curated by{" "}
-              <span className="font-semibold text-stone-700">Nalla Harikrishna</span>
-              {" "}— selected for SP role at Infosys at ₹11 LPA. Not generic prep.
-              Real strategy from someone who went through every round.
+            <p data-intro className="mt-6 max-w-[52ch] text-lg leading-snug">
+              These resources were curated by <b className="font-semibold">Nalla Harikrishna</b>, selected for the SP role
+              at Infosys at ₹11 LPA. Not generic prep: the strategy from someone who went through every round.
             </p>
-
-            {/* Trust pills */}
-            <div className="flex flex-wrap gap-2">
-              {[
-                { icon: <BadgeCheck className="w-3 h-3" />, label: "SP Role Secured", gold: true  },
-                { icon: <Star       className="w-3 h-3" />, label: "₹11 LPA Offer",   gold: true  },
-                { icon: <Trophy     className="w-3 h-3" />, label: "Infosys Selected", gold: true  },
-                { icon: <Zap        className="w-3 h-3" />, label: "Last-min Friendly", gold: false },
-              ].map((p) => (
-                <span
-                  key={p.label}
-                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold font-['Inter']"
-                  style={
-                    p.gold
-                      ? { background: GOLD_BG, color: GOLD, border: `1px solid ${GOLD_BDR}` }
-                      : { background: INFY_BG, color: INFY_BLUE, border: `1px solid ${INFY_BDR}` }
-                  }
-                >
-                  {p.icon}
-                  {p.label}
-                </span>
-              ))}
+            <div data-intro className="mt-8 flex flex-col gap-5 sm:flex-row">
+              <Link to="/coding-questions" className={`${BTN} bg-[var(--color-accent)]`}>
+                Open {FREE_COUNT} free questions
+                <ArrowRight className="h-4 w-4" aria-hidden />
+              </Link>
+              <a href="#watch" className={`${BTN} bg-[var(--color-paper-3)]`}>
+                Watch the prep video
+              </a>
             </div>
           </div>
 
-          {/* Right — Author card */}
-          <div
-            className="flex-shrink-0 flex flex-col items-center text-center p-5 rounded-2xl w-[180px]"
-            style={{
-              background: "linear-gradient(160deg, #ffffff 60%, rgba(217,119,6,0.04) 100%)",
-              border: `1px solid rgba(217,119,6,0.18)`,
-              boxShadow: "0 4px 24px rgba(0,0,0,0.07), 0 1px 0 rgba(255,255,255,0.9) inset",
-            }}
-          >
-            {/* Selected badge */}
-            <div
-              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold tracking-widest uppercase font-['Inter'] mb-3"
-              style={{ background: GOLD_BG, color: GOLD, border: `1px solid ${GOLD_BDR}` }}
-            >
-              <BadgeCheck className="w-2.5 h-2.5" /> Selected
-            </div>
-
-            {/* Photo */}
-            <div
-              className="relative mb-3"
-              style={{
-                width: 88, height: 88,
-                borderRadius: "50%",
-                padding: 3,
-                background: `linear-gradient(135deg, ${GOLD}, #fcd34d, ${GOLD})`,
-              }}
-            >
-              <img
-                src="/harry.png"
-                alt="Nalla Harikrishna"
-                style={{
-                  width: "100%", height: "100%",
-                  borderRadius: "50%",
-                  objectFit: "cover",
-                  display: "block",
-                  border: "2px solid #fff",
-                }}
-              />
-            </div>
-
-            <div className="text-stone-800 font-semibold font-['Inter'] text-[13.5px] leading-tight mb-0.5">
-              Nalla Harikrishna
-            </div>
-            <div className="text-[11px] font-semibold font-['Inter'] mb-3" style={{ color: GOLD }}>
-              SP Role · ₹11 LPA
-            </div>
-            <div
-              className="text-[11px] font-['Inter'] text-stone-400 mb-3 leading-relaxed"
-            >
-              Infosys Specialist<br />Programmer
-            </div>
+          {/* Author sheet */}
+          <aside data-drop="2" className={`${SHEET} mx-auto w-full max-w-[20rem] p-6 text-center lg:col-span-4 lg:max-w-none`}>
+            <p className="inline-block bg-[var(--color-accent)] px-2.5 py-1 text-xs font-semibold">Selected</p>
+            <AuthorPhoto />
+            <p className="mt-5 font-display text-3xl uppercase leading-none">Nalla Harikrishna</p>
+            <p className="mt-2 text-[15px] font-semibold">SP role · ₹11 LPA</p>
+            <p className="text-sm text-[var(--color-muted)]">Infosys Specialist Programmer</p>
             <a
               href="https://www.linkedin.com/in/hari-krishna-nallana-33949b277/"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[11px] font-semibold font-['Inter'] transition-all hover:opacity-80 w-full justify-center"
-              style={{ background: "#ffffff", color: GOLD, border: `1px solid ${GOLD_BDR}` }}
-              onClick={(e) => e.stopPropagation()}
+              className="mt-4 inline-flex items-center gap-1.5 text-[15px] font-semibold underline decoration-[var(--color-rule)] underline-offset-4 hover:decoration-[var(--color-ink)]"
             >
-              <ExternalLink className="w-3 h-3" />
-              LinkedIn
+              LinkedIn <ExternalLink className="h-3.5 w-3.5" aria-hidden />
             </a>
-          </div>
-        </div>
+          </aside>
+        </section>
 
-        {/* ══ WHY THIS WORKS ════════════════════════════════════════════════════ */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-10">
-          {WHY.map((w) => (
-            <div
-              key={w.title}
-              className="rounded-2xl p-4"
-              style={{ background: "#ffffff", border: `1px solid rgba(0,0,0,0.07)`, boxShadow: "0 1px 8px rgba(0,0,0,0.04)" }}
-            >
-              <div className="text-xl mb-2">{w.emoji}</div>
-              <div className="text-stone-800 font-semibold font-['Inter'] text-[13px] mb-1">{w.title}</div>
-              <div className="text-stone-500 text-[12px] font-['Inter'] leading-relaxed">{w.desc}</div>
+        {/* ── Video ── */}
+        <section id="watch" className="scroll-mt-24 bg-[var(--color-paper-2)]">
+          <div className={`${WRAP} py-16 sm:py-24`}>
+            <p data-reveal className="text-base font-medium text-[var(--color-muted)]">Watch first</p>
+            <h2 data-reveal className={`${DISPLAY} mt-2 max-w-[18ch] text-[clamp(2.5rem,6vw,4.75rem)]`}>
+              How to prepare for the Infosys coding round
+            </h2>
+            <div data-reveal className="mt-10 max-w-[900px]">
+              <Video src={PREP_VIDEO} title="How to prepare for the Infosys coding round" />
             </div>
-          ))}
-        </div>
 
-        {/* ══ VIDEO ════════════════════════════════════════════════════════════ */}
-        <div className="mb-5">
-          <p className="text-[9.5px] font-bold tracking-[0.22em] uppercase font-['Inter'] mb-1" style={{ color: INFY_BLUE, opacity: 0.7 }}>
-            Watch First
-          </p>
-          <h2 className="text-[18px] font-serif text-stone-800 tracking-tight mb-1 leading-snug">
-            Harry's Infosys SP Interview Experience
-          </h2>
-          <p className="text-stone-400 text-[12.5px] font-['Inter'] font-light mb-4">
-            Watch the exact interview he faced — the questions, pressure, and how he handled it.
-          </p>
-          <div
-            className="rounded-2xl overflow-hidden"
-            style={{
-              border: `1px solid ${INFY_BDR}`,
-              boxShadow: `0 4px 24px ${INFY_GLOW}, 0 1px 4px rgba(0,0,0,0.06)`,
-              aspectRatio: "16/9",
-            }}
-          >
-            <iframe
-              width="100%" height="100%"
-              src="https://www.youtube.com/embed/50mbEzZHekQ?si=Nmuy4mxKv1HXffdH"
-              title="Harry's Infosys SP Interview Experience"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              referrerPolicy="strict-origin-when-cross-origin"
-              allowFullScreen
-              style={{ display: "block" }}
-            />
-          </div>
-        </div>
-
-        {/* ══ AI MOCK INTERVIEW ════════════════════════════════════════════════ */}
-        <div
-          className="rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 relative overflow-hidden group cursor-pointer mb-12"
-          style={{ background: `linear-gradient(135deg, rgba(0,124,195,0.06) 0%, rgba(0,124,195,0.02) 100%)`, border: `1px solid ${INFY_BDR}` }}
-          onClick={() => navigate("/ai-interview")}
-        >
-          <div className="absolute inset-0 pointer-events-none" style={{ background: `radial-gradient(ellipse 60% 120% at 95% 50%, rgba(0,124,195,0.09) 0%, transparent 65%)` }} />
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 pointer-events-none" />
-          <div className="relative z-10 flex items-start gap-4">
-            <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: INFY_BG, border: `1px solid ${INFY_BDR}` }}>
-              <Code2 className="w-5 h-5" style={{ color: INFY_BLUE }} />
-            </div>
-            <div>
-              <div className="flex items-center gap-2 mb-1">
-                <h3 className="text-[15px] font-bold font-['Inter'] text-stone-800">AI Mock Interview — Infosys Mode</h3>
-                <span className="px-2 py-0.5 rounded-full text-[11px] font-bold tracking-wide border font-['Inter']" style={{ color: INFY_BLUE, background: INFY_BG, borderColor: INFY_BDR }}>
-                  AVAILABLE
-                </span>
+            <div data-reveal className="mt-16 grid items-center gap-8 lg:grid-cols-12">
+              <div className="lg:col-span-5">
+                <h3 className={`${DISPLAY} text-[clamp(1.75rem,3.5vw,2.75rem)]`}>Harry's Infosys SP interview experience</h3>
+                <p className="mt-3 max-w-[40ch] text-base leading-relaxed">
+                  The exact interview he faced: the questions, the pressure, and how he handled it.
+                </p>
               </div>
-              <p className="text-stone-500 text-[13px] font-['Inter'] leading-relaxed">
-                Practice the interview round — live coding, DSA questions, OOPs, OS, DBMS, and HR. Real-time AI feedback.
-              </p>
+              <div className="lg:col-span-7">
+                <Video src={EXPERIENCE_VIDEO} title="Harry's Infosys SP interview experience" />
+              </div>
             </div>
           </div>
-          <div
-            className="relative z-10 flex items-center gap-1.5 flex-shrink-0 px-5 py-2.5 rounded-xl text-white text-[13px] font-semibold font-['Inter'] transition-all hover:scale-[1.03] active:scale-[0.97]"
-            style={{ background: `linear-gradient(135deg, ${INFY_BLUE}, ${INFY_DARK})`, boxShadow: `0 4px 16px ${INFY_GLOW}` }}
-          >
-            Start Mock
-            <ChevronRight className="w-4 h-4" />
-          </div>
-        </div>
+        </section>
 
-        {/* ══ ROLE TIERS ═══════════════════════════════════════════════════════ */}
-        <div className="mb-10">
-          <p className="text-[9.5px] font-bold tracking-[0.22em] uppercase font-['Inter'] mb-3" style={{ color: INFY_BLUE, opacity: 0.7 }}>
-            Roles & Packages
-          </p>
-          <div className="flex flex-wrap gap-2">
+        {/* ── Why ── */}
+        <section className={`${WRAP} py-16 sm:py-24`}>
+          <ul data-reveal-group className="grid gap-6 md:grid-cols-3">
+            {WHY.map(([t, d]) => (
+              <li key={t} className={`${SHEET} p-6`}>
+                <h3 className="font-display text-3xl font-normal uppercase leading-none">{t}</h3>
+                <p className="mt-3 text-base leading-relaxed">{d}</p>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        {/* ── Competition structure ── */}
+        <section className="bg-[var(--color-ink)] text-[var(--color-paper)]">
+          <div className={`${WRAP} py-16 sm:py-24`}>
+            <h2 data-reveal className={`${DISPLAY} text-[clamp(2.5rem,6vw,4.75rem)]`}>Three rounds. Here is each one.</h2>
+            <ol data-reveal-group className="mt-12 grid gap-6 md:grid-cols-3">
+              {ROUNDS.map((r) => (
+                <li key={r.num} className="bg-[var(--color-paper)] p-6 text-[var(--color-ink)]">
+                  <p className="font-display text-6xl leading-none">{r.num}</p>
+                  <h3 className="mt-4 text-xl font-semibold">{r.title}</h3>
+                  <p className="mt-2 text-[15px] leading-relaxed">{r.desc}</p>
+                  <p className="mt-4 inline-block bg-[var(--color-accent)] px-2.5 py-1 text-xs font-semibold">{r.badge}</p>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
+
+        {/* ── Roles ── */}
+        <section className={`${WRAP} py-16 sm:py-24`}>
+          <h2 data-reveal className={`${DISPLAY} text-[clamp(2.25rem,5vw,4rem)]`}>Roles and packages</h2>
+          <ul data-reveal-group className={`${SHEET} mt-8 divide-y divide-[var(--color-rule)]`}>
             {ROLES.map((r) => (
-              <div
-                key={r.label}
-                className="flex flex-col px-3 py-2 rounded-xl text-[11px] font-semibold font-['Inter']"
-                style={{ background: r.bg, border: `1px solid ${r.border}`, color: r.color }}
-              >
-                <div className="flex items-center gap-2">
-                  <span className="font-bold">{r.label}</span>
-                  {(r as any).gold && <BadgeCheck className="w-3 h-3" />}
-                  <span className="font-bold">{r.lpa}</span>
-                </div>
-                <span className="text-[9.5px] opacity-70 font-normal mt-0.5">{r.sub}</span>
-              </div>
+              <li key={r.label} className={`flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 px-5 py-5 sm:px-8 ${r.hero ? "bg-[var(--color-accent)]" : ""}`}>
+                <span className="font-display text-3xl uppercase leading-none">{r.label}</span>
+                <span className="order-3 w-full text-sm sm:order-2 sm:w-auto sm:flex-1 sm:text-base">{r.sub}</span>
+                <span className="order-2 font-display text-4xl leading-none tabular-nums sm:order-3">{r.lpa}</span>
+              </li>
             ))}
-          </div>
-        </div>
+          </ul>
+        </section>
 
-        {/* ══ COMPETITION STRUCTURE ════════════════════════════════════════════ */}
-        <div className="mb-12">
-          <p className="text-[9.5px] font-bold tracking-[0.22em] uppercase font-['Inter'] mb-4" style={{ color: INFY_BLUE, opacity: 0.7 }}>
-            Competition Structure
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {ROUNDS.map((r) => (
-              <div
-                key={r.num}
-                className="relative rounded-2xl p-5 flex flex-col gap-3 overflow-hidden group"
-                style={{ background: "#ffffff", border: `1px solid ${r.border}`, boxShadow: "0 2px 12px rgba(0,0,0,0.04)", transition: "box-shadow 0.22s ease, transform 0.22s ease" }}
-                onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.boxShadow = `0 12px 36px rgba(0,0,0,0.06), 0 0 0 1.5px ${r.border}`; (e.currentTarget as HTMLElement).style.transform = "translateY(-3px)"; }}
-                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.boxShadow = "0 2px 12px rgba(0,0,0,0.04)"; (e.currentTarget as HTMLElement).style.transform = "translateY(0)"; }}
-              >
-                <div className="absolute inset-0 pointer-events-none" style={{ background: `radial-gradient(ellipse 90% 60% at 10% 0%, ${r.bg} 0%, transparent 70%)` }} />
-                <div className="absolute bottom-0 left-0 right-0 h-[1.5px] opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ background: `linear-gradient(90deg, ${r.color}, transparent 70%)` }} />
-                <div className="relative z-10">
-                  <div className="text-[11px] font-bold tracking-[0.38em] uppercase font-['Inter'] mb-1" style={{ color: r.color }}>{r.num}</div>
-                  <h3 className="text-[13.5px] font-bold font-['Inter'] text-stone-800 mb-2 leading-tight">{r.title}</h3>
-                  <p className="text-stone-500 text-[12px] leading-relaxed font-['Inter'] mb-3">{r.desc}</p>
-                  <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[9.5px] font-semibold tracking-wide border font-['Inter']" style={{ color: r.color, background: r.bg, borderColor: r.border }}>
-                    {r.badge}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* ══ PREP SECTIONS ════════════════════════════════════════════════════ */}
-        <div className="mb-12">
-          <p className="text-[9.5px] font-bold tracking-[0.22em] uppercase font-['Inter'] mb-4" style={{ color: INFY_BLUE, opacity: 0.7 }}>
-            Prep Sections
-          </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {SECTIONS.map((s) => (
-              <div
-                key={s.path}
-                onClick={() => navigate(s.path)}
-                className="relative rounded-2xl p-5 flex items-start gap-4 cursor-pointer group overflow-hidden"
-                style={{ background: "#ffffff", border: `1px solid ${INFY_BDR}`, boxShadow: "0 2px 12px rgba(0,0,0,0.03)", transition: "box-shadow 0.22s ease, transform 0.22s ease" }}
-                onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.boxShadow = `0 12px 36px ${INFY_GLOW}, 0 0 0 1.5px ${INFY_BDR}`; (e.currentTarget as HTMLElement).style.transform = "translateY(-3px)"; }}
-                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.boxShadow = "0 2px 12px rgba(0,0,0,0.03)"; (e.currentTarget as HTMLElement).style.transform = "translateY(0)"; }}
-              >
-                <div className="absolute inset-0 pointer-events-none" style={{ background: `radial-gradient(ellipse 80% 55% at 5% 0%, ${INFY_BG} 0%, transparent 65%)` }} />
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 pointer-events-none" />
-                <div className="absolute bottom-0 left-0 right-0 h-[1.5px] opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ background: `linear-gradient(90deg, ${INFY_BLUE}, transparent 70%)` }} />
-                <div className="relative z-10 w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5" style={{ background: INFY_BG, border: `1px solid ${INFY_BDR}` }}>
-                  <s.icon className="w-4 h-4" style={{ color: INFY_BLUE }} />
-                </div>
-                <div className="relative z-10 flex-1">
-                  <h3 className="text-[14px] font-bold font-['Inter'] text-stone-800 mb-1 leading-tight">{s.title}</h3>
-                  <p className="text-stone-500 text-[12px] leading-relaxed font-['Inter'] mb-2">{s.desc}</p>
-                  <div className="flex items-center justify-between">
-                    <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[9.5px] font-semibold tracking-wide border font-['Inter']" style={{ color: INFY_BLUE, background: INFY_BG, borderColor: INFY_BDR }}>
+        {/* ── Prep sections ── */}
+        <section className="bg-[var(--color-paper-2)]">
+          <div className={`${WRAP} py-16 sm:py-24`}>
+            <h2 data-reveal className={`${DISPLAY} text-[clamp(2.25rem,5vw,4rem)]`}>Everything for the round</h2>
+            <ul data-reveal-group className="mt-8 grid gap-6 sm:grid-cols-2">
+              {SECTIONS.map((s) => (
+                <li key={s.path}>
+                  <Link
+                    to={s.path}
+                    className={`group flex h-full flex-col gap-2 p-6 shadow-[var(--shadow-sheet)] transition-transform duration-200 hover:-translate-y-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--color-focus)] ${
+                      s.free ? "bg-[var(--color-paper-3)] ring-2 ring-[var(--color-ink)]" : "bg-[var(--color-paper-3)]"
+                    }`}
+                  >
+                    <span className="flex items-start justify-between gap-3">
+                      <span className="font-display text-3xl uppercase leading-none">{s.title}</span>
+                      <ArrowUpRight className="mt-1 h-5 w-5 flex-shrink-0 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden />
+                    </span>
+                    <span className="text-[15px] leading-relaxed">{s.desc}</span>
+                    <span className={`mt-auto inline-block self-start px-2.5 py-1 text-xs font-semibold ${s.free ? "bg-[var(--color-accent)]" : "bg-[var(--color-paper-2)]"}`}>
                       {s.tag}
                     </span>
-                    <div className="flex items-center gap-0.5">
-                      <span className="text-[11.5px] font-semibold font-['Inter']" style={{ color: INFY_BLUE }}>Explore</span>
-                      <ArrowUpRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" style={{ color: INFY_BLUE }} />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </div>
-        </div>
+        </section>
 
-        {/* ══ AUTHOR STRIP ═════════════════════════════════════════════════════ */}
-        <div
-          className="rounded-2xl p-5 flex flex-col sm:flex-row items-center gap-4 mb-10"
-          style={{ background: GOLD_BG, border: `1px solid ${GOLD_BDR}` }}
-        >
-          <img
-            src="/harry.png"
-            alt="Nalla Harikrishna"
-            className="w-12 h-12 rounded-full object-cover flex-shrink-0"
-            style={{ boxShadow: `0 0 0 2px ${GOLD}` }}
-          />
-          <div className="flex-1 text-center sm:text-left">
-            <div className="text-stone-800 font-semibold font-['Inter'] text-[13.5px] mb-0.5">
-              Made by Nalla Harikrishna
+        {/* ── Mock interview + close ── */}
+        <section className="bg-[var(--color-ink)] text-[var(--color-paper)]">
+          <div className={`${WRAP} grid items-center gap-8 py-16 sm:py-24 lg:grid-cols-12`}>
+            <div className="lg:col-span-8">
+              <h2 data-reveal className={`${DISPLAY} text-[clamp(2.5rem,6vw,4.75rem)]`}>Practice the interview out loud.</h2>
+              <p data-reveal className="mt-5 max-w-[52ch] text-lg leading-snug opacity-85">
+                AI mock interview, Infosys mode: live coding, DSA, OOPs, OS, DBMS and HR, with real-time feedback.
+              </p>
             </div>
-            <div className="text-stone-500 text-[12px] font-['Inter'] font-light">
-              Infosys SP Role · ₹11 LPA · These are the resources he used and wished existed when he was preparing.
+            <div data-reveal className="flex flex-col gap-5 lg:col-span-4">
+              <Link to="/ai-interview" className={`${BTN} bg-[var(--color-accent)] !shadow-[4px_4px_0_var(--color-paper)] active:!shadow-none`}>
+                Start a mock
+                <ArrowRight className="h-4 w-4" aria-hidden />
+              </Link>
+              <Link to="/connect" className="text-base underline decoration-[var(--color-paper)]/40 underline-offset-4 hover:decoration-[var(--color-paper)]">
+                Or book 20 minutes with a senior placed at Infosys
+              </Link>
             </div>
           </div>
-          <a
-            href="https://www.linkedin.com/in/hari-krishna-nallana-33949b277/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex-shrink-0 inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-[12px] font-semibold font-['Inter'] transition-all hover:opacity-80"
-            style={{ background: "#ffffff", color: GOLD, border: `1px solid ${GOLD_BDR}` }}
-          >
-            <ExternalLink className="w-3.5 h-3.5" />
-            LinkedIn
-          </a>
-        </div>
-
-        {/* ── Decorative code viz ── */}
-        <div className="opacity-40">
-          <CodeViz />
-        </div>
-
-      </div>
-    </>
+        </section>
+      </main>
+    </div>
   );
 };
 

@@ -20,8 +20,6 @@ import TermsOfService from "./pages/TermsOfService";
 import RefundPolicy from "./pages/RefundPolicy";
 import AboutUs from "./pages/AboutUs";
 import CouponDashboard from "./pages/CouponDashboard";
-// Loaded on demand: pulls in the Azure speech SDK, which must not run at app start.
-const AIInterview = lazy(() => import("./pages/AIInterview"));
 import AIInterviewSelection from "./pages/AIInterviewSelection";
 import PremiumRoute from "@/components/PremiumRoute";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
@@ -58,6 +56,9 @@ import { lazy, Suspense, useState } from "react";
 import SplashScreen from "@/components/SplashScreen";
 import CustomerSupport from "@/components/CustomerSupport";
 import { MetaPixelTracker } from "@/components/MetaPixelTracker";
+
+// Loaded on demand: pulls in the Azure speech SDK, which must not run at app start.
+const AIInterview = lazy(() => import("./pages/AIInterview"));
 
 const queryClient = new QueryClient();
 const clerkPubKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
@@ -198,7 +199,7 @@ const App = () => {
               <Route path="/blog/:slug" element={<BlogPost />} />
 
               {/* HackWithInfy — landing is public (teaser), resources are premium */}
-              <Route path="/hackwithinfy" element={<PrivateRoute><HackWithInfyLanding /></PrivateRoute>} />
+              <Route path="/hackwithinfy" element={<HackWithInfyLanding />} />
               <Route path="/hackwithinfy/syllabus" element={<PremiumRoute><HackWithInfySyllabus /></PremiumRoute>} />
               <Route path="/hackwithinfy/resources" element={<PremiumRoute><HackWithInfyResources /></PremiumRoute>} />
               <Route path="/hackwithinfy/tips" element={<PremiumRoute><HackWithInfyTips /></PremiumRoute>} />
