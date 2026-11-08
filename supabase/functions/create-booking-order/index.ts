@@ -136,7 +136,7 @@ serve(async (req: Request) => {
       .select("id")
       .single();
     if (bookingError) {
-      if (bookingError.code === "23505") return json({ error: "This slot was just taken" }, 409);
+      if (bookingError.code === "23505" || bookingError.code === "23P01") return json({ error: "This slot was just taken" }, 409);
       throw bookingError;
     }
 
