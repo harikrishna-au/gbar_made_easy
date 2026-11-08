@@ -25,7 +25,7 @@ export function PromoBanner({ onClaim }: PromoBannerProps) {
       {/* scrolling ticker: two identical groups, each wider than the screen, shifted by exactly one group */}
       <div className="overflow-hidden border-b border-white/10 py-1.5" aria-hidden="true">
         <div
-          className="promo-marquee flex w-max whitespace-nowrap text-[11px] font-black tracking-[0.28em] text-[#8fb5a3]"
+          className="promo-marquee flex w-max whitespace-nowrap text-[11px] font-black tracking-[0.28em] text-flame"
           style={{ animation: "promo-marquee 30s linear infinite" }}
         >
           {[0, 1].map((g) => (

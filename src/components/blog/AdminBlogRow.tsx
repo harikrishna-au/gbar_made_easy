@@ -149,7 +149,7 @@ function renderMarkdown(md: string): string {
     .replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, text, url) => {
       const safe = /^https?:\/\//i.test(url) || /^mailto:/i.test(url) || url.startsWith('/') || url.startsWith('#');
       if (!safe) return text;
-      return `<a href="${url.replace(/"/g, '%22')}" style="color:#557d6b;text-decoration:underline;text-underline-offset:3px;font-weight:500" target="_blank" rel="noopener noreferrer">${text}</a>`;
+      return `<a href="${url.replace(/"/g, '%22')}" style="color:#c2410c;text-decoration:underline;text-underline-offset:3px;font-weight:500" target="_blank" rel="noopener noreferrer">${text}</a>`;
     })
     .replace(/\n\n/g, '</p><p style="margin-top:1.25rem;color:#57534e;line-height:1.85;font-family:Inter,sans-serif;font-size:15.5px">')
     .replace(/\n/g, '<br/>');

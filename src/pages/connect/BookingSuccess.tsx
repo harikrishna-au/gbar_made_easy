@@ -68,7 +68,7 @@ const BookingSuccess = ({ expertName, date, startTime, endTime, userEmail, meetL
           ['One meeting link', 'Sent to your email and shown in My Bookings.'],
         ].map(([t, d], i) => (
           <li key={t} className="flex gap-3">
-            <span className={`w-6 h-6 rounded-full text-xs font-semibold font-['Inter'] flex items-center justify-center flex-shrink-0 mt-0.5 ${i === 0 ? 'bg-[#557d6b] text-white' : 'bg-stone-100 text-stone-600'}`}>
+            <span className={`w-6 h-6 rounded-full text-xs font-semibold font-['Inter'] flex items-center justify-center flex-shrink-0 mt-0.5 ${i === 0 ? 'bg-primary text-white' : 'bg-stone-100 text-stone-600'}`}>
               {i === 0 ? <CheckCircle2 className="w-3.5 h-3.5" /> : i + 1}
             </span>
             <span>

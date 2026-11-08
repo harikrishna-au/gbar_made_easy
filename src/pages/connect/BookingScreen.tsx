@@ -320,7 +320,7 @@ const BookingScreen = ({ expert, onClose }: BookingScreenProps) => {
                 <dl className="mt-8 grid grid-cols-2 sm:grid-cols-3 gap-px rounded-2xl overflow-hidden border border-stone-200 bg-stone-200">
                   {expert.company && (
                     <div className="bg-white px-4 py-3.5">
-                      <dt className="text-[10.5px] uppercase tracking-[0.12em] font-semibold text-[#43695a] font-['Inter']">Placed at</dt>
+                      <dt className="text-[10.5px] uppercase tracking-[0.12em] font-semibold text-primary font-['Inter']">Placed at</dt>
                       <dd className="font-['Merriweather'] text-lg text-stone-900 mt-1 leading-tight">{expert.company}</dd>
                     </div>
                   )}
@@ -340,7 +340,7 @@ const BookingScreen = ({ expert, onClose }: BookingScreenProps) => {
               )}
 
               {expert.proof_url && (
-                <p className="mt-4 inline-flex items-center gap-2 text-sm text-[#43695a] font-medium font-['Inter']">
+                <p className="mt-4 inline-flex items-center gap-2 text-sm text-primary font-medium font-['Inter']">
                   <BadgeCheck className="w-4 h-4" />
                   Placement proof is on file with the Connect team
                 </p>

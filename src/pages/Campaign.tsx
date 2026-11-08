@@ -133,8 +133,8 @@ const Campaign = () => {
 
                 {/* Hero */}
                 <section className="pt-12 sm:pt-16 pb-14 sm:pb-20 max-w-3xl">
-                    <p className="inline-flex items-center gap-2 font-['Inter'] text-xs font-semibold uppercase tracking-[0.14em] text-[#43695a]">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#557d6b]" />
+                    <p className="inline-flex items-center gap-2 font-['Inter'] text-xs font-semibold uppercase tracking-[0.14em] text-primary">
+                        <span className="w-1.5 h-1.5 rounded-full bg-primary" />
                         {c.eyebrow}
                     </p>
                     <h1 className="font-['Merriweather'] font-black tracking-tight text-stone-900 text-[2.5rem] leading-[1.08] sm:text-6xl sm:leading-[1.05] mt-5">
@@ -173,7 +173,7 @@ const Campaign = () => {
                     <ol className={`mt-8 grid gap-4 ${c.steps.length === 4 ? 'sm:grid-cols-2' : 'sm:grid-cols-3'}`}>
                         {c.steps.map(({ icon: Icon, title, body }, i) => (
                             <li key={title} className="rounded-3xl border border-stone-200 bg-white p-6 flex gap-4">
-                                <span className="w-11 h-11 rounded-2xl bg-[#557d6b]/10 text-[#43695a] flex items-center justify-center flex-shrink-0">
+                                <span className="w-11 h-11 rounded-2xl bg-primary/10 text-primary flex items-center justify-center flex-shrink-0">
                                     <Icon className="w-5 h-5" />
                                 </span>
                                 <span>
