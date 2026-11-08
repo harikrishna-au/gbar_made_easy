@@ -503,3 +503,46 @@ export const CODING_TOPICS: TopicSection[] = [
 ];
 
 export const TOTAL_PROBLEMS = CODING_TOPICS.reduce((s, t) => s + t.problems.length, 0);
+
+// ─── Free preview ─────────────────────────────────────────────────────────────
+// Non-premium users see FREE_COUNT questions: every section gets at least
+// MIN_PER_SECTION, the rest is shared out in proportion to section size
+// (largest remainder, so the total is exactly FREE_COUNT). Within a section the
+// free ones are the first in the listed order, which is the study order.
+
+export const FREE_COUNT = 50;
+const MIN_PER_SECTION = 2;
+
+const computeFreeIds = (): Set<string> => {
+  const sizes = CODING_TOPICS.map((t) => t.problems.length);
+  const base = sizes.map((n) => Math.min(n, MIN_PER_SECTION));
+  let left = FREE_COUNT - base.reduce((a, b) => a + b, 0);
+  const total = sizes.reduce((a, b) => a + b, 0);
+
+  const want = sizes.map((n, i) => Math.max(0, (n / total) * FREE_COUNT - base[i]));
+  const quota = base.map((b, i) => b + Math.floor(want[i]));
+  left -= quota.reduce((a, b) => a + b, 0) - base.reduce((a, b) => a + b, 0);
+
+  const order = want
+    .map((w, i) => ({ i, frac: w - Math.floor(w) }))
+    .sort((a, b) => b.frac - a.frac);
+  for (const { i } of order) {
+    if (left <= 0) break;
+    if (quota[i] < sizes[i]) { quota[i] += 1; left -= 1; }
+  }
+
+  // The per-section minimum can overshoot; trim from the biggest sections first.
+  while (left < 0) {
+    let big = -1;
+    quota.forEach((q, i) => { if (q > MIN_PER_SECTION && (big < 0 || q > quota[big])) big = i; });
+    if (big < 0) break;
+    quota[big] -= 1;
+    left += 1;
+  }
+
+  const ids = new Set<string>();
+  CODING_TOPICS.forEach((t, i) => t.problems.slice(0, quota[i]).forEach((p) => ids.add(p.id)));
+  return ids;
+};
+
+export const FREE_IDS = computeFreeIds();

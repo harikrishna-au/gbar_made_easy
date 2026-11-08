@@ -195,7 +195,7 @@ const App = () => {
               <Route path="/hackwithinfy/previous-years" element={<PremiumRoute><HackWithInfyPreviousYears /></PremiumRoute>} />
 
               {/* Coding Questions — Premium */}
-              <Route path="/coding-questions" element={<PremiumRoute><CodingQuestionsPage /></PremiumRoute>} />
+              <Route path="/coding-questions" element={<CodingQuestionsPage />} />
 
               {/* Admin */}
               <Route path="/admin" element={<BlogAdmin />} />

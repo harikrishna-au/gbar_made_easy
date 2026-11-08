@@ -126,7 +126,6 @@ export const CompanySelection = ({ onSelectCompany, isPremium, onSubscribe }: Co
   return (
     <div ref={page} className="mx-auto w-full max-w-[1360px] px-1 py-6 sm:px-6 sm:py-10">
       <header className="mb-10 sm:mb-12">
-        <p data-intro className="mb-2 text-base font-medium text-muted-foreground">Accenture 2026</p>
         <h1 data-intro className="font-display text-6xl font-normal uppercase leading-[0.95] text-foreground sm:text-7xl">
           Your prep dashboard
         </h1>
@@ -179,7 +178,7 @@ export const CompanySelection = ({ onSelectCompany, isPremium, onSubscribe }: Co
         />
         <Tool
           title="Study Resources"
-          body="Prep materials and guides for Accenture 2026."
+          body="Prep materials and guides for MNC hiring rounds."
           note="Premium"
           locked={!isPremium}
           onClick={() => {

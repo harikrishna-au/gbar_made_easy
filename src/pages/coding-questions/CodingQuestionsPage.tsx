@@ -1,55 +1,55 @@
 import { useState, useEffect, useRef, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { useAuth } from "@clerk/clerk-react";
 import {
-  ArrowLeft, ChevronDown, ChevronUp, Search, X,
-  CheckCircle2, Circle, RotateCcw, Trophy, ExternalLink,
+  ArrowLeft, ChevronDown, Search, X, Check, RotateCcw, ExternalLink, Lock, ArrowRight,
 } from "lucide-react";
-import gsap from "gsap";
-import { useGSAP } from "@gsap/react";
-import { CODING_TOPICS, TOTAL_PROBLEMS, type Difficulty } from "./data";
+import SEO from "@/components/SEO";
+import PaymentPopup from "@/components/PaymentPopup";
+import { usePremiumStatus } from "@/hooks/usePremiumStatus";
+import { useGsapReveal } from "@/hooks/useGsapReveal";
+import { PROMO_ACTIVE, PROMO_PRICE, REGULAR_PRICE } from "@/lib/promo";
+import { CODING_TOPICS, TOTAL_PROBLEMS, FREE_COUNT, FREE_IDS, type Difficulty } from "./data";
 
-// ─── Constants ────────────────────────────────────────────────────────────────
 const STORAGE_KEY = "cq_done_v1";
 
-const DIFF_STYLE: Record<Difficulty, { color: string; bg: string; border: string }> = {
-  Easy:   { color: "#059669", bg: "rgba(5,150,105,0.09)",   border: "rgba(5,150,105,0.22)"   },
-  Medium: { color: "#d97706", bg: "rgba(217,119,6,0.09)",   border: "rgba(217,119,6,0.22)"   },
-  Hard:   { color: "#dc2626", bg: "rgba(220,38,38,0.09)",   border: "rgba(220,38,38,0.22)"   },
+// Difficulty reads from shape and weight, not from a traffic-light palette.
+const DIFF_STYLE: Record<Difficulty, string> = {
+  Easy: "bg-[var(--color-paper-2)] text-[var(--color-ink)]",
+  Medium: "bg-[var(--color-accent)] text-[var(--color-ink)]",
+  Hard: "bg-[var(--color-ink)] text-[var(--color-paper)]",
 };
 
 type FilterDiff = "All" | Difficulty;
 const DIFF_FILTERS: FilterDiff[] = ["All", "Easy", "Medium", "Hard"];
 
-// ─── Decorative viz for header ────────────────────────────────────────────────
-const DSAViz = () => {
-  const nodes = [
-    [0, 0], [1, -1], [1, 1], [2, -2], [2, 0], [2, 2],
-  ];
-  const edges = [[0,1],[0,2],[1,3],[1,4],[2,4],[2,5]];
-  const W = 120, H = 80, pad = 18;
-  const xs = nodes.map(n => pad + n[1] * 26 + 52);
-  const ys = nodes.map(n => pad + n[0] * 24);
-  return (
-    <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} fill="none">
-      {edges.map(([a, b], i) => (
-        <line key={i} x1={xs[a]} y1={ys[a]} x2={xs[b]} y2={ys[b]}
-          stroke="rgba(220,38,38,0.22)" strokeWidth="1.2" />
-      ))}
-      {nodes.map(([, ], i) => (
-        <circle key={i} cx={xs[i]} cy={ys[i]} r={5.5}
-          fill={`rgba(220,38,38,${0.12 + i * 0.09})`}
-          stroke={`rgba(220,38,38,${0.3 + i * 0.07})`} strokeWidth="1.2" />
-      ))}
-    </svg>
-  );
-};
+const BTN =
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap px-6 py-3.5 text-[15px] font-semibold text-[var(--color-ink)] " +
+  "shadow-[var(--shadow-offset)] transition-[transform,box-shadow] duration-[120ms] hover:translate-x-px hover:translate-y-px " +
+  "hover:shadow-[3px_3px_0_var(--color-ink)] active:translate-x-1 active:translate-y-1 active:shadow-none " +
+  "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--color-focus)]";
 
-// ─── Main page ────────────────────────────────────────────────────────────────
 export default function CodingQuestionsPage() {
-  const navigate = useNavigate();
-  const containerRef = useRef<HTMLDivElement>(null);
+  const page = useRef<HTMLDivElement>(null);
+  const { isSignedIn } = useAuth();
+  const { isPremium, loading: premiumLoading } = usePremiumStatus();
+  const [showPayment, setShowPayment] = useState(false);
+  useGsapReveal(page);
 
-  // ── Persisted checked state ───────────────────────────────────────────────
+  const unlocked = isPremium;
+  const visibleTotal = unlocked ? TOTAL_PROBLEMS : FREE_COUNT;
+  const price = PROMO_ACTIVE ? PROMO_PRICE : REGULAR_PRICE;
+
+  const unlock = () => {
+    if (!isSignedIn) {
+      try { localStorage.setItem("auto_open_payment", "true"); } catch { /* ignore */ }
+      window.location.href = "/login";
+      return;
+    }
+    setShowPayment(true);
+  };
+
+  // ── Checked state, kept in this browser ──
   const [done, setDone] = useState<Set<string>>(() => {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
@@ -58,306 +58,295 @@ export default function CodingQuestionsPage() {
       return new Set();
     }
   });
-
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify([...done]));
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify([...done])); } catch { /* ignore */ }
   }, [done]);
-
-  const toggle = (id: string) => {
-    setDone(prev => {
+  const toggle = (id: string) =>
+    setDone((prev) => {
       const next = new Set(prev);
-      next.has(id) ? next.delete(id) : next.add(id);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
       return next;
     });
-  };
 
-  // ── Filters ───────────────────────────────────────────────────────────────
+  // ── Filters ──
   const [search, setSearch] = useState("");
   const [diffFilter, setDiffFilter] = useState<FilterDiff>("All");
-  const [expanded, setExpanded] = useState<Set<string>>(() => new Set(CODING_TOPICS.map(t => t.id)));
-
+  const [collapsed, setCollapsed] = useState<Set<string>>(new Set());
   const toggleSection = (id: string) =>
-    setExpanded(prev => {
+    setCollapsed((prev) => {
       const next = new Set(prev);
-      next.has(id) ? next.delete(id) : next.add(id);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
       return next;
     });
 
-  // ── Filtered topics ───────────────────────────────────────────────────────
-  const filtered = useMemo(() => {
+  const sections = useMemo(() => {
     const q = search.trim().toLowerCase();
-    return CODING_TOPICS.map(topic => ({
-      ...topic,
-      problems: topic.problems.filter(p => {
-        const matchDiff = diffFilter === "All" || p.difficulty === diffFilter;
-        const matchQ = !q || p.title.toLowerCase().includes(q);
-        return matchDiff && matchQ;
-      }),
-    })).filter(t => t.problems.length > 0);
-  }, [search, diffFilter]);
+    return CODING_TOPICS.map((topic) => {
+      const open = unlocked ? topic.problems : topic.problems.filter((p) => FREE_IDS.has(p.id));
+      const shown = open.filter(
+        (p) => (diffFilter === "All" || p.difficulty === diffFilter) && (!q || p.title.toLowerCase().includes(q)),
+      );
+      return { topic, shown, openCount: open.length, lockedCount: topic.problems.length - open.length };
+    }).filter((s) => s.shown.length > 0 || (!search && diffFilter === "All"));
+  }, [search, diffFilter, unlocked]);
 
-  // ── Stats ─────────────────────────────────────────────────────────────────
-  const totalDone = done.size;
-  const pct = Math.round((totalDone / TOTAL_PROBLEMS) * 100);
-
-  // ── GSAP entry animation ──────────────────────────────────────────────────
-  useGSAP(() => {
-    gsap.fromTo(containerRef.current,
-      { opacity: 0, y: 20 },
-      { opacity: 1, y: 0, duration: 0.55, ease: "power3.out" }
-    );
-  }, { scope: containerRef });
+  const visibleIds = useMemo(() => {
+    const ids = new Set<string>();
+    CODING_TOPICS.forEach((t) => t.problems.forEach((p) => { if (unlocked || FREE_IDS.has(p.id)) ids.add(p.id); }));
+    return ids;
+  }, [unlocked]);
+  const totalDone = [...done].filter((id) => visibleIds.has(id)).length;
+  const pct = Math.round((totalDone / visibleTotal) * 100);
 
   const handleReset = () => {
-    if (window.confirm(`Reset all ${totalDone} checked items?`)) {
-      setDone(new Set());
-    }
+    if (window.confirm(`Reset all ${totalDone} checked items?`)) setDone(new Set());
   };
 
   return (
-    <div
-      ref={containerRef}
-      className="min-h-screen w-full font-['Inter'] opacity-0"
-      style={{ background: "#fcfcf9" }}
-    >
-      {/* ── Fixed background wash ── */}
-      <div className="fixed inset-0 -z-10"
-        style={{ background: "radial-gradient(ellipse 80% 50% at 50% -10%, rgba(220,38,38,0.06) 0%, transparent 70%)" }} />
+    <div ref={page} className="min-h-screen bg-[var(--color-paper)] font-sans text-[var(--color-ink)]">
+      <SEO
+        title="Infosys SP & DSE Coding Questions | Harry The Blaze"
+        description="Coding questions collected from a survey of people who got Infosys SP and DSE roles. 50 free, the full set for Premium."
+      />
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-14">
-
-        {/* ── Back nav ── */}
-        <button
-          onClick={() => navigate("/dashboard")}
-          className="flex items-center gap-2 mb-8 text-stone-400 hover:text-stone-700 transition-colors text-sm font-medium"
+      <div className="mx-auto max-w-[1100px] px-4 pb-24 pt-8 sm:px-8 sm:pt-12">
+        <Link
+          to="/dashboard"
+          className="mb-10 inline-flex items-center gap-2 text-[15px] underline decoration-[var(--color-rule)] underline-offset-4 hover:decoration-[var(--color-ink)]"
         >
-          <ArrowLeft className="w-4 h-4" />
-          Back to Dashboard
-        </button>
+          <ArrowLeft className="h-4 w-4" aria-hidden />
+          Dashboard
+        </Link>
 
         {/* ── Header ── */}
-        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-6 mb-10">
-          <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-3"
-              style={{ background: "rgba(220,38,38,0.08)", border: "1px solid rgba(220,38,38,0.18)" }}>
-              <span className="text-[11px] font-bold tracking-[0.22em] uppercase" style={{ color: "#dc2626" }}>
-                DSA Checklist
-              </span>
+        <header>
+          <p data-intro className="text-base font-medium text-[var(--color-muted)]">Infosys · SP and DSE roles</p>
+          <h1
+            data-intro
+            className="mt-2 max-w-[16ch] font-display font-normal uppercase leading-[0.92] tracking-[0.005em]"
+            style={{ fontSize: "clamp(3rem, 8vw, 6.5rem)" }}
+          >
+            The questions Infosys actually asked.
+          </h1>
+          <p data-intro className="mt-6 max-w-[62ch] text-lg leading-snug">
+            These questions were collected from a large survey of people who got into the Infosys SP and DSE roles,
+            with references for every one. The full set is for Premium members.
+          </p>
+        </header>
+
+        {/* ── Numbers + offer ── */}
+        <div data-reveal className="mt-10 grid gap-6 lg:grid-cols-12">
+          <dl className="grid grid-cols-3 gap-px bg-[var(--color-ink)] lg:col-span-7">
+            {[
+              [String(TOTAL_PROBLEMS), "questions in the full set"],
+              [String(CODING_TOPICS.length), "topics"],
+              [String(FREE_COUNT), "free to open"],
+            ].map(([n, l]) => (
+              <div key={l} className="bg-[var(--color-paper-3)] p-5">
+                <dt className="font-display text-5xl leading-none sm:text-6xl">{n}</dt>
+                <dd className="mt-2 text-sm text-[var(--color-muted)]">{l}</dd>
+              </div>
+            ))}
+          </dl>
+
+          {!unlocked && !premiumLoading && (
+            <div data-drop="1" className="bg-[var(--color-accent)] p-6 shadow-[var(--shadow-sheet)] lg:col-span-5">
+              <p className="font-display text-4xl uppercase leading-none">Get all {TOTAL_PROBLEMS}</p>
+              <p className="mt-3 flex items-baseline gap-3">
+                <span className="font-display text-5xl leading-none tabular-nums">₹{price}</span>
+                {PROMO_ACTIVE && <span className="text-lg line-through tabular-nums">₹{REGULAR_PRICE}</span>}
+              </p>
+              <p className="mt-2 text-[15px] leading-snug">
+                Every section complete, plus the rest of Premium practice. One payment.
+              </p>
+              <button onClick={unlock} className={`${BTN} mt-5 w-full bg-[var(--color-ink)] !text-[var(--color-paper)] !shadow-[4px_4px_0_var(--color-paper)]`}>
+                {isSignedIn ? "Unlock the full set" : "Sign up to unlock"}
+                <ArrowRight className="h-4 w-4" aria-hidden />
+              </button>
             </div>
-            <h1 className="text-3xl sm:text-4xl font-bold text-stone-800 tracking-tight leading-tight mb-2">
-              Important Coding Questions
-            </h1>
-            <p className="text-stone-500 text-sm leading-relaxed">
-              {TOTAL_PROBLEMS} curated problems across {CODING_TOPICS.length} topics
-            </p>
-          </div>
-          <DSAViz />
+          )}
         </div>
 
-        {/* ── Overall progress ── */}
-        <div className="rounded-2xl bg-white border border-stone-100 shadow-sm p-5 mb-6"
-          style={{ boxShadow: "0 2px 14px rgba(0,0,0,0.04)" }}>
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <Trophy className="w-4 h-4" style={{ color: "#dc2626" }} />
-              <span className="text-sm font-semibold text-stone-700">Overall Progress</span>
-            </div>
-            <div className="flex items-center gap-3">
-              <span className="text-xs text-stone-400 font-medium">{totalDone}/{TOTAL_PROBLEMS}</span>
+        {/* ── Progress ── */}
+        <section data-reveal className="mt-10 bg-[var(--color-paper-3)] p-5 shadow-[var(--shadow-card)]" aria-label="Progress">
+          <div className="flex items-center justify-between gap-4">
+            <p className="text-[15px] font-semibold">
+              Your progress <span className="font-normal text-[var(--color-muted)]">· saved in this browser</span>
+            </p>
+            <div className="flex items-center gap-4 text-sm">
+              <span className="tabular-nums">{totalDone}/{visibleTotal}</span>
               {totalDone > 0 && (
-                <button onClick={handleReset}
-                  className="flex items-center gap-1 text-[11px] text-stone-400 hover:text-red-500 transition-colors">
-                  <RotateCcw className="w-3 h-3" /> Reset
+                <button onClick={handleReset} className="inline-flex items-center gap-1 underline decoration-[var(--color-rule)] underline-offset-4 hover:decoration-[var(--color-ink)]">
+                  <RotateCcw className="h-3.5 w-3.5" aria-hidden /> Reset
                 </button>
               )}
             </div>
           </div>
-          <div className="h-2 rounded-full bg-stone-100 overflow-hidden">
-            <div
-              className="h-full rounded-full transition-all duration-500"
-              style={{
-                width: `${pct}%`,
-                background: pct >= 80 ? "#059669" : pct >= 50 ? "#d97706" : "#dc2626",
-              }}
-            />
+          <div className="mt-3 h-2.5 bg-[var(--color-paper-2)]" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100}>
+            <div className="h-full bg-[var(--color-accent)] transition-[width] duration-500" style={{ width: `${pct}%` }} />
           </div>
-          <div className="flex justify-between mt-1.5">
-            <span className="text-[11px] text-stone-400">{pct}% complete</span>
-            <span className="text-[11px] text-stone-400">{TOTAL_PROBLEMS - totalDone} remaining</span>
-          </div>
-        </div>
+        </section>
 
-        {/* ── Filter bar ── */}
-        <div className="flex flex-col sm:flex-row gap-3 mb-8">
-          {/* Search */}
+        {/* ── Filters ── */}
+        <div className="mt-8 flex flex-col gap-3 sm:flex-row">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400 pointer-events-none" />
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--color-muted)]" aria-hidden />
             <input
               type="text"
-              placeholder="Search problems…"
+              aria-label="Search questions"
+              placeholder="Search questions…"
               value={search}
-              onChange={e => setSearch(e.target.value)}
-              className="w-full pl-9 pr-8 py-2.5 text-sm rounded-xl bg-white border border-stone-200 text-stone-700 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-red-200 focus:border-transparent transition"
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full border-[1.5px] border-[var(--color-ink)] bg-[var(--color-paper-3)] py-2.5 pl-9 pr-9 text-[15px] placeholder:text-[var(--color-muted)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]"
             />
             {search && (
-              <button onClick={() => setSearch("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600">
-                <X className="w-3.5 h-3.5" />
+              <button onClick={() => setSearch("")} aria-label="Clear search" className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[var(--color-muted)] hover:text-[var(--color-ink)]">
+                <X className="h-4 w-4" />
               </button>
             )}
           </div>
-
-          {/* Difficulty pills */}
-          <div className="flex gap-2 flex-wrap">
-            {DIFF_FILTERS.map(d => (
-              <button key={d} onClick={() => setDiffFilter(d)}
-                className="px-3.5 py-2 rounded-xl text-xs font-semibold border transition-all"
-                style={diffFilter === d
-                  ? d === "All"
-                    ? { background: "#1c1c1e", color: "#fff", borderColor: "#1c1c1e" }
-                    : { background: DIFF_STYLE[d as Difficulty].bg, color: DIFF_STYLE[d as Difficulty].color, borderColor: DIFF_STYLE[d as Difficulty].border }
-                  : { background: "#fff", color: "#6b7280", borderColor: "#e5e7eb" }
-                }>
+          <div className="flex flex-wrap gap-2" role="group" aria-label="Difficulty">
+            {DIFF_FILTERS.map((d) => (
+              <button
+                key={d}
+                aria-pressed={diffFilter === d}
+                onClick={() => setDiffFilter(d)}
+                className={`px-4 py-2.5 text-sm font-semibold transition-[transform,box-shadow] duration-[120ms] ${
+                  diffFilter === d
+                    ? "bg-[var(--color-accent)] shadow-[3px_3px_0_var(--color-ink)]"
+                    : "bg-[var(--color-paper-3)] shadow-[var(--shadow-card)] hover:-translate-y-0.5"
+                }`}
+              >
                 {d}
               </button>
             ))}
           </div>
         </div>
 
-        {/* ── Topics list ── */}
-        {filtered.length === 0 ? (
-          <div className="text-center py-16 text-stone-400">
-            <Search className="w-8 h-8 mx-auto mb-3 opacity-40" />
-            <p className="text-sm">No problems found. Try a different search or filter.</p>
+        {/* ── Sections ── */}
+        {sections.length === 0 ? (
+          <div className="mt-12 py-12">
+            <p className="font-display text-4xl uppercase leading-none">No questions found</p>
+            <p className="mt-3 text-base">Try a different search or difficulty.</p>
           </div>
         ) : (
-          <div className="flex flex-col gap-4">
-            {filtered.map(topic => {
-              const topicDone = topic.problems.filter(p => done.has(p.id)).length;
-              const isOpen = expanded.has(topic.id);
-              const topicPct = Math.round((topicDone / topic.problems.length) * 100);
-
+          <div data-reveal-group className="mt-8 flex flex-col gap-5">
+            {sections.map(({ topic, shown, openCount, lockedCount }) => {
+              const isOpen = !collapsed.has(topic.id);
+              const doneHere = topic.problems.filter((p) => done.has(p.id) && visibleIds.has(p.id)).length;
               return (
-                <div key={topic.id}
-                  className="rounded-2xl bg-white overflow-hidden"
-                  style={{
-                    border: `1px solid ${topic.border}`,
-                    boxShadow: "0 2px 12px rgba(0,0,0,0.04)",
-                  }}>
-
-                  {/* Section header */}
+                <section key={topic.id} className="bg-[var(--color-paper-3)] shadow-[var(--shadow-sheet)]">
                   <button
                     onClick={() => toggleSection(topic.id)}
-                    className="w-full flex items-center justify-between p-4 sm:p-5 text-left group"
+                    aria-expanded={isOpen}
+                    className="flex w-full items-center justify-between gap-4 p-5 text-left focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-[var(--color-focus)] sm:p-6"
                   >
-                    <div className="flex items-center gap-3 min-w-0">
-                      {/* Color dot */}
-                      <div className="w-3 h-3 rounded-full flex-shrink-0"
-                        style={{ background: topic.color, opacity: 0.8 }} />
-                      <div className="min-w-0">
-                        <span className="font-semibold text-stone-800 text-[0.95rem] leading-tight">
-                          {topic.title}
-                        </span>
-                        <div className="flex items-center gap-2 mt-0.5">
-                          <span className="text-[11px] text-stone-400">
-                            {topicDone}/{topic.problems.length} done
-                          </span>
-                          {topicDone === topic.problems.length && topic.problems.length > 0 && (
-                            <span className="text-[11px] font-bold px-1.5 py-0.5 rounded-full"
-                              style={{ background: "rgba(5,150,105,0.1)", color: "#059669" }}>
-                              ✓ Complete
-                            </span>
-                          )}
-                        </div>
-                      </div>
+                    <div className="min-w-0">
+                      <h2 className="font-display text-3xl font-normal uppercase leading-none sm:text-4xl">{topic.title}</h2>
+                      <p className="mt-2 text-sm text-[var(--color-muted)]">
+                        <span className="tabular-nums">{doneHere}/{openCount}</span> done
+                        {lockedCount > 0 && <> · <span className="tabular-nums">{lockedCount}</span> more in the full set</>}
+                      </p>
                     </div>
-
-                    <div className="flex items-center gap-3 flex-shrink-0 ml-3">
-                      {/* Mini progress bar */}
-                      <div className="hidden sm:block w-20 h-1.5 rounded-full bg-stone-100 overflow-hidden">
-                        <div className="h-full rounded-full transition-all duration-300"
-                          style={{ width: `${topicPct}%`, background: topic.color, opacity: 0.7 }} />
-                      </div>
-                      {isOpen
-                        ? <ChevronUp className="w-4 h-4 text-stone-400" />
-                        : <ChevronDown className="w-4 h-4 text-stone-400" />
-                      }
-                    </div>
+                    <ChevronDown className={`h-5 w-5 flex-shrink-0 transition-transform ${isOpen ? "rotate-180" : ""}`} aria-hidden />
                   </button>
 
-                  {/* Problems list */}
                   {isOpen && (
-                    <div className="border-t" style={{ borderColor: topic.border }}>
-                      <div className="p-3 sm:p-4 grid grid-cols-1 gap-1.5">
-                        {topic.problems.map((prob, idx) => {
-                          const checked = done.has(prob.id);
-                          const ds = DIFF_STYLE[prob.difficulty];
+                    <div className="border-t-2 border-[var(--color-ink)]">
+                      <ul>
+                        {shown.map((p, idx) => {
+                          const checked = done.has(p.id);
                           return (
-                            <button
-                              key={prob.id}
-                              onClick={() => toggle(prob.id)}
-                              className="flex items-center gap-3 w-full text-left rounded-xl px-3 py-2.5 transition-all group/item"
-                              style={{
-                                background: checked ? topic.bg : "transparent",
-                              }}
-                              onMouseEnter={e => {
-                                if (!checked) (e.currentTarget as HTMLElement).style.background = "rgba(0,0,0,0.025)";
-                              }}
-                              onMouseLeave={e => {
-                                (e.currentTarget as HTMLElement).style.background = checked ? topic.bg : "transparent";
-                              }}
-                            >
-                              {/* Checkbox icon */}
-                              {checked
-                                ? <CheckCircle2 className="w-4.5 h-4.5 flex-shrink-0" style={{ color: topic.color }} />
-                                : <Circle className="w-4.5 h-4.5 flex-shrink-0 text-stone-300 group-hover/item:text-stone-400 transition-colors" />
-                              }
-
-                              {/* Number */}
-                              <span className="text-[11px] text-stone-300 font-mono w-5 text-right flex-shrink-0">
-                                {idx + 1}
-                              </span>
-
-                              {/* Title */}
-                              <span className={`flex-1 text-[13px] font-medium leading-tight transition-colors ${checked ? "line-through" : ""}`}
-                                style={{ color: checked ? "#9ca3af" : "#374151" }}>
-                                {prob.title}
-                              </span>
-
-                              {/* Link button */}
-                              {prob.link && (
+                            <li key={p.id} className="flex items-center gap-3 border-b border-[var(--color-rule)] pr-3 last:border-b-0 sm:pr-5">
+                              <button
+                                onClick={() => toggle(p.id)}
+                                aria-pressed={checked}
+                                className="flex min-w-0 flex-1 items-center gap-3 py-3.5 pl-4 text-left focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-[var(--color-focus)] sm:pl-6"
+                              >
+                                <span
+                                  aria-hidden
+                                  className={`flex h-5 w-5 flex-shrink-0 items-center justify-center border-2 border-[var(--color-ink)] ${checked ? "bg-[var(--color-accent)]" : "bg-transparent"}`}
+                                >
+                                  {checked && <Check className="h-3.5 w-3.5" strokeWidth={3} />}
+                                </span>
+                                <span className="w-6 flex-shrink-0 text-right text-xs tabular-nums text-[var(--color-muted)]">{idx + 1}</span>
+                                <span className={`min-w-0 flex-1 text-[15px] ${checked ? "text-[var(--color-muted)] line-through" : "font-medium"}`}>
+                                  {p.title}
+                                </span>
+                              </button>
+                              {p.link && (
                                 <a
-                                  href={prob.link}
+                                  href={p.link}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  onClick={e => e.stopPropagation()}
-                                  className="flex-shrink-0 p-1 rounded-lg text-stone-300 hover:text-stone-600 hover:bg-stone-100 transition-colors"
-                                  title="Open problem"
+                                  aria-label={`Open ${p.title}`}
+                                  className="flex-shrink-0 p-1.5 hover:bg-[var(--color-paper-2)]"
                                 >
-                                  <ExternalLink className="w-3.5 h-3.5" />
+                                  <ExternalLink className="h-4 w-4" aria-hidden />
                                 </a>
                               )}
-
-                              {/* Difficulty badge */}
-                              <span className="text-[11px] font-bold px-2 py-0.5 rounded-full flex-shrink-0"
-                                style={{ color: ds.color, background: ds.bg, border: `1px solid ${ds.border}` }}>
-                                {prob.difficulty}
-                              </span>
-                            </button>
+                              <span className={`flex-shrink-0 px-2 py-0.5 text-xs font-semibold ${DIFF_STYLE[p.difficulty]}`}>{p.difficulty}</span>
+                            </li>
                           );
                         })}
-                      </div>
+                      </ul>
+
+                      {lockedCount > 0 && !search && diffFilter === "All" && (
+                        <button
+                          onClick={unlock}
+                          className="group relative block w-full overflow-hidden border-t-2 border-[var(--color-ink)] bg-[var(--color-paper-2)] p-5 text-left sm:px-6"
+                        >
+                          <span aria-hidden className="pointer-events-none block select-none space-y-2.5 opacity-40 blur-[3px]">
+                            {[72, 58, 66].slice(0, Math.min(3, lockedCount)).map((w, i) => (
+                              <span key={i} className="flex items-center gap-3">
+                                <span className="h-5 w-5 border-2 border-[var(--color-ink)]" />
+                                <span className="h-3 bg-[var(--color-ink)]" style={{ width: `${w}%` }} />
+                              </span>
+                            ))}
+                          </span>
+                          <span className="mt-4 flex items-center justify-between gap-3 text-[15px] font-semibold">
+                            <span className="inline-flex items-center gap-2">
+                              <Lock className="h-4 w-4" aria-hidden />
+                              {lockedCount} more {topic.title} {lockedCount === 1 ? "question" : "questions"} in the full set
+                            </span>
+                            <span className="inline-flex items-center gap-1 underline decoration-[var(--color-ink)] underline-offset-4">
+                              Unlock <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden />
+                            </span>
+                          </span>
+                        </button>
+                      )}
                     </div>
                   )}
-                </div>
+                </section>
               );
             })}
           </div>
         )}
 
-        {/* ── Bottom padding ── */}
-        <div className="h-16" />
+        {/* ── Closing offer ── */}
+        {!unlocked && !premiumLoading && (
+          <section data-reveal className="mt-16 bg-[var(--color-ink)] p-8 text-[var(--color-paper)] sm:p-12">
+            <h2 className="max-w-[18ch] font-display text-[clamp(2.5rem,6vw,4.75rem)] font-normal uppercase leading-[0.95]">
+              You have seen {FREE_COUNT}. There are {TOTAL_PROBLEMS - FREE_COUNT} more.
+            </h2>
+            <p className="mt-5 max-w-[52ch] text-lg leading-snug opacity-85">
+              The full set covers every topic the survey flagged, from first-round basics to the harder graph and DP
+              questions. It comes with the rest of Premium practice.
+            </p>
+            <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
+              <button onClick={unlock} className={`${BTN} bg-[var(--color-accent)] !shadow-[4px_4px_0_var(--color-paper)] active:!shadow-none`}>
+                {isSignedIn ? `Unlock all ${TOTAL_PROBLEMS} for ₹${price}` : "Sign up to unlock"}
+                <ArrowRight className="h-4 w-4" aria-hidden />
+              </button>
+              {PROMO_ACTIVE && <span className="text-base opacity-80">Launch price. Regular price is ₹{REGULAR_PRICE}.</span>}
+            </div>
+          </section>
+        )}
       </div>
+
+      <PaymentPopup isOpen={showPayment} onClose={() => setShowPayment(false)} />
     </div>
   );
 }

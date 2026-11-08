@@ -16,7 +16,7 @@ const JOURNEY_STEPS: TourStep[] = [
     {
         targetId: 'onboarding-tr-group',
         title: "Cognitive games",
-        description: "Each card is one game from the Accenture cognitive round. We built them from scratch so you can master the logic before test day.",
+        description: "Each card is one game from a real MNC cognitive round. We built them from scratch so you can master the logic before test day.",
     },
     {
         title: "Premium",
@@ -32,7 +32,7 @@ const LANDING_STEPS: TourStep[] = [
     {
         targetId: 'onboarding-tr-group',
         title: "Cognitive puzzles",
-        description: "The logic games used in Accenture and other MNC assessments: Matrix Flow, Balloon Math and Hidden Maze. Repeat until they feel easy.",
+        description: "The logic games used in MNC assessments: Matrix Flow, Balloon Math and Hidden Maze. Repeat until they feel easy.",
     },
     {
         targetId: 'onboarding-comm-card',
