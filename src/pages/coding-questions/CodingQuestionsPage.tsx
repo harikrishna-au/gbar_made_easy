@@ -192,24 +192,24 @@ export default function CodingQuestionsPage() {
         {/* ── Topics + questions ── */}
         <div className="mt-6 grid gap-6 lg:grid-cols-[230px_minmax(0,1fr)]">
           {/* Topic picker: chips on small screens, sticky list on large */}
-          <nav aria-label="Topics" className="lg:sticky lg:top-6 lg:self-start">
+          <nav aria-label="Topics" className="lg:sticky lg:top-6 lg:min-w-0 lg:self-start">
             <ul className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-2 [scrollbar-width:none] lg:mx-0 lg:block lg:space-y-1 lg:overflow-visible lg:px-0 lg:pb-0">
               {CODING_TOPICS.map((t) => {
                 const s = statOf(t.id);
                 const on = !q && t.id === active;
                 return (
-                  <li key={t.id} className="flex-shrink-0">
+                  <li key={t.id} className="flex-shrink-0 lg:min-w-0">
                     <button
                       onClick={() => { setActive(t.id); setSearch(""); }}
                       aria-current={on ? "true" : undefined}
-                      className={`flex w-full items-center justify-between gap-3 whitespace-nowrap px-3.5 py-2 text-left text-[15px] transition-colors lg:py-2.5 ${
+                      className={`flex w-full items-center justify-between gap-3 whitespace-nowrap px-3.5 py-2 text-left text-[15px] transition-colors lg:whitespace-normal lg:py-2.5 ${
                         on
                           ? "bg-[var(--color-ink)] font-semibold text-[var(--color-paper)]"
                           : "bg-[var(--color-paper-3)] shadow-[var(--shadow-card)] hover:bg-[var(--color-paper-2)]"
                       }`}
                     >
-                      <span>{t.title}</span>
-                      <span className={`text-xs tabular-nums ${on ? "" : "text-[var(--color-muted)]"}`}>
+                      <span className="min-w-0 leading-snug">{t.title}</span>
+                      <span className={`flex-shrink-0 text-xs tabular-nums ${on ? "" : "text-[var(--color-muted)]"}`}>
                         {s.doneCount}/{s.openCount}
                       </span>
                     </button>
