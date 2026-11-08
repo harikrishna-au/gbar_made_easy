@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { button, detailRows, emailShell, esc, prettyDate, prettyTime } from "../_shared/email.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -79,36 +80,28 @@ function meetingEmail(params: {
   studentEmail?: string;
   message?: string | null;
 }) {
-  const recipientName = escapeHtml(params.recipientName);
-  const otherName = escapeHtml(params.otherName);
-  const date = escapeHtml(params.date);
-  const startTime = escapeHtml(formatTime(params.startTime));
-  const endTime = escapeHtml(formatTime(params.endTime));
-  const meetLink = escapeHtml(params.meetLink);
-  const studentEmail = escapeHtml(params.studentEmail);
-  const message = escapeHtml(params.message);
-  return `
-  <div style="font-family:Inter,Arial,sans-serif;max-width:560px;margin:0 auto;background:#fafaf9;border:1px solid #e7e5e4;border-radius:18px;overflow:hidden">
-    <div style="background:#1c1917;padding:24px 28px">
-      <div style="color:#a8a29e;font-size:11px;letter-spacing:.14em;text-transform:uppercase">Harry The Blaze · Connect 1:1</div>
-      <h1 style="color:#fff;font-size:22px;margin:8px 0 0">Your session is confirmed</h1>
-    </div>
-    <div style="padding:28px">
-      <p style="color:#44403c;font-size:14px;line-height:1.6;margin:0 0 20px">
-        Hi <strong>${recipientName}</strong>, your 1:1 session with
-        <strong>${otherName}</strong> is ready.
-      </p>
-      <div style="background:#fff;border:1px solid #e7e5e4;border-radius:12px;padding:16px 20px;margin-bottom:20px">
-        <div style="display:flex;justify-content:space-between;padding:6px 0;color:#44403c"><span style="color:#78716c">Date</span><strong>${date}</strong></div>
-        <div style="display:flex;justify-content:space-between;padding:6px 0;color:#44403c"><span style="color:#78716c">Time</span><strong>${startTime}–${endTime} IST</strong></div>
-        <div style="display:flex;justify-content:space-between;padding:6px 0;color:#44403c"><span style="color:#78716c">${params.isExpert ? "Student" : "Expert"}</span><strong>${otherName}</strong></div>
-        ${params.isExpert && params.studentEmail ? `<div style="display:flex;justify-content:space-between;padding:6px 0;color:#44403c"><span style="color:#78716c">Student email</span><strong>${studentEmail}</strong></div>` : ""}
-        ${params.isExpert && params.message ? `<div style="margin-top:12px;padding-top:12px;border-top:1px solid #e7e5e4;color:#57534e;font-size:13px"><span style="color:#78716c">Student goal:</span><br>${message}</div>` : ""}
-      </div>
-      <a href="${meetLink}" style="display:block;background:#1c1917;color:#fff;text-align:center;padding:14px;border-radius:10px;text-decoration:none;font-weight:600">Join the meeting</a>
-      <p style="color:#78716c;font-size:12px;line-height:1.6;margin:16px 0 0">Keep this email. Both participants use the same secure meeting link.</p>
-    </div>
-  </div>`;
+  const rows: Array<[string, string]> = [
+    ["Date", esc(prettyDate(params.date))],
+    ["Time", `${esc(prettyTime(params.startTime))} &ndash; ${esc(prettyTime(params.endTime))} IST`],
+    [params.isExpert ? "Student" : "Expert", esc(params.otherName)],
+  ];
+  if (params.isExpert && params.studentEmail) rows.push(["Student email", esc(params.studentEmail)]);
+  if (params.isExpert && params.message) rows.push(["Student goal", `<span style="font-weight:500">${esc(params.message)}</span>`]);
+
+  const tips = params.isExpert
+    ? "Join a couple of minutes early and keep the student's goal in mind."
+    : "Join 2 minutes early, keep your resume open, and test your camera and mic.";
+
+  return emailShell({
+    preheader: `Your 1:1 with ${params.otherName} is confirmed for ${prettyDate(params.date)}.`,
+    kicker: "Connect 1:1",
+    heading: "Your session is confirmed",
+    intro: `Hi <strong>${esc(params.recipientName)}</strong>, your 1:1 session with <strong>${esc(params.otherName)}</strong> is locked in. Everything you need is below.`,
+    body: detailRows(rows),
+    footnote: `${button(params.meetLink, "Join the meeting")}
+      <p style="margin:16px 0 0">${esc(tips)}</p>
+      <p style="margin:10px 0 0;word-break:break-all">Button not working? Open this link: <a href="${esc(params.meetLink)}" style="color:#1a1613">${esc(params.meetLink)}</a><br>Both participants use the same link. Keep this email.</p>`,
+  });
 }
 
 function statusEmail(params: {
@@ -121,22 +114,19 @@ function statusEmail(params: {
   reason?: string | null;
 }) {
   const label = params.status.replaceAll("_", " ");
-  return `
-  <div style="font-family:Inter,Arial,sans-serif;max-width:560px;margin:0 auto;background:#fafaf9;border:1px solid #e7e5e4;border-radius:18px;overflow:hidden">
-    <div style="background:#1c1917;padding:24px 28px;color:#fff">
-      <div style="color:#a8a29e;font-size:11px;letter-spacing:.14em;text-transform:uppercase">Harry The Blaze · Connect 1:1</div>
-      <h1 style="font-size:21px;margin:8px 0 0">Session update: ${escapeHtml(label)}</h1>
-    </div>
-    <div style="padding:28px;color:#44403c">
-      <p style="font-size:14px;line-height:1.6">Hi <strong>${escapeHtml(params.recipientName)}</strong>, the session with <strong>${escapeHtml(params.otherName)}</strong> has been updated.</p>
-      <div style="background:#fff;border:1px solid #e7e5e4;border-radius:12px;padding:16px 20px">
-        <p style="margin:5px 0;font-size:13px"><span style="color:#78716c">Status:</span> <strong style="text-transform:capitalize">${escapeHtml(label)}</strong></p>
-        <p style="margin:5px 0;font-size:13px"><span style="color:#78716c">Schedule:</span> <strong>${escapeHtml(params.date)}, ${escapeHtml(formatTime(params.startTime))}–${escapeHtml(formatTime(params.endTime))} IST</strong></p>
-        ${params.reason ? `<p style="margin:12px 0 0;padding-top:12px;border-top:1px solid #e7e5e4;font-size:13px"><span style="color:#78716c">Note:</span><br>${escapeHtml(params.reason)}</p>` : ""}
-      </div>
-      <p style="color:#78716c;font-size:12px;line-height:1.6;margin:18px 0 0">Reply to this email if you need help from the Connect team.</p>
-    </div>
-  </div>`;
+  const rows: Array<[string, string]> = [
+    ["Status", `<span style="text-transform:capitalize">${esc(label)}</span>`],
+    ["Date", esc(prettyDate(params.date))],
+    ["Time", `${esc(prettyTime(params.startTime))} &ndash; ${esc(prettyTime(params.endTime))} IST`],
+  ];
+  if (params.reason) rows.push(["Note", `<span style="font-weight:500">${esc(params.reason)}</span>`]);
+  return emailShell({
+    preheader: `Session update: ${label}`,
+    kicker: "Connect 1:1",
+    heading: `Session ${label}`,
+    intro: `Hi <strong>${esc(params.recipientName)}</strong>, your session with <strong>${esc(params.otherName)}</strong> has been updated.`,
+    body: detailRows(rows),
+  });
 }
 
 async function sendEmail(to: string, subject: string, html: string) {
