@@ -1,82 +1,64 @@
-import React, { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { X } from 'lucide-react';
 
 interface TourStep {
+    /** Element id to spotlight. Missing or hidden targets fall back to a centered card. */
     targetId?: string;
     title: string;
     description: string;
-    position: 'center' | 'target';
 }
 
 const JOURNEY_STEPS: TourStep[] = [
     {
         title: "Welcome to Harry The Blaze",
-        description: "This is a practice environment designed to help you eliminate fear before your real placement assessments. Practice repeatedly to build confidence.",
-        position: 'center'
+        description: "This is a practice environment built to take the fear out of your real placement assessment. Practice repeatedly and the format stops being a surprise.",
     },
     {
         targetId: 'onboarding-tr-group',
-        title: "Technical Round (TR) Practice",
-        description: "The Technical Round includes 3 distinct cognitive puzzles. We have built these games from scratch so you can master the logic before your real assessment.",
-        position: 'target'
+        title: "Cognitive games",
+        description: "Each card is one game from the Accenture cognitive round. We built them from scratch so you can master the logic before test day.",
     },
     {
-        targetId: 'onboarding-comm-card',
-        title: "Communication Round",
-        description: "For those who clear the TR, we offer a complete simulation of the Communication Round. Practice answering, listening, and repeating to get instant AI feedback.",
-        position: 'target'
+        title: "Premium",
+        description: "Premium adds the extra levels, deeper feedback and the full Communication Round. Good luck.",
     },
-    {
-        targetId: 'onboarding-premium-card',
-        title: "Unlock Your Full Potential",
-        description: "Premium members get access to extra levels, advanced feedback, and the full Communication Round experience. Good luck!",
-        position: 'target'
-    }
 ];
 
 const LANDING_STEPS: TourStep[] = [
     {
         title: "Welcome to Harry The Blaze",
-        description: "Six focused tools to prepare you for every stage of top MNC hiring — from cognitive puzzles to job matching. Let's take a quick tour.",
-        position: 'center'
+        description: "Every tool you need for MNC hiring, from cognitive puzzles to job matching. A quick tour, six stops.",
     },
     {
         targetId: 'onboarding-tr-group',
-        title: "Cognitive Puzzles",
-        description: "Practice the exact logic games used in Accenture & other MNC assessments — Matrix Flow, Balloon Math, and Hidden Maze. Repeat until you're fearless.",
-        position: 'target'
+        title: "Cognitive puzzles",
+        description: "The logic games used in Accenture and other MNC assessments: Matrix Flow, Balloon Math and Hidden Maze. Repeat until they feel easy.",
     },
     {
         targetId: 'onboarding-comm-card',
-        title: "Communication Round",
-        description: "Full simulation of the spoken communication round. Practice QA, sentence repeating, story retelling, and more — with instant AI feedback.",
-        position: 'target'
+        title: "Communication round",
+        description: "A full simulation of the spoken round. Practice Q&A, sentence repeating and story retelling, with instant AI feedback.",
     },
     {
         targetId: 'onboarding-ai-card',
-        title: "AI Mock Interview",
-        description: "Face a real-time AI interviewer that asks questions and evaluates your answers on confidence, clarity, and relevance. Great for HR prep.",
-        position: 'target'
+        title: "AI mock interview",
+        description: "A live AI interviewer asks questions and scores your answers on confidence, clarity and relevance. Good HR prep.",
     },
     {
         targetId: 'onboarding-connect-card',
-        title: "1:1 Connect",
-        description: "Book a session with someone who just cracked the same process — last month. Real guidance, zero guesswork.",
-        position: 'target'
+        title: "Connect 1:1",
+        description: "Book 20 minutes with someone who recently cleared the same process. Real guidance, no guesswork.",
     },
     {
         targetId: 'onboarding-premium-card',
-        title: "Forge — Resume Builder",
-        description: "Upload your PDF or DOCX and let AI extract everything. Edit, refine, and export as a clean LaTeX resume. Free to use.",
-        position: 'target'
+        title: "Resume builder",
+        description: "Upload a PDF or DOCX, edit what the AI pulls out, and export a clean LaTeX resume. Free to use.",
     },
     {
         targetId: 'onboarding-radar-card',
-        title: "Radar — Job Match",
-        description: "Radar scans your skills against real job openings and ranks them by match score. See exactly what you're missing and where to apply first.",
-        position: 'target'
-    }
+        title: "Radar: job match",
+        description: "Radar scans your skills against real openings and ranks them by match score, so you see the gaps and where to apply first.",
+    },
 ];
 
 interface OnboardingTourProps {
@@ -85,85 +67,176 @@ interface OnboardingTourProps {
     mode?: 'landing' | 'journey';
 }
 
+const PAD = 10; // breathing room around the spotlight
+const CARD_W = 400;
+const GAP = 16;
+
+interface Box { top: number; left: number; width: number; height: number }
+
 export const OnboardingTour = ({ isOpen, onClose, mode = 'journey' }: OnboardingTourProps) => {
     const steps = mode === 'landing' ? LANDING_STEPS : JOURNEY_STEPS;
-    // Internal step state remains
     const [currentStep, setCurrentStep] = useState(0);
+    const [box, setBox] = useState<Box | null>(null);
+    const [vp, setVp] = useState({ w: 0, h: 0 });
+    const nextRef = useRef<HTMLButtonElement>(null);
 
-    // Reset step when opened
     useEffect(() => {
-        if (isOpen) {
-            setCurrentStep(0);
-        }
+        if (isOpen) setCurrentStep(0);
     }, [isOpen]);
-
-
-
-
-
-    const handleNext = () => {
-        if (currentStep < steps.length - 1) {
-            setCurrentStep(prev => prev + 1);
-        } else {
-            handleClose();
-        }
-    };
-
-    const handleBack = () => {
-        if (currentStep > 0) {
-            setCurrentStep(prev => prev - 1);
-        }
-    };
-
-    const handleClose = () => {
-        onClose();
-        localStorage.setItem('has_seen_tour_v1', 'true');
-    };
-
-    if (!isOpen) return null;
 
     const step = steps[currentStep];
 
-    if (!step) return null;
+    // Find the target, bring it on screen, then keep the spotlight glued to it.
+    const measure = useCallback(() => {
+        setVp({ w: window.innerWidth, h: window.innerHeight });
+        const el = step?.targetId ? document.getElementById(step.targetId) : null;
+        if (!el) return setBox(null);
+        const r = el.getBoundingClientRect();
+        if (r.width === 0 && r.height === 0) return setBox(null);
+        setBox({ top: r.top, left: r.left, width: r.width, height: r.height });
+    }, [step]);
+
+    useLayoutEffect(() => {
+        if (!isOpen) return;
+        const el = step?.targetId ? document.getElementById(step.targetId) : null;
+        el?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        measure();
+
+        let raf = 0;
+        const loop = () => { measure(); raf = requestAnimationFrame(loop); };
+        // Follow the smooth scroll for a moment, then settle.
+        raf = requestAnimationFrame(loop);
+        const stop = window.setTimeout(() => cancelAnimationFrame(raf), 900);
+
+        const on = () => measure();
+        window.addEventListener('resize', on);
+        window.addEventListener('scroll', on, true);
+        return () => {
+            cancelAnimationFrame(raf);
+            window.clearTimeout(stop);
+            window.removeEventListener('resize', on);
+            window.removeEventListener('scroll', on, true);
+        };
+    }, [isOpen, step, measure]);
+
+    const handleClose = useCallback(() => {
+        onClose();
+        try { localStorage.setItem('has_seen_tour_v1', 'true'); } catch { /* storage unavailable */ }
+    }, [onClose]);
+
+    const handleNext = () => {
+        if (currentStep < steps.length - 1) setCurrentStep((s) => s + 1);
+        else handleClose();
+    };
+    const handleBack = () => setCurrentStep((s) => Math.max(0, s - 1));
+
+    useEffect(() => {
+        if (!isOpen) return;
+        nextRef.current?.focus();
+        const onKey = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') handleClose();
+            if (e.key === 'ArrowRight') handleNext();
+            if (e.key === 'ArrowLeft') handleBack();
+        };
+        window.addEventListener('keydown', onKey);
+        return () => window.removeEventListener('keydown', onKey);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isOpen, currentStep]);
+
+    if (!isOpen || !step) return null;
+
+    const mobile = vp.w > 0 && vp.w < 640;
+    const spot = box && {
+        top: box.top - PAD,
+        left: box.left - PAD,
+        width: box.width + PAD * 2,
+        height: box.height + PAD * 2,
+    };
+
+    // Card position: below the spotlight if it fits, otherwise above; centered with no target.
+    let cardStyle: React.CSSProperties;
+    if (mobile) {
+        cardStyle = { left: 12, right: 12, bottom: 12 };
+    } else if (spot) {
+        const w = Math.min(CARD_W, vp.w - 32);
+        const left = Math.min(Math.max(16, spot.left), vp.w - w - 16);
+        const below = spot.top + spot.height + GAP;
+        const fitsBelow = below + 230 < vp.h;
+        cardStyle = fitsBelow
+            ? { left, width: w, top: below }
+            : { left, width: w, top: Math.max(16, spot.top - GAP - 230) };
+    } else {
+        cardStyle = { left: '50%', top: '50%', width: Math.min(CARD_W, vp.w - 32), transform: 'translate(-50%, -50%)' };
+    }
+
+    const last = currentStep === steps.length - 1;
 
     return (
-        <div role="dialog" aria-modal="true" className="fixed inset-0 z-[100] overflow-hidden bg-black/20 backdrop-blur-[2px]">
-            {/* Content Card */}
-            <div className="absolute z-20 w-full h-full pointer-events-none flex flex-col items-center justify-center">
+        <div role="dialog" aria-modal="true" aria-labelledby="tour-title" className="fixed inset-0 z-[100]">
+            {/* Dim everything; the spotlight is a hole cut by a huge box-shadow. */}
+            {spot ? (
                 <div
-                    className="pointer-events-auto max-w-md w-[90%] bg-white rounded-2xl shadow-2xl p-6 border border-neutral-100 animate-in zoom-in-95 fade-in slide-in-from-bottom-5 duration-300"
-                >
-                    <div className="flex justify-between items-start mb-4">
-                        <h3 className="text-xl font-bold text-neutral-900">{step.title}</h3>
-                        <button onClick={handleClose} className="text-neutral-400 hover:text-neutral-900 p-1">
-                            <X className="w-5 h-5" />
-                        </button>
-                    </div>
+                    aria-hidden
+                    className="pointer-events-none fixed transition-[top,left,width,height] duration-300 ease-out motion-reduce:transition-none"
+                    style={{
+                        ...spot,
+                        boxShadow: '0 0 0 9999px color-mix(in oklab, var(--color-ink) 62%, transparent)',
+                        outline: '3px solid var(--color-accent)',
+                        outlineOffset: 2,
+                    }}
+                />
+            ) : (
+                <div aria-hidden className="fixed inset-0" style={{ background: 'color-mix(in oklab, var(--color-ink) 62%, transparent)' }} />
+            )}
 
-                    <p className="text-neutral-600 mb-6 leading-relaxed">
-                        {step.description}
+            <div
+                key={currentStep}
+                className="fixed bg-[var(--color-paper-3)] p-6 text-[var(--color-ink)] shadow-[8px_8px_0_var(--color-ink)] animate-in fade-in slide-in-from-bottom-3 duration-300 motion-reduce:animate-none"
+                style={cardStyle}
+            >
+                <div className="flex items-start justify-between gap-4">
+                    <p className="text-sm font-semibold text-[var(--color-muted)]">
+                        Step {currentStep + 1} of {steps.length}
                     </p>
+                    <button
+                        onClick={handleClose}
+                        aria-label="Close tour"
+                        className="-m-1 p-1 text-[var(--color-ink)] hover:bg-[var(--color-paper-2)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--color-focus)]"
+                    >
+                        <X className="h-5 w-5" aria-hidden />
+                    </button>
+                </div>
 
-                    <div className="flex justify-between items-center pt-2">
-                        <div className="flex gap-1">
-                            {steps.map((_, idx) => (
-                                <div
-                                    key={idx}
-                                    className={`h-1.5 rounded-full transition-all duration-300 ${idx === currentStep ? 'w-6 bg-emerald-500' : 'w-1.5 bg-neutral-200'}`}
-                                />
-                            ))}
-                        </div>
+                <h3 id="tour-title" className="mt-2 font-display text-3xl font-normal uppercase leading-none">
+                    {step.title}
+                </h3>
+                <p className="mt-3 text-[15px] leading-relaxed">{step.description}</p>
 
-                        <div className="flex gap-2">
-                            {currentStep > 0 && (
-                                <Button variant="ghost" onClick={handleBack} className="text-neutral-500">
-                                    Back
-                                </Button>
-                            )}
-                            <Button onClick={handleNext} className="bg-neutral-900 text-white hover:bg-neutral-800">
-                                {currentStep === steps.length - 1 ? "Get Started" : "Next"}
-                            </Button>
-                        </div>
+                <div className="mt-6 flex items-center justify-between gap-3">
+                    <div className="flex gap-1.5" aria-hidden>
+                        {steps.map((_, i) => (
+                            <span
+                                key={i}
+                                className={`h-1.5 transition-all duration-300 ${i === currentStep ? 'w-6 bg-[var(--color-accent)]' : 'w-1.5 bg-[var(--color-rule)]'}`}
+                            />
+                        ))}
+                    </div>
+                    <div className="flex items-center gap-2">
+                        {currentStep > 0 && (
+                            <button
+                                onClick={handleBack}
+                                className="px-3 py-2 text-[15px] font-medium underline decoration-[var(--color-rule)] underline-offset-4 hover:decoration-[var(--color-ink)]"
+                            >
+                                Back
+                            </button>
+                        )}
+                        <button
+                            ref={nextRef}
+                            onClick={handleNext}
+                            className="bg-[var(--color-accent)] px-5 py-2.5 text-[15px] font-semibold text-[var(--color-ink)] shadow-[var(--shadow-offset)] transition-[transform,box-shadow] duration-[120ms] hover:translate-x-px hover:translate-y-px hover:shadow-[3px_3px_0_var(--color-ink)] active:translate-x-1 active:translate-y-1 active:shadow-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--color-focus)]"
+                        >
+                            {last ? 'Get started' : 'Next'}
+                        </button>
                     </div>
                 </div>
             </div>

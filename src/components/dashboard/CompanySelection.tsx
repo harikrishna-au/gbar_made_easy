@@ -137,6 +137,7 @@ export const CompanySelection = ({ onSelectCompany, isPremium, onSubscribe }: Co
 
       <div data-reveal-group className="grid gap-6 md:grid-cols-3">
         <Round
+          id="onboarding-tr-group"
           label="Round 1"
           title="Cognitive Puzzles"
           body="Game-based simulations of how large companies test reasoning speed, memory and problem-solving."

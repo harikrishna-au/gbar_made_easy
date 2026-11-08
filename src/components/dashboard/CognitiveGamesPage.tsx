@@ -254,7 +254,7 @@ export const CognitiveGamesPage = ({ isPremium, onSubscribe }: Props) => {
           count={ACCENTURE_GAMES.length}
           blurb="Modelled on the Accenture cognitive assessment — pattern logic, numerical fluency and spatial memory."
         />
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div id="onboarding-tr-group" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {ACCENTURE_GAMES.map((game) => (
             <GameCard
               key={game.num}

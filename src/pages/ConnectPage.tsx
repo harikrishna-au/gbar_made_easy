@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { Search, CalendarDays, UserPlus, ArrowRight, ArrowDown, X } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Header from '@/components/Header';
@@ -7,6 +7,7 @@ import ExpertCard, { Expert, ExpertCardSkeleton } from './connect/ExpertCard';
 import BookingScreen from './connect/BookingScreen';
 import MyBookingsModal from './connect/MyBookingsModal';
 import { trackMetaViewContent } from '@/lib/meta-pixel';
+import { useGsapReveal } from '@/hooks/useGsapReveal';
 
 type SortKey = 'recent' | 'price';
 
@@ -50,6 +51,8 @@ const ConnectPage = () => {
     const [selectedCompany, setSelectedCompany] = useState('All');
     const [sort, setSort] = useState<SortKey>('recent');
     const [showMyBookings, setShowMyBookings] = useState(false);
+    const page = useRef<HTMLDivElement>(null);
+    useGsapReveal(page, [loading]);
 
     useEffect(() => {
         trackMetaViewContent({
@@ -143,21 +146,21 @@ const ConnectPage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#fcfcf9] text-stone-900 font-sans selection:bg-stone-200 overflow-x-hidden">
+        <div ref={page} className="min-h-screen bg-[var(--color-paper)] text-[var(--color-ink)] font-sans overflow-x-hidden">
             <Header onStartTour={() => { }} />
 
             <main className="max-w-6xl mx-auto px-4 sm:px-6">
                 {/* ── Hero ── */}
                 <section className="pt-28 sm:pt-36 pb-12 sm:pb-16 grid lg:grid-cols-[1.1fr_0.9fr] gap-10 lg:gap-16 items-start">
                     <div>
-                        <p className="inline-flex items-center gap-2 font-['Inter'] text-xs font-semibold uppercase tracking-[0.14em] text-[#43695a]">
-                            <span className="w-1.5 h-1.5 rounded-full bg-[#557d6b]" />
+                        <p data-intro className="font-['Inter'] text-sm font-semibold text-[var(--color-muted)]">
                             Connect 1:1 · 20-minute live call
                         </p>
-                        <h1 className="font-['Merriweather'] font-black tracking-tight text-stone-900 text-[2.5rem] leading-[1.08] sm:text-6xl sm:leading-[1.05] mt-5">
-                            Talk to someone who just got placed.
+                        <h1 data-intro className="font-display uppercase tracking-tight text-foreground text-[clamp(2.7rem,7.2vw,4.8rem)] leading-[0.95] mt-4">
+                            Talk to someone who{' '}
+                            <span className="inline-block -rotate-1 bg-[var(--color-accent)] px-3 pb-1 pt-2">just got placed.</span>
                         </h1>
-                        <p className="font-['Inter'] text-base sm:text-lg text-stone-600 leading-relaxed mt-5 max-w-xl">
+                        <p data-intro className="font-['Inter'] text-base sm:text-lg text-[var(--color-ink)] leading-relaxed mt-5 max-w-xl">
                             Practice gets you ready for the round. A senior who sat in that exact interview tells you what it
                             was really like, and what you would do differently.
                         </p>
@@ -166,7 +169,7 @@ const ConnectPage = () => {
                             {TOPICS.map((t) => (
                                 <li
                                     key={t}
-                                    className="px-3 py-1.5 rounded-full border border-stone-200 bg-white text-[13px] text-stone-700 font-['Inter']"
+                                    className="px-3 py-1.5 bg-[var(--color-paper-3)] shadow-[var(--shadow-card)] text-[13px] text-[var(--color-ink)] font-['Inter']"
                                 >
                                     {t}
                                 </li>
@@ -176,14 +179,14 @@ const ConnectPage = () => {
                         <div className="flex flex-wrap items-center gap-3 mt-8">
                             <a
                                 href="#seniors"
-                                className="inline-flex items-center gap-2 px-6 py-3.5 bg-stone-900 text-white rounded-2xl text-[15px] font-semibold font-['Inter'] hover:bg-stone-700 active:scale-[0.97] transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-stone-900"
+                                className="inline-flex items-center gap-2 px-6 py-3.5 bg-[var(--color-accent)] text-[var(--color-ink)] rounded-none text-[15px] font-semibold font-['Inter'] shadow-[var(--shadow-offset)] hover:translate-x-px hover:translate-y-px hover:shadow-[3px_3px_0_var(--color-ink)] active:translate-x-1 active:translate-y-1 active:shadow-none transition-[transform,box-shadow] duration-150 motion-reduce:transition-none focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-foreground"
                             >
                                 Choose a senior
                                 <ArrowDown className="w-4 h-4" />
                             </a>
                             <button
                                 onClick={() => setShowMyBookings(true)}
-                                className="inline-flex items-center gap-2 px-5 py-3.5 bg-white border border-stone-200 text-stone-700 rounded-2xl text-[15px] font-medium font-['Inter'] hover:border-stone-400 hover:text-stone-900 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-stone-900"
+                                className="inline-flex items-center gap-2 px-5 py-3.5 bg-[var(--color-paper-3)] text-[var(--color-ink)] rounded-none text-[15px] font-semibold font-['Inter'] shadow-[var(--shadow-offset)] hover:translate-x-px hover:translate-y-px hover:shadow-[3px_3px_0_var(--color-ink)] active:translate-x-1 active:translate-y-1 active:shadow-none transition-[transform,box-shadow] duration-150 motion-reduce:transition-none focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-foreground"
                             >
                                 <CalendarDays className="w-4 h-4" />
                                 My bookings
@@ -192,27 +195,27 @@ const ConnectPage = () => {
                     </div>
 
                     {/* How the call works */}
-                    <aside className="rounded-3xl border border-stone-200 bg-white p-6 sm:p-7 shadow-[0_24px_48px_-32px_rgba(28,25,23,0.3)]">
-                        <h2 className="font-['Inter'] text-xs font-semibold uppercase tracking-[0.14em] text-stone-500">
+                    <aside data-drop="1" className="bg-[var(--color-paper-3)] p-6 sm:p-7 shadow-[var(--shadow-sheet)]">
+                        <h2 className="font-display text-2xl uppercase tracking-tight text-foreground">
                             How your call works
                         </h2>
                         <ol className="mt-5 relative">
                             {STEPS.map((step, i) => (
                                 <li key={step.title} className="relative pl-12 pb-6 last:pb-0">
                                     {i < STEPS.length - 1 && (
-                                        <span className="absolute left-[15px] top-8 bottom-1 w-px bg-stone-200" aria-hidden />
+                                        <span className="absolute left-[15px] top-9 bottom-1 w-px bg-[var(--color-ink)]" aria-hidden />
                                     )}
-                                    <span className="absolute left-0 top-0 w-8 h-8 rounded-full bg-stone-900 text-white flex items-center justify-center text-sm font-['Merriweather']">
+                                    <span className="absolute left-0 top-0 w-8 h-8 bg-[var(--color-accent)] text-[var(--color-ink)] flex items-center justify-center text-xl font-display">
                                         {i + 1}
                                     </span>
-                                    <p className="font-['Merriweather'] text-[16px] text-stone-900 leading-snug pt-1">{step.title}</p>
-                                    <p className="font-['Inter'] text-sm text-stone-500 leading-relaxed mt-1">{step.body}</p>
+                                    <p className="font-['Inter'] text-[16px] font-bold text-foreground leading-snug pt-1">{step.title}</p>
+                                    <p className="font-['Inter'] text-sm text-[var(--color-muted)] leading-relaxed mt-1">{step.body}</p>
                                 </li>
                             ))}
                         </ol>
-                        <p className="mt-6 pt-5 border-t border-stone-100 font-['Inter'] text-[13px] text-stone-500 leading-relaxed">
+                        <p className="mt-6 pt-5 border-t border-[var(--color-rule)] font-['Inter'] text-[13px] text-[var(--color-muted)] leading-relaxed">
                             Calls are scheduled by our team, not auto-booked, so you will see your request as
-                            <span className="text-stone-800 font-medium"> pending </span>
+                            <span className="text-[var(--color-ink)] font-semibold"> pending </span>
                             until the link arrives in My bookings and your inbox.
                         </p>
                     </aside>
@@ -222,9 +225,9 @@ const ConnectPage = () => {
                 <section id="seniors" className="scroll-mt-24 pb-16">
                     <div className="flex items-end justify-between gap-4 flex-wrap">
                         <div>
-                            <h2 className="font-['Merriweather'] text-3xl text-stone-900 tracking-tight">Seniors you can book</h2>
+                            <h2 data-reveal className="font-display text-5xl uppercase leading-none text-[var(--color-ink)]">Seniors you can book</h2>
                             <p
-                                className="font-['Inter'] text-sm text-stone-500 mt-1.5 min-h-[20px]"
+                                className="font-['Inter'] text-sm text-[var(--color-muted)] mt-2 min-h-[20px]"
                                 aria-live="polite"
                             >
                                 {loading
@@ -238,7 +241,7 @@ const ConnectPage = () => {
                         <div
                             role="radiogroup"
                             aria-label="Sort seniors"
-                            className="inline-flex p-1 rounded-xl bg-stone-100 border border-stone-200/70"
+                            className="inline-flex p-1 bg-[var(--color-paper-2)]"
                         >
                             {([
                                 ['recent', 'Recently placed'],
@@ -249,8 +252,8 @@ const ConnectPage = () => {
                                     role="radio"
                                     aria-checked={sort === key}
                                     onClick={() => setSort(key)}
-                                    className={`px-3.5 py-1.5 rounded-lg text-[13px] font-medium font-['Inter'] transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-stone-900 ${
-                                        sort === key ? 'bg-white text-stone-900 shadow-sm' : 'text-stone-500 hover:text-stone-800'
+                                    className={`px-3.5 py-1.5 text-[13px] font-semibold font-['Inter'] transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ink)] ${
+                                        sort === key ? 'bg-[var(--color-ink)] text-[var(--color-paper)]' : 'text-[var(--color-muted)] hover:text-[var(--color-ink)]'
                                     }`}
                                 >
                                     {label}
@@ -262,20 +265,20 @@ const ConnectPage = () => {
                     {/* Filters */}
                     <div className="mt-6 flex flex-col gap-3">
                         <div className="relative">
-                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400 pointer-events-none" />
+                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--color-muted)] pointer-events-none" />
                             <input
                                 type="text"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 placeholder="Search by name, company or topic"
                                 aria-label="Search seniors"
-                                className="w-full pl-11 pr-10 py-3 bg-white border border-stone-200 rounded-2xl text-[15px] text-stone-800 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-[#557d6b]/40 focus:border-[#557d6b]/50 transition-all font-['Inter']"
+                                className="w-full pl-11 pr-10 py-3 bg-[var(--color-paper-3)] border-[1.5px] border-[var(--color-ink)] text-[15px] text-[var(--color-ink)] placeholder:text-[var(--color-muted)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] font-['Inter']"
                             />
                             {searchQuery && (
                                 <button
                                     onClick={() => setSearchQuery('')}
                                     aria-label="Clear search"
-                                    className="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full flex items-center justify-center text-stone-400 hover:bg-stone-100 hover:text-stone-700"
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center text-[var(--color-muted)] hover:text-[var(--color-ink)]"
                                 >
                                     <X className="w-3.5 h-3.5" />
                                 </button>
@@ -295,16 +298,16 @@ const ConnectPage = () => {
                                             key={label}
                                             onClick={() => setSelectedCompany(label)}
                                             aria-pressed={active}
-                                            className={`flex-shrink-0 inline-flex items-center gap-2 pl-4 pr-3 py-2 rounded-full text-sm font-medium font-['Inter'] border transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-stone-900 ${
+                                            className={`flex-shrink-0 inline-flex items-center gap-2 pl-4 pr-3 py-2 text-sm font-semibold font-['Inter'] transition-[transform,box-shadow] duration-[120ms] focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-ink)] ${
                                                 active
-                                                    ? 'bg-stone-900 text-white border-stone-900'
-                                                    : 'bg-white text-stone-700 border-stone-200 hover:border-stone-400'
+                                                    ? 'bg-[var(--color-accent)] text-[var(--color-ink)] shadow-[3px_3px_0_var(--color-ink)]'
+                                                    : 'bg-[var(--color-paper-3)] text-[var(--color-ink)] shadow-[var(--shadow-card)] hover:-translate-y-0.5'
                                             }`}
                                         >
                                             {label}
                                             <span
-                                                className={`min-w-[22px] text-center px-1.5 py-0.5 rounded-full text-[11px] tabular-nums ${
-                                                    active ? 'bg-white/20 text-white' : 'bg-stone-100 text-stone-500'
+                                                className={`min-w-[22px] text-center px-1.5 py-0.5 text-[11px] tabular-nums ${
+                                                    active ? 'bg-[var(--color-ink)] text-[var(--color-paper)]' : 'bg-[var(--color-paper-2)] text-[var(--color-ink)]'
                                                 }`}
                                             >
                                                 {count}
@@ -319,24 +322,24 @@ const ConnectPage = () => {
                     {/* Grid */}
                     <div className="mt-8">
                         {loading ? (
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {[0, 1, 2].map((i) => (
                                     <ExpertCardSkeleton key={i} />
                                 ))}
                             </div>
                         ) : filteredExperts.length === 0 ? (
-                            <div className="rounded-3xl border border-dashed border-stone-300 bg-white/60 px-6 py-16 text-center">
-                                <CalendarDays className="w-10 h-10 text-stone-300 mx-auto mb-5" />
+                            <div className="bg-[var(--color-paper-3)] shadow-[var(--shadow-sheet)] px-6 py-16 text-center">
+                                <CalendarDays className="w-10 h-10 text-[var(--color-ink)] mx-auto mb-5" />
                                 {experts.length === 0 ? (
                                     <>
-                                        <h3 className="font-['Merriweather'] text-2xl text-stone-800">Seniors are being onboarded</h3>
-                                        <p className="font-['Inter'] text-stone-500 max-w-md mx-auto mt-3 leading-relaxed">
+                                        <h3 className="font-display text-4xl uppercase leading-none text-[var(--color-ink)]">Seniors are being onboarded</h3>
+                                        <p className="font-['Inter'] text-[var(--color-ink)] max-w-md mx-auto mt-3 leading-relaxed">
                                             We review every senior before they are listed. Check back soon, or practice a round while
                                             you wait.
                                         </p>
                                         <button
                                             onClick={() => navigate('/dashboard')}
-                                            className="mt-6 inline-flex items-center gap-2 px-5 py-3 bg-stone-900 text-white rounded-xl text-sm font-medium font-['Inter'] hover:bg-stone-700 transition-all"
+                                            className="mt-6 inline-flex items-center gap-2 px-5 py-3 bg-[var(--color-accent)] text-[var(--color-ink)] text-sm font-semibold font-['Inter'] shadow-[var(--shadow-offset)] active:translate-x-1 active:translate-y-1 active:shadow-none transition-[transform,box-shadow]"
                                         >
                                             Go to practice
                                             <ArrowRight className="w-4 h-4" />
@@ -344,14 +347,14 @@ const ConnectPage = () => {
                                     </>
                                 ) : (
                                     <>
-                                        <h3 className="font-['Merriweather'] text-xl text-stone-800">No seniors match that</h3>
-                                        <p className="font-['Inter'] text-stone-500 text-sm mt-2">
+                                        <h3 className="font-display text-3xl uppercase leading-none text-[var(--color-ink)]">No seniors match that</h3>
+                                        <p className="font-['Inter'] text-[var(--color-ink)] text-sm mt-2">
                                             Try another company or a different keyword.
                                         </p>
                                         {hasFilters && (
                                             <button
                                                 onClick={clearFilters}
-                                                className="mt-5 px-4 py-2.5 bg-white border border-stone-300 text-stone-700 rounded-xl text-sm font-medium font-['Inter'] hover:border-stone-500 transition-all"
+                                                className="mt-5 px-4 py-2.5 bg-[var(--color-paper-2)] text-[var(--color-ink)] text-sm font-semibold font-['Inter']"
                                             >
                                                 Clear filters
                                             </button>
@@ -360,7 +363,7 @@ const ConnectPage = () => {
                                 )}
                             </div>
                         ) : (
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                            <div data-reveal-group className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {filteredExperts.map((expert) => (
                                     <ExpertCard key={expert.id} expert={expert} onBook={handleBook} />
                                 ))}
@@ -371,18 +374,18 @@ const ConnectPage = () => {
 
                 {/* ── Seniors who want to share ── */}
                 <section className="pb-20">
-                    <div className="rounded-3xl bg-stone-900 text-white px-6 py-8 sm:px-10 sm:py-10 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+                    <div data-reveal className="bg-[var(--color-ink)] text-[var(--color-paper)] px-6 py-8 sm:px-10 sm:py-12 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
                         <div className="max-w-xl">
-                            <h2 className="font-['Merriweather'] text-2xl sm:text-3xl leading-tight">
+                            <h2 className="font-display text-4xl sm:text-5xl uppercase leading-[0.98]">
                                 Recently placed? Be the senior someone else needed.
                             </h2>
-                            <p className="font-['Inter'] text-stone-300 text-[15px] leading-relaxed mt-3">
+                            <p className="font-['Inter'] text-[15px] opacity-85 leading-relaxed mt-3">
                                 Share what you were asked and how you prepared. We review every senior before they are listed.
                             </p>
                         </div>
                         <button
                             onClick={() => navigate('/placed-guru')}
-                            className="flex-shrink-0 inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-white text-stone-900 rounded-2xl text-[15px] font-semibold font-['Inter'] hover:bg-stone-100 active:scale-[0.97] transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-900 focus-visible:ring-white"
+                            className="flex-shrink-0 inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-[var(--color-accent)] text-[var(--color-ink)] text-[15px] font-semibold font-['Inter'] shadow-[4px_4px_0_var(--color-paper)] active:translate-x-1 active:translate-y-1 active:shadow-none transition-[transform,box-shadow] focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-ink)] focus-visible:ring-white"
                         >
                             <UserPlus className="w-4 h-4" />
                             Share your experience
