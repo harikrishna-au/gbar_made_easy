@@ -124,13 +124,13 @@ const Header = ({ onStartTour }: HeaderProps) => {
 
   const premiumControl =
     premiumLoading ? null : isPremium ? (
-      <Badge className="h-9 gap-1.5 rounded-md px-3 text-[13px] font-bold tracking-wide">
+      <Badge className="h-9 gap-1.5 rounded-none px-3 text-[13px] font-bold">
         <Sparkles className="h-3.5 w-3.5" aria-hidden />
-        <span className="hidden sm:inline">PREMIUM</span>
+        <span className="hidden sm:inline">Premium</span>
         <span className="sr-only sm:hidden">Premium member</span>
       </Badge>
     ) : (
-      <Button size="sm" className="h-9 gap-1.5 font-semibold" onClick={() => setShowPayment(true)}>
+      <Button variant="outline" size="sm" className="h-9 gap-1.5 border-foreground font-semibold" onClick={() => setShowPayment(true)}>
         <Sparkles aria-hidden />
         Premium
       </Button>
@@ -140,8 +140,8 @@ const Header = ({ onStartTour }: HeaderProps) => {
     <>
       <header
         className={cn(
-          "fixed inset-x-0 top-0 z-50 border-b backdrop-blur-md transition-[background-color,border-color,box-shadow] duration-300",
-          scrolled ? "border-border bg-background/95 shadow-sm" : "border-transparent bg-background/70",
+          "fixed inset-x-0 top-0 z-50 border-b transition-[background-color,border-color,box-shadow] duration-300",
+          scrolled ? "border-border bg-[var(--color-paper-3)] shadow-[var(--shadow-card)]" : "border-transparent bg-background",
         )}
       >
         <div className="container mx-auto flex h-14 items-center gap-2 px-3 sm:h-16 sm:px-6">
@@ -305,7 +305,7 @@ const Header = ({ onStartTour }: HeaderProps) => {
                   </nav>
 
                   <Separator />
-                  <p className="px-4 pb-1 pt-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                  <p className="px-4 pb-1 pt-4 text-[13px] font-semibold text-muted-foreground">
                     Practice
                   </p>
                   <nav className="flex flex-col p-2 pt-0" aria-label="Practice">
@@ -315,7 +315,7 @@ const Header = ({ onStartTour }: HeaderProps) => {
                   </nav>
 
                   <Separator />
-                  <p className="px-4 pb-1 pt-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                  <p className="px-4 pb-1 pt-4 text-[13px] font-semibold text-muted-foreground">
                     Tools
                   </p>
                   <nav className="flex flex-col p-2 pt-0" aria-label="Tools">

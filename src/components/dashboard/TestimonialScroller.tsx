@@ -24,7 +24,7 @@ const ROW_1: Testimonial[] = [
   {
     text: "Got placed at Accenture after a week of serious practice here. The cognitive drills hit different.",
     author: "Karthik S.",
-    role: "Placed · Accenture",
+    role: "Placed, Accenture",
     stars: 5,
     w: 260,
   },
@@ -103,218 +103,50 @@ const ROW_2: Testimonial[] = [
   },
 ];
 
-// ─── Accent palette (matches bento tiles) ─────────────────────────────────────
+// ─── Layout ───────────────────────────────────────────────────────────────────
 
-const ACCENTS = [
-  {
-    color: "#44403c",
-    bg: "rgba(28,25,23,0.04)",
-    border: "rgba(28,25,23,0.10)",
-    quote: "rgba(28,25,23,0.10)",
-    avatar: "#57534e",
-  },
-  {
-    color: "#44403c",
-    bg: "rgba(28,25,23,0.04)",
-    border: "rgba(28,25,23,0.10)",
-    quote: "rgba(28,25,23,0.10)",
-    avatar: "#57534e",
-  },
-  {
-    color: "#44403c",
-    bg: "rgba(28,25,23,0.04)",
-    border: "rgba(28,25,23,0.10)",
-    quote: "rgba(28,25,23,0.10)",
-    avatar: "#57534e",
-  },
-  {
-    color: "#44403c",
-    bg: "rgba(28,25,23,0.04)",
-    border: "rgba(28,25,23,0.10)",
-    quote: "rgba(28,25,23,0.10)",
-    avatar: "#57534e",
-  },
-  {
-    color: "#44403c",
-    bg: "rgba(28,25,23,0.04)",
-    border: "rgba(28,25,23,0.10)",
-    quote: "rgba(28,25,23,0.10)",
-    avatar: "#57534e",
-  },
-  {
-    color: "#44403c",
-    bg: "rgba(28,25,23,0.04)",
-    border: "rgba(28,25,23,0.10)",
-    quote: "rgba(28,25,23,0.10)",
-    avatar: "#57534e",
-  },
-];
+const TILTS = ["-rotate-1", "rotate-0", "rotate-1", "rotate-0", "rotate-0", "-rotate-1"];
 
-// ─── CSS keyframes ─────────────────────────────────────────────────────────────
-
-const STYLES = `
-  @keyframes ts-scroll {
-    from { transform: translateX(0); }
-    to   { transform: translateX(-50%); }
-  }
-  .ts-row-a {
-    animation: ts-scroll 52s linear infinite;
-  }
-  .ts-row-b {
-    animation: ts-scroll 40s linear infinite;
-    animation-delay: -14s;
-  }
-  .ts-row-a:hover,
-  .ts-row-b:hover {
-    animation-play-state: paused;
-  }
-`;
-
-// ─── Card ─────────────────────────────────────────────────────────────────────
-
-function Card({
-  t,
-  accent,
-}: {
-  t: Testimonial;
-  accent: (typeof ACCENTS)[0];
-}) {
+function Sheet({ t, tilt }: { t: Testimonial; tilt: string }) {
   return (
-    <div
-      className="flex-shrink-0 rounded-2xl p-6 relative overflow-hidden flex flex-col gap-4"
-      style={{
-        width: t.w,
-        background: "#ffffff",
-        border: `1px solid ${accent.border}`,
-        boxShadow: "0 3px 20px rgba(0,0,0,0.038)",
-      }}
+    <figure
+      className={`mb-6 break-inside-avoid bg-[var(--color-paper-3)] p-6 shadow-[var(--shadow-card)] ${tilt}`}
     >
-      {/* Accent wash */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background: `radial-gradient(ellipse 85% 60% at 0% 0%, ${accent.bg} 0%, transparent 70%)`,
-        }}
-      />
-
-      {/* Decorative quote */}
-      <div
-        className="absolute top-1 right-4 select-none pointer-events-none leading-none"
-        style={{
-          fontSize: 76,
-          fontFamily: "Georgia, serif",
-          color: accent.quote,
-          fontWeight: 700,
-        }}
-      >
-        "
+      <div className="flex gap-0.5" role="img" aria-label={`${t.stars} out of 5`}>
+        {Array.from({ length: t.stars }).map((_, i) => (
+          <Star key={i} className="h-4 w-4 fill-[var(--color-ink)] text-[var(--color-ink)]" aria-hidden />
+        ))}
       </div>
-
-      <div className="relative z-10 flex flex-col gap-4 h-full">
-        {/* Stars */}
-        <div className="flex gap-0.5">
-          {Array.from({ length: t.stars }).map((_, i) => (
-            <Star key={i} className="w-3 h-3 fill-current" style={{ color: accent.color }} />
-          ))}
-          {Array.from({ length: 5 - t.stars }).map((_, i) => (
-            <Star key={`e${i}`} className="w-3 h-3" style={{ color: "rgba(0,0,0,0.08)" }} />
-          ))}
-        </div>
-
-        {/* Quote text */}
-        <p className="text-stone-600 text-[13px] leading-relaxed font-['Inter'] flex-1">
-          "{t.text}"
-        </p>
-
-        {/* Author */}
-        <div className="flex items-center gap-3">
-          <div
-            className="w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center text-white text-[12px] font-bold"
-            style={{ background: accent.avatar }}
-          >
-            {t.author[0]}
-          </div>
-          <div>
-            <p className="text-[11.5px] font-bold text-stone-800 font-['Inter'] leading-tight">
-              {t.author}
-            </p>
-            <p
-              className="text-[9.5px] font-semibold uppercase tracking-[0.1em] font-['Inter'] mt-0.5"
-              style={{ color: accent.color }}
-            >
-              {t.role}
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Bottom accent line */}
-      <div
-        className="absolute bottom-0 left-0 right-0 h-[1.5px]"
-        style={{
-          background: `linear-gradient(90deg, ${accent.color}, transparent 60%)`,
-          opacity: 0.45,
-        }}
-      />
-    </div>
+      <blockquote className="mt-4 text-base leading-relaxed text-[var(--color-ink)]">"{t.text}"</blockquote>
+      <figcaption className="mt-5 border-t border-[var(--color-rule)] pt-4">
+        <span className="block text-[15px] font-semibold text-[var(--color-ink)]">{t.author}</span>
+        <span className="block text-sm text-[var(--color-muted)]">{t.role}</span>
+      </figcaption>
+    </figure>
   );
 }
 
 // ─── Main export ──────────────────────────────────────────────────────────────
 
 export const TestimonialScroller = () => {
-  // Duplicate each row for seamless infinite loop
-  const r1 = [...ROW_1, ...ROW_1];
-  const r2 = [...ROW_2, ...ROW_2];
+  const all = [...ROW_1, ...ROW_2];
 
   return (
-    <div className="w-full overflow-hidden bg-[#fcfcf9]">
-      <style>{STYLES}</style>
+    <section className="w-full bg-[var(--color-paper-2)]" aria-labelledby="reviews-title">
+      <div className="mx-auto max-w-[1360px] px-4 py-20 sm:px-8 sm:py-28 lg:px-12">
+        <h2
+          id="reviews-title"
+          className="max-w-[16ch] font-display text-[clamp(2.5rem,6vw,5rem)] font-normal uppercase leading-[0.95] [text-wrap:balance]"
+        >
+          Trusted by aspirants across campuses.
+        </h2>
 
-      {/* Top divider */}
-      <div className="w-full h-px bg-gradient-to-r from-transparent via-stone-200 to-transparent" />
-
-      <div className="py-10 sm:py-20">
-        {/* Section header */}
-        <div className="text-center mb-8 sm:mb-14 px-6">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-stone-100 text-stone-500 text-[11px] font-semibold tracking-[0.2em] uppercase font-['Inter'] mb-5">
-            <span className="relative flex h-1.5 w-1.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500" />
-            </span>
-            Student Reviews
-          </div>
-          <h2 className="text-3xl md:text-4xl font-serif text-stone-800 tracking-tight leading-tight">
-            Trusted by aspirants
-            <br />
-            <span className="text-stone-400 font-light italic">across campuses.</span>
-          </h2>
-        </div>
-
-        {/* Brick scroller */}
-        <div className="relative">
-          {/* Edge fade masks */}
-          <div className="absolute left-0 top-0 bottom-0 w-24 md:w-44 z-10 bg-gradient-to-r from-[#fcfcf9] to-transparent pointer-events-none" />
-          <div className="absolute right-0 top-0 bottom-0 w-24 md:w-44 z-10 bg-gradient-to-l from-[#fcfcf9] to-transparent pointer-events-none" />
-
-          {/* Row 1 */}
-          <div className="ts-row-a flex w-max gap-3.5 px-4 mb-3.5 items-stretch">
-            {r1.map((t, i) => (
-              <Card key={i} t={t} accent={ACCENTS[i % ACCENTS.length]} />
-            ))}
-          </div>
-
-          {/* Row 2 — different card widths + different speed = brick wall effect */}
-          <div className="ts-row-b flex w-max gap-3.5 px-4 items-stretch">
-            {r2.map((t, i) => (
-              <Card key={i} t={t} accent={ACCENTS[(i + 2) % ACCENTS.length]} />
-            ))}
-          </div>
+        <div className="mt-12 columns-1 gap-6 sm:columns-2 lg:columns-3">
+          {all.map((t, i) => (
+            <Sheet key={i} t={t} tilt={TILTS[i % TILTS.length]} />
+          ))}
         </div>
       </div>
-
-      {/* Bottom divider */}
-      <div className="w-full h-px bg-gradient-to-r from-transparent via-stone-200 to-transparent" />
-    </div>
+    </section>
   );
 };

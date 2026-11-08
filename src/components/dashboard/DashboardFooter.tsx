@@ -17,11 +17,11 @@ const SOCIALS = [
 export const DashboardFooter = ({ onFeedbackClick, onSupportClick }: DashboardFooterProps) => (
   <footer className="w-full bg-background">
     <div className="mx-auto max-w-6xl px-4 pb-10 pt-6 sm:px-8">
-      <Separator className="mb-8 bg-foreground" />
+      <Separator className="mb-8 bg-[var(--color-rule)]" />
 
       <div className="flex flex-col gap-8 md:flex-row md:items-start md:justify-between">
         <div className="max-w-md">
-          <h2 className="font-['Merriweather'] text-xl font-bold text-foreground">Something broken or missing?</h2>
+          <h2 className="text-xl font-semibold text-foreground">Something broken or missing?</h2>
           <p className="mt-2 text-[15px] leading-relaxed text-foreground/80">
             Tell us. Every message is read by Hari, who builds this. If it saved you time, you can also buy him a chai.
           </p>

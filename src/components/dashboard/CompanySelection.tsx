@@ -9,7 +9,7 @@ const PREMIUM_RESOURCES_URL =
   "https://drive.google.com/drive/folders/1wepyyapyvzyUR9T26CZJjQE-fGesd3A3?usp=sharing";
 
 const FOCUS =
-  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring";
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--color-focus)]";
 
 interface CellLinkProps {
   id?: string;
@@ -22,7 +22,7 @@ interface CellLinkProps {
 // Real <a>/<button> so keyboard, middle-click and deep links work.
 const CellLink = ({ id, to, onClick, className, children }: CellLinkProps) =>
   to ? (
-    <Link id={id} to={to} className={cn("group block transition-colors duration-150 hover:bg-muted/60", FOCUS, className)}>
+    <Link id={id} to={to} className={cn("group block transition-colors duration-150 hover:bg-muted/60 active:bg-muted", FOCUS, className)}>
       {children}
     </Link>
   ) : (
@@ -30,15 +30,15 @@ const CellLink = ({ id, to, onClick, className, children }: CellLinkProps) =>
       id={id}
       type="button"
       onClick={onClick}
-      className={cn("group block w-full text-left transition-colors duration-150 hover:bg-muted/60", FOCUS, className)}
+      className={cn("group block w-full text-left transition-colors duration-150 hover:bg-muted/60 active:bg-muted", FOCUS, className)}
     >
       {children}
     </button>
   );
 
 const SectionHeading = ({ title, hint }: { title: string; hint?: string }) => (
-  <div className="mb-4 mt-14 flex items-baseline justify-between gap-4 border-b-2 border-foreground pb-2">
-    <h2 className="font-['Merriweather'] text-2xl font-bold tracking-tight text-foreground">{title}</h2>
+  <div className="mb-4 mt-14 flex items-baseline justify-between gap-4 border-b-2 border-[var(--color-ink)] pb-2">
+    <h2 className="font-display text-4xl font-normal uppercase leading-none text-foreground">{title}</h2>
     {hint && <p className="hidden text-sm text-muted-foreground sm:block">{hint}</p>}
   </div>
 );
@@ -61,11 +61,11 @@ const Round = ({ id, label, title, body, covers, cta, to, onClick }: RoundProps)
     id={id}
     to={to}
     onClick={onClick}
-    className="border-b border-border p-5 last:border-b-0 sm:p-6 md:border-b-0 md:border-r md:last:border-r-0"
+    className="border-b border-[var(--color-rule)] p-6 last:border-b-0 sm:p-8 md:border-b-0 md:border-r md:last:border-r-0"
   >
     <span className="flex h-full flex-col">
-      <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{label}</span>
-      <span className="mt-2 block font-['Merriweather'] text-xl font-bold leading-snug text-foreground">{title}</span>
+      <span className="text-sm font-medium text-muted-foreground">{label}</span>
+      <span className="mt-2 block text-xl font-semibold leading-tight text-foreground">{title}</span>
       <span className="mt-2 block text-[15px] leading-relaxed text-foreground/80">{body}</span>
       <span className="mt-3 block text-sm text-muted-foreground">Covers {covers}.</span>
       <span className="mt-auto inline-flex items-center gap-1 pt-5 text-sm font-semibold text-foreground underline decoration-transparent underline-offset-4 transition-colors group-hover:decoration-foreground">
@@ -121,10 +121,10 @@ interface CompanySelectionProps {
 
 export const CompanySelection = ({ onSelectCompany, isPremium, onSubscribe }: CompanySelectionProps) => {
   return (
-    <div className="mx-auto w-full max-w-6xl px-1 py-6 sm:px-6 sm:py-12">
+    <div className="mx-auto w-full max-w-[1360px] px-1 py-6 sm:px-6 sm:py-12">
       <header className="mb-7 sm:mb-9">
-        <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Accenture 2026</p>
-        <h1 className="font-['Merriweather'] text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+        <p className="mb-2 text-base font-medium text-muted-foreground">Accenture 2026</p>
+        <h1 className="font-display text-6xl font-normal uppercase leading-[0.95] text-foreground sm:text-7xl">
           Your prep dashboard
         </h1>
       </header>
@@ -132,7 +132,7 @@ export const CompanySelection = ({ onSelectCompany, isPremium, onSubscribe }: Co
       <ConnectFeature />
 
       <SectionHeading title="Practice the rounds first" hint="The same round types you will face" />
-      <Card className="grid overflow-hidden rounded-md shadow-none md:grid-cols-3">
+      <Card className="grid overflow-hidden rounded-none border-0 bg-[var(--color-paper-3)] shadow-[var(--shadow-sheet)] md:grid-cols-3">
         <Round
           label="Round 1"
           title="Cognitive Puzzles"

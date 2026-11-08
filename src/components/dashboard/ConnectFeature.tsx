@@ -24,7 +24,7 @@ const inr = (n: number) => `₹${n.toLocaleString("en-IN")}`;
 
 const RowSkeleton = () => (
   <div className="flex h-[76px] items-center gap-4 border-t border-border py-3">
-    <Skeleton className="h-14 w-14 rounded-sm" />
+    <Skeleton className="h-14 w-14 rounded-none" />
     <div className="flex-1 space-y-2">
       <Skeleton className="h-3.5 w-2/5" />
       <Skeleton className="h-3.5 w-3/5" />
@@ -73,54 +73,52 @@ export const ConnectFeature = () => {
       id="onboarding-connect-card"
       role="region"
       aria-labelledby="connect-feature-title"
-      className="rounded-md border-foreground bg-card shadow-[4px_4px_0_0_hsl(var(--foreground))] sm:shadow-[6px_6px_0_0_hsl(var(--foreground))]"
+      className="overflow-hidden rounded-none border-0 bg-[var(--color-paper-3)] shadow-[var(--shadow-sheet)]"
     >
       <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
         {/* Left: the offer */}
-        <div className="flex min-w-0 flex-col p-5 sm:p-8 lg:p-10">
-          <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-            Connect 1:1 · 20 minutes
-          </p>
+        <div className="flex min-w-0 flex-col bg-flame p-5 text-foreground sm:p-8 lg:p-10">
+          <p className="text-base font-semibold">Connect 1:1, 20 minutes</p>
 
           <h2
             id="connect-feature-title"
-            className="mt-3 max-w-xl font-['Merriweather'] text-3xl font-bold leading-[1.15] tracking-tight text-foreground sm:text-4xl"
+            className="mt-3 max-w-xl font-display text-5xl font-normal uppercase leading-[0.95] sm:text-6xl lg:text-[4.25rem]"
           >
             Talk to someone who just got placed.
           </h2>
 
-          <p className="mt-4 max-w-lg text-base leading-relaxed text-foreground/80">
+          <p className="mt-4 max-w-lg text-base leading-relaxed">
             A live call with a senior who cleared the round you are facing. People usually ask what was actually
             asked, how the rounds ran, for resume feedback, and what to prep first.
           </p>
 
           <div className="mt-7 flex flex-wrap items-center gap-x-5 gap-y-3">
-            <Button asChild size="lg" className="group h-12 gap-2 px-6 text-[15px] font-semibold">
+            <Button asChild size="lg" className="group h-12 gap-2 rounded-none border-0 bg-foreground px-6 text-[15px] font-semibold text-background shadow-[4px_4px_0_var(--color-paper-3)] transition-[transform,box-shadow] duration-[120ms] hover:translate-x-px hover:translate-y-px hover:bg-foreground hover:shadow-[3px_3px_0_var(--color-paper-3)] active:translate-x-1 active:translate-y-1 active:shadow-none motion-reduce:transition-none">
               <Link to="/connect">
                 Book a call
                 <ArrowRight className="transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden />
               </Link>
             </Button>
             {fromPrice !== null && (
-              <span className="text-sm text-foreground/80">
+              <span className="text-sm">
                 from <span className="font-semibold tabular-nums text-foreground">{inr(fromPrice)}</span>
               </span>
             )}
           </div>
 
-          <ol className="mt-8 border-t border-border">
+          <ol className="mt-8 border-t border-[var(--color-ink)]">
             {STEPS.map((label, i) => (
-              <li key={label} className="flex items-baseline gap-4 border-b border-border py-3">
-                <span className="w-5 font-['Merriweather'] text-lg font-bold tabular-nums text-foreground">{i + 1}</span>
-                <span className="text-[15px] text-foreground/90">{label}</span>
+              <li key={label} className="flex items-baseline gap-4 border-b border-[var(--color-ink)] py-3">
+                <span className="w-6 shrink-0 font-display text-2xl font-normal tabular-nums">{i + 1}</span>
+                <span className="text-[15px] font-medium">{label}</span>
               </li>
             ))}
           </ol>
         </div>
 
         {/* Right: roster of real seniors */}
-        <div className="min-w-0 border-t border-foreground bg-background/60 p-5 sm:p-8 lg:border-l lg:border-t-0 lg:p-10">
-          <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+        <div className="min-w-0 bg-[var(--color-paper-3)] p-5 sm:p-8 lg:p-10">
+          <h3 className="mb-3 text-xl font-semibold">
             Seniors you can book
           </h3>
 
@@ -132,11 +130,11 @@ export const ConnectFeature = () => {
                 <Link
                   key={e.id}
                   to={`/connect/${e.id}`}
-                  className="-mx-2 flex items-center gap-4 border-t border-border px-2 py-3 transition-colors duration-150 hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
+                  className="-mx-2 flex items-center gap-4 border-t border-border px-2 py-3 transition-colors duration-150 hover:bg-muted active:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--color-focus)]"
                 >
-                  <Avatar className="h-14 w-14 rounded-sm">
+                  <Avatar className="h-14 w-14 rounded-none border-2 border-foreground">
                     {e.photo_url && <AvatarImage src={e.photo_url} alt="" className="object-cover" />}
-                    <AvatarFallback className="rounded-sm bg-muted font-['Merriweather'] text-xl text-foreground">
+                    <AvatarFallback className="rounded-none bg-flame font-display text-2xl text-foreground">
                       {e.name.charAt(0)}
                     </AvatarFallback>
                   </Avatar>

@@ -1,17 +1,9 @@
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
 import { useAuth } from "@clerk/clerk-react";
-import { ArrowRight, Brain, Mic, Users, Radar, BarChart2, Bot, Check } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import SEO from "@/components/SEO";
 
-const fade = {
-  initial: { opacity: 0, y: 18 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true, margin: "-60px" },
-  transition: { duration: 0.5, ease: "easeOut" as const },
-};
-
-const cognitiveGames = [
+const GAMES = [
   "Matrix (find the min)",
   "Balloon math",
   "Hidden maze",
@@ -24,17 +16,34 @@ const cognitiveGames = [
   "Dual task",
 ];
 
-const connectSteps = [
-  { n: "01", title: "Pick a senior", body: "Browse people who were recently placed and see who matches the company you are preparing for." },
-  { n: "02", title: "Choose a 20-minute slot and pay", body: "Payment goes through Razorpay. The price is set on our server, not in your browser." },
-  { n: "03", title: "We send one meeting link", body: "The Connect team confirms the slot by hand and sends the same meeting link to you and the senior." },
+const STEPS = [
+  { n: "1", title: "Pick a senior", body: "Browse people who were recently placed and see who matches the company you are preparing for." },
+  { n: "2", title: "Choose a 20-minute slot and pay", body: "Payment goes through Razorpay. The price is set on our server, not in your browser." },
+  { n: "3", title: "We send one meeting link", body: "The Connect team confirms the slot by hand and sends the same meeting link to you and the senior." },
 ];
 
-const extras = [
-  { icon: Bot, title: "AI interview practice", body: "Run a mock interview and get through the awkward first attempts here, not in the real one.", to: "/ai-interview" },
-  { icon: Radar, title: "Radar job match", body: "Match your skill profile against open roles.", to: "/radar" },
-  { icon: BarChart2, title: "Company dashboard", body: "Start with Accenture 2026, with more MNCs after that.", to: "/dashboard" },
+const ALSO = [
+  { title: "AI interview practice", body: "Run a mock interview and get through the awkward first attempts here, not in the real one.", to: "/ai-interview" },
+  { title: "Radar job match", body: "Match your skill profile against open roles.", to: "/radar" },
+  { title: "Company dashboard", body: "Start with Accenture 2026, with more MNCs after that.", to: "/dashboard" },
 ];
+
+// Paper physics: sheets lift off the board, controls sit on a hard ink offset and drop into it.
+const SHEET = "bg-[var(--color-paper-3)] shadow-[var(--shadow-sheet)]";
+const BTN =
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap px-6 py-3.5 text-[15px] font-semibold text-[var(--color-ink)] " +
+  "shadow-[var(--shadow-offset)] transition-[transform,box-shadow] duration-[120ms] ease-out " +
+  "hover:translate-x-px hover:translate-y-px hover:shadow-[3px_3px_0_var(--color-ink)] " +
+  "active:translate-x-1 active:translate-y-1 active:shadow-none " +
+  "motion-reduce:transition-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--color-focus)]";
+const BTN_PRIMARY = `${BTN} bg-[var(--color-accent)]`;
+const BTN_SECONDARY = `${BTN} bg-[var(--color-paper-3)]`;
+const BTN_INK = `${BTN} bg-[var(--color-ink)] !text-[var(--color-paper)] shadow-[4px_4px_0_var(--color-accent)]`;
+
+const DISPLAY = "font-display font-normal uppercase leading-[0.95] tracking-[0.005em] [overflow-wrap:break-word] [text-wrap:balance]";
+const WRAP = "mx-auto w-full max-w-[1360px] px-4 sm:px-8 lg:px-12";
+const NAV_LINK =
+  "whitespace-nowrap px-3 py-2 text-[15px] text-[var(--color-ink)] underline decoration-transparent underline-offset-4 hover:decoration-[var(--color-ink)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-focus)]";
 
 export default function Home() {
   const { isSignedIn } = useAuth();
@@ -42,34 +51,37 @@ export default function Home() {
   const primaryLabel = isSignedIn ? "Go to dashboard" : "Start practicing";
 
   return (
-    <div className="min-h-screen font-['Inter'] text-stone-800" style={{ background: "#fcfcf9" }}>
+    <div className="min-h-screen bg-[var(--color-paper)] font-sans text-[var(--color-ink)]">
       <SEO
-        title="Harry The Blaze — Practice Accenture rounds, then talk to someone placed"
+        title="Harry The Blaze: Practice Accenture rounds, then talk to someone placed"
         description="Practice Accenture-style cognitive games and communication rounds, then book a 20-minute 1:1 with a recently placed senior."
       />
 
-      {/* Nav */}
-      <header className="sticky top-0 z-30 border-b border-stone-200/70 backdrop-blur" style={{ background: "rgba(252,252,249,0.88)" }}>
-        <div className="mx-auto max-w-6xl px-4 sm:px-6 h-14 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2.5">
-            <img src="/favicon.svg" alt="" className="w-7 h-7" />
-            <span className="font-['Merriweather'] font-black text-[0.85rem] tracking-tight text-stone-900">HARRY THE BLAZE</span>
+      {/* Nav: a sheet of copy paper on the board */}
+      <header className="sticky top-0 z-30 px-3 pt-3 sm:px-6">
+        <div className={`${SHEET} mx-auto flex h-14 max-w-[1360px] items-center justify-between gap-2 px-3 sm:px-5`}>
+          <Link
+            to="/"
+            className="flex items-center gap-2.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-focus)]"
+          >
+            <img src="/favicon.svg" alt="" className="h-8 w-8" />
+            <span className={`${DISPLAY} text-xl max-[400px]:sr-only`}>Harry the Blaze</span>
           </Link>
-          <nav className="hidden md:flex items-center gap-7 text-[13px] text-stone-500">
-            <a href="#rounds" className="hover:text-stone-900 transition-colors">Practice</a>
-            <a href="#connect" className="hover:text-stone-900 transition-colors">Connect 1:1</a>
-            <a href="#pricing" className="hover:text-stone-900 transition-colors">Pricing</a>
-            <Link to="/blog" className="hover:text-stone-900 transition-colors">Blog</Link>
+          <nav className="hidden items-center gap-2 md:flex" aria-label="Main">
+            <a href="#rounds" className={NAV_LINK}>Practice</a>
+            <a href="#connect" className={NAV_LINK}>Connect 1:1</a>
+            <a href="#pricing" className={NAV_LINK}>Pricing</a>
+            <Link to="/blog" className={NAV_LINK}>Blog</Link>
           </nav>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1">
             {!isSignedIn && (
-              <Link to="/login" className="px-3 py-2 text-[13px] font-medium text-stone-600 hover:text-stone-900 transition-colors">
+              <Link to="/login" className={`${NAV_LINK} whitespace-nowrap font-medium`}>
                 Sign in
               </Link>
             )}
             <Link
               to={primaryTo}
-              className="px-4 py-2 rounded-xl bg-stone-900 text-white text-[13px] font-semibold hover:bg-stone-700 transition-colors"
+              className="whitespace-nowrap bg-[var(--color-accent)] px-4 py-2 text-[15px] font-semibold text-[var(--color-ink)] shadow-[3px_3px_0_var(--color-ink)] transition-[transform,box-shadow] duration-[120ms] hover:translate-x-px hover:translate-y-px hover:shadow-[2px_2px_0_var(--color-ink)] active:translate-x-[3px] active:translate-y-[3px] active:shadow-none motion-reduce:transition-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--color-focus)]"
             >
               {isSignedIn ? "Dashboard" : "Get started"}
             </Link>
@@ -78,233 +90,229 @@ export default function Home() {
       </header>
 
       <main>
-        {/* Hero */}
-        <section className="mx-auto max-w-6xl px-4 sm:px-6 pt-14 pb-16 sm:pt-24 sm:pb-24">
-          <motion.p {...fade} className="text-[12px] font-semibold uppercase tracking-[0.14em] text-stone-500 mb-5">
-            Accenture 2026 campaign
-          </motion.p>
-          <motion.h1
-            {...fade}
-            className="font-['Merriweather'] font-black text-stone-900 leading-[1.07] tracking-tight max-w-3xl"
-            style={{ fontSize: "clamp(2.2rem, 6vw, 4.4rem)" }}
-          >
-            Practice the real rounds. Then talk to someone who just got placed.
-          </motion.h1>
-          <motion.p {...fade} className="mt-6 max-w-xl text-[16px] leading-relaxed text-stone-600">
-            Cognitive games and communication rounds in the style companies like Accenture actually run. When you are ready,
-            book a 20-minute live call with a recently placed senior.
-          </motion.p>
-          <motion.div {...fade} className="mt-9 flex flex-col sm:flex-row gap-3">
-            <Link
-              to={primaryTo}
-              className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-stone-900 text-white text-[14.5px] font-semibold hover:bg-stone-700 transition-colors"
-            >
-              {primaryLabel}
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-            <Link
-              to="/connect"
-              className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl border-2 border-stone-900 text-stone-900 text-[14.5px] font-semibold hover:bg-white transition-colors"
-            >
-              <Users className="w-4 h-4" />
-              Book a Connect 1:1
-            </Link>
-          </motion.div>
-          <motion.p {...fade} className="mt-4 text-[12.5px] text-stone-400">
-            Create an account in under a minute. Works best on a phone or laptop.
-          </motion.p>
-        </section>
+        {/* Hero (Stage): the headline on the board, the ticket as the paste-up */}
+        <section className={`${WRAP} grid items-center gap-12 pb-24 pt-12 lg:grid-cols-12 lg:gap-8 lg:pb-32 lg:pt-16`}>
+          <div className="lg:col-span-7">
+            <h1 className={`${DISPLAY} text-[clamp(3.25rem,9vw,8rem)] leading-[0.92]`}>Practice the real rounds.</h1>
+            <p className="mt-6 max-w-[34ch] text-[clamp(1.125rem,0.35vw+1rem,1.375rem)] leading-snug">
+              Then book 20 minutes with someone just placed.
+            </p>
+            <div className="mt-9 flex flex-col gap-5 sm:flex-row">
+              <Link to={primaryTo} className={BTN_PRIMARY}>
+                {primaryLabel}
+                <ArrowRight className="h-4 w-4" aria-hidden />
+              </Link>
+              <Link to="/connect" className={BTN_SECONDARY}>
+                Book a Connect 1:1
+              </Link>
+            </div>
+          </div>
 
-        {/* Rounds */}
-        <section id="rounds" className="border-t border-stone-200 bg-white">
-          <div className="mx-auto max-w-6xl px-4 sm:px-6 py-16 sm:py-20">
-            <motion.div {...fade} className="max-w-2xl mb-10">
-              <h2 className="font-['Merriweather'] font-bold text-[1.8rem] sm:text-[2.2rem] leading-tight text-stone-900">
-                Two kinds of rounds. Both practiced under time.
-              </h2>
-              <p className="mt-3 text-stone-600 leading-relaxed">
-                Start with the round you are actually facing, not a feature tour.
-              </p>
-            </motion.div>
-
-            <div className="grid md:grid-cols-2 gap-5">
-              <motion.div {...fade} className="rounded-2xl border border-stone-200 p-6 sm:p-7" style={{ background: "#faf9f7" }}>
-                <div className="w-10 h-10 rounded-xl bg-stone-900 flex items-center justify-center mb-4">
-                  <Brain className="w-5 h-5 text-white" />
+          {/* The ticket: states the real offer in three lines */}
+          <div className="relative mx-auto w-full max-w-[26rem] pb-6 pt-10 lg:col-span-5 lg:max-w-none lg:pt-0">
+            <div
+              aria-hidden
+              className="absolute inset-x-0 bottom-0 top-6 -rotate-3 bg-[var(--color-accent)] shadow-[var(--shadow-sheet)] sm:inset-x-6"
+            />
+            <div className={`${SHEET} relative rotate-2 lg:mx-4`}>
+              <div className="flex items-start justify-between p-6 pb-5">
+                <div>
+                  <p className={`${DISPLAY} text-5xl sm:text-6xl`}>Admit one</p>
+                  <p className="mt-2 text-[15px] text-[var(--color-muted)]">Accenture 2026</p>
                 </div>
-                <h3 className="font-['Merriweather'] font-bold text-[1.2rem] text-stone-900">Cognitive games</h3>
-                <p className="mt-2 text-[14px] text-stone-600 leading-relaxed">
-                  The game-based aptitude round, played the way it is played on test day.
-                </p>
-                <ul className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2">
-                  {cognitiveGames.map((g) => (
-                    <li key={g} className="flex items-center gap-2 text-[13px] text-stone-700">
-                      <Check className="w-3.5 h-3.5 text-stone-500 flex-shrink-0" strokeWidth={3} />
-                      {g}
+                <img src="/favicon.svg" alt="" className="h-14 w-14" />
+              </div>
+              <div className="relative border-t-2 border-dashed border-[var(--color-ink)]">
+                <span aria-hidden className="absolute -left-3 -top-3 h-6 w-6 rounded-full bg-[var(--color-paper)]" />
+                <span aria-hidden className="absolute -right-3 -top-3 h-6 w-6 rounded-full bg-[var(--color-paper)]" />
+                <ol className="divide-y divide-[var(--color-rule)] p-6 pt-7">
+                  {[
+                    ["Round 1", "Cognitive games"],
+                    ["Round 2", "Communication"],
+                    ["Round 3", "20 minutes with a senior"],
+                  ].map(([k, v]) => (
+                    <li key={k} className="flex items-baseline justify-between gap-4 py-3.5">
+                      <span className="text-[15px] text-[var(--color-muted)]">{k}</span>
+                      <span className="text-right text-lg font-semibold">{v}</span>
                     </li>
                   ))}
-                </ul>
-              </motion.div>
-
-              <motion.div {...fade} className="rounded-2xl border border-stone-200 p-6 sm:p-7" style={{ background: "#faf9f7" }}>
-                <div className="w-10 h-10 rounded-xl bg-stone-900 flex items-center justify-center mb-4">
-                  <Mic className="w-5 h-5 text-white" />
-                </div>
-                <h3 className="font-['Merriweather'] font-bold text-[1.2rem] text-stone-900">Communication rounds</h3>
-                <p className="mt-2 text-[14px] text-stone-600 leading-relaxed">
-                  Speaking, writing and fluency tasks with a clock running, so the timing stops being a surprise.
-                </p>
-                <p className="mt-5 text-[13px] text-stone-500 leading-relaxed">
-                  Two sets of communication rounds are available, plus AI mock interviews when you want to rehearse speaking out loud.
-                </p>
-              </motion.div>
+                </ol>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* Connect */}
-        <section id="connect" className="border-t border-stone-200">
-          <div className="mx-auto max-w-6xl px-4 sm:px-6 py-16 sm:py-20">
-            <div className="grid lg:grid-cols-[1fr_1.15fr] gap-10 lg:gap-16 items-start">
-              <motion.div {...fade}>
-                <span className="inline-block text-[10px] font-semibold uppercase tracking-wide px-2 py-1 rounded-full bg-stone-900 text-white mb-4">
-                  Connect 1:1
-                </span>
-                <h2 className="font-['Merriweather'] font-bold text-[1.8rem] sm:text-[2.2rem] leading-tight text-stone-900">
-                  20 minutes with someone who sat the same rounds last year.
-                </h2>
-                <p className="mt-4 text-stone-600 leading-relaxed">
-                  Ask what the interview was really like, what to skip, and what you would do differently. This is a real call
-                  with a real senior, not a chatbot and not a marketplace listing.
-                </p>
-                <p className="mt-4 text-[13px] text-stone-500 leading-relaxed">
-                  Connect is run by hand. After you pay, our team confirms your slot and sends the meeting link. It is not instant,
-                  and we would rather say so up front.
-                </p>
-                <Link
-                  to="/connect"
-                  className="mt-7 inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-stone-900 text-white text-[14px] font-semibold hover:bg-stone-700 transition-colors"
-                >
-                  Browse seniors
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
-              </motion.div>
+        {/* Toner band: the game list, counted from the list itself */}
+        <div className="bg-[var(--color-ink)] text-[var(--color-paper)]">
+          <div className={`${WRAP} py-10 sm:py-14`}>
+            <p className={`${DISPLAY} max-w-[26ch] text-[clamp(2.25rem,5.5vw,4.75rem)] sm:max-w-none`}>
+              Ten games. Two communication sets. One senior on the call.
+            </p>
+          </div>
+        </div>
 
-              <ol className="space-y-4">
-                {connectSteps.map((s) => (
-                  <motion.li key={s.n} {...fade} className="flex gap-5 rounded-2xl border border-stone-200 bg-white p-5 sm:p-6">
-                    <span className="font-['Merriweather'] font-black text-[1.5rem] text-stone-300 leading-none pt-0.5">{s.n}</span>
-                    <div>
-                      <h3 className="font-semibold text-[15px] text-stone-900">{s.title}</h3>
-                      <p className="mt-1 text-[13.5px] text-stone-600 leading-relaxed">{s.body}</p>
-                    </div>
-                  </motion.li>
+        {/* Rounds: two sheets */}
+        <section id="rounds" className={`${WRAP} py-24 sm:py-32`}>
+          <h2 className={`${DISPLAY} max-w-[18ch] text-[clamp(2.5rem,6vw,5rem)]`}>Two kinds of rounds. Both practiced under time.</h2>
+          <p className="mt-5 max-w-[48ch] text-lg">Start with the round you are actually facing, not a feature tour.</p>
+
+          <div className="mt-12 grid items-start gap-6 lg:grid-cols-12 lg:gap-8">
+            <div className={`${SHEET} p-6 sm:p-9 lg:col-span-7`}>
+              <p className={`${DISPLAY} text-7xl sm:text-8xl`}>01</p>
+              <h3 className="mt-4 text-2xl font-semibold">Cognitive games</h3>
+              <p className="mt-2 max-w-[44ch] text-lg leading-relaxed">
+                The game-based aptitude round, played the way it is played on test day.
+              </p>
+              <ul className="mt-8 grid gap-x-8 sm:grid-cols-2">
+                {GAMES.map((g) => (
+                  <li key={g} className="border-t border-[var(--color-rule)] py-3 text-base">{g}</li>
                 ))}
-              </ol>
+              </ul>
+            </div>
+            <div className={`${SHEET} p-6 sm:p-9 lg:col-span-5 lg:mt-12`}>
+              <p className={`${DISPLAY} text-7xl sm:text-8xl`}>02</p>
+              <h3 className="mt-4 text-2xl font-semibold">Communication rounds</h3>
+              <p className="mt-2 text-lg leading-relaxed">
+                Speaking, writing and fluency tasks with a clock running, so the timing stops being a surprise.
+              </p>
+              <p className="mt-8 border-t border-[var(--color-rule)] pt-4 text-base leading-relaxed text-[var(--color-muted)]">
+                Two sets of communication rounds are available, plus AI mock interviews when you want to rehearse speaking
+                out loud.
+              </p>
             </div>
           </div>
         </section>
 
-        {/* Extras */}
-        <section className="border-t border-stone-200 bg-white">
-          <div className="mx-auto max-w-6xl px-4 sm:px-6 py-16 sm:py-20">
-            <motion.h2 {...fade} className="font-['Merriweather'] font-bold text-[1.6rem] sm:text-[2rem] text-stone-900 mb-8">
-              Also inside
-            </motion.h2>
-            <div className="grid sm:grid-cols-3 gap-5">
-              {extras.map(({ icon: Icon, title, body, to }) => (
-                <motion.div key={title} {...fade}>
-                  <Link
-                    to={to}
-                    className="group block h-full rounded-2xl border border-stone-200 p-6 hover:border-stone-400 transition-colors"
-                    style={{ background: "#faf9f7" }}
-                  >
-                    <Icon className="w-5 h-5 text-stone-700 mb-4" />
-                    <h3 className="font-semibold text-[15px] text-stone-900">{title}</h3>
-                    <p className="mt-1.5 text-[13.5px] text-stone-600 leading-relaxed">{body}</p>
-                  </Link>
-                </motion.div>
+        {/* Connect: the one flame sheet of this screen, steps on a typed sheet */}
+        <section id="connect" className={`${WRAP} pb-24 sm:pb-32`}>
+          <div className="grid items-start gap-8 lg:grid-cols-12">
+            <div className="-rotate-1 bg-[var(--color-accent)] p-6 shadow-[var(--shadow-sheet)] sm:p-10 lg:col-span-7">
+              <h2 className={`${DISPLAY} text-[clamp(2.5rem,5.5vw,4.75rem)]`}>
+                20 minutes with someone who sat the same rounds last year.
+              </h2>
+              <p className="mt-6 max-w-[46ch] text-lg leading-relaxed">
+                Ask what the interview was really like, what to skip, and what you would do differently. This is a real call
+                with a real senior, not a chatbot and not a marketplace listing.
+              </p>
+              <p className="mt-4 max-w-[46ch] text-base leading-relaxed">
+                Connect is run by hand. After you pay, our team confirms your slot and sends the meeting link. It is not
+                instant, and we would rather say so up front.
+              </p>
+              <Link to="/connect" className={`${BTN_INK} mt-9`}>
+                Browse seniors
+                <ArrowRight className="h-4 w-4" aria-hidden />
+              </Link>
+            </div>
+
+            <ol className={`${SHEET} divide-y divide-[var(--color-rule)] px-6 sm:px-9 lg:col-span-5 lg:mt-16`}>
+              {STEPS.map((s) => (
+                <li key={s.n} className="flex gap-6 py-7">
+                  <span className={`${DISPLAY} w-10 shrink-0 text-6xl`}>{s.n}</span>
+                  <div>
+                    <h3 className="text-lg font-semibold [text-wrap:balance]">{s.title}</h3>
+                    <p className="mt-1.5 text-base leading-relaxed">{s.body}</p>
+                  </div>
+                </li>
               ))}
-            </div>
+            </ol>
           </div>
         </section>
 
-        {/* Pricing */}
-        <section id="pricing" className="border-t border-stone-200">
-          <div className="mx-auto max-w-6xl px-4 sm:px-6 py-16 sm:py-20">
-            <motion.h2 {...fade} className="font-['Merriweather'] font-bold text-[1.8rem] sm:text-[2.2rem] text-stone-900 mb-2">
-              Two ways in
-            </motion.h2>
-            <motion.p {...fade} className="text-stone-600 mb-10">Practice gets you ready. Connect gets you a real conversation.</motion.p>
-
-            <div className="grid md:grid-cols-2 gap-5 max-w-4xl">
-              <motion.div {...fade} className="rounded-2xl border border-stone-200 bg-white p-7">
-                <h3 className="font-semibold text-stone-900">Premium practice</h3>
-                <p className="mt-3 flex items-baseline gap-2">
-                  <span className="font-['Merriweather'] font-black text-[2.4rem] text-stone-900">₹299</span>
-                  <span className="text-stone-400 line-through text-[15px]">₹500</span>
-                </p>
-                <p className="mt-2 text-[13.5px] text-stone-600 leading-relaxed">
-                  Unlocks the full practice suite: the cognitive games and communication rounds.
-                </p>
+        {/* Also inside: one typed sheet, a row per tool */}
+        <section className={`${WRAP} pb-24 sm:pb-32`}>
+          <h2 className={`${DISPLAY} text-[clamp(2.25rem,5vw,4rem)]`}>Also inside</h2>
+          <ul className={`${SHEET} mt-8 divide-y divide-[var(--color-rule)]`}>
+            {ALSO.map((a) => (
+              <li key={a.title}>
                 <Link
-                  to={primaryTo}
-                  className="mt-6 inline-flex w-full items-center justify-center gap-2 px-5 py-3 rounded-xl border-2 border-stone-900 text-stone-900 text-[14px] font-semibold hover:bg-stone-50 transition-colors"
+                  to={a.to}
+                  className="group grid items-baseline gap-x-8 gap-y-1 px-6 py-6 sm:grid-cols-[minmax(0,16rem)_minmax(0,1fr)_auto] sm:px-9 focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-[var(--color-focus)]"
                 >
+                  <h3 className="text-xl font-semibold">{a.title}</h3>
+                  <p className="text-base leading-relaxed">{a.body}</p>
+                  <span className="mt-2 inline-flex items-center gap-1 text-base font-semibold underline decoration-transparent underline-offset-4 group-hover:decoration-[var(--color-ink)] sm:mt-0">
+                    Open <ArrowRight className="h-4 w-4" aria-hidden />
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        {/* Pricing: two sheets, the price set huge because it is the offer */}
+        <section id="pricing" className="bg-[var(--color-paper-2)]">
+          <div className={`${WRAP} py-24 sm:py-32`}>
+            <h2 className={`${DISPLAY} text-[clamp(2.5rem,6vw,5rem)]`}>Two ways in</h2>
+            <p className="mt-4 max-w-[48ch] text-lg">Practice gets you ready. Connect gets you a real conversation.</p>
+
+            <div className="mt-12 grid max-w-5xl gap-8 md:grid-cols-2">
+              <div className={`${SHEET} flex flex-col p-6 sm:p-9`}>
+                <h3 className="text-xl font-semibold">Premium practice</h3>
+                <p className="mt-4 flex items-baseline gap-4">
+                  <span className={`${DISPLAY} num text-[clamp(4.5rem,8vw,7rem)]`}>₹299</span>
+                  <span className="num text-xl text-[var(--color-muted)] line-through">₹500</span>
+                </p>
+                <p className="mt-3 flex-1 text-lg leading-relaxed">
+                  Opens the full practice suite: the cognitive games and communication rounds.
+                </p>
+                <Link to={primaryTo} className={`${BTN_SECONDARY} mt-8 w-[calc(100%-4px)]`}>
                   {isSignedIn ? "Open dashboard" : "Create account"}
                 </Link>
-              </motion.div>
+              </div>
 
-              <motion.div {...fade} className="rounded-2xl border-2 border-stone-900 bg-white p-7">
-                <h3 className="font-semibold text-stone-900 flex items-center gap-2">
-                  Connect 1:1
-                  <span className="text-[9px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded-full bg-stone-100 text-stone-600">Live</span>
-                </h3>
-                <p className="mt-3 font-['Merriweather'] font-black text-[1.6rem] leading-[2.6rem] text-stone-900">Priced per senior</p>
-                <p className="mt-2 text-[13.5px] text-stone-600 leading-relaxed">
+              <div className="flex rotate-1 flex-col bg-[var(--color-accent)] p-6 shadow-[var(--shadow-sheet)] sm:p-9">
+                <h3 className="text-xl font-semibold">Connect 1:1</h3>
+                <p className={`${DISPLAY} mt-4 text-[clamp(3rem,5.5vw,4.75rem)]`}>Priced per senior</p>
+                <p className="mt-3 flex-1 text-lg leading-relaxed">
                   A 20-minute live call. You see the price before you pay, and you book separately from Premium.
                 </p>
-                <Link
-                  to="/connect"
-                  className="mt-6 inline-flex w-full items-center justify-center gap-2 px-5 py-3 rounded-xl bg-stone-900 text-white text-[14px] font-semibold hover:bg-stone-700 transition-colors"
-                >
+                <Link to="/connect" className={`${BTN_INK} mt-8 w-[calc(100%-4px)]`}>
                   See who is available
-                  <ArrowRight className="w-4 h-4" />
+                  <ArrowRight className="h-4 w-4" aria-hidden />
                 </Link>
-              </motion.div>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* Final CTA */}
-        <section className="border-t border-stone-200 bg-stone-900">
-          <div className="mx-auto max-w-6xl px-4 sm:px-6 py-16 sm:py-20 text-center">
-            <motion.h2 {...fade} className="font-['Merriweather'] font-black text-white leading-tight mx-auto max-w-2xl" style={{ fontSize: "clamp(1.7rem, 4vw, 2.6rem)" }}>
+        {/* Final call: toner band */}
+        <section className="bg-[var(--color-ink)] text-[var(--color-paper)]">
+          <div className={`${WRAP} py-24 sm:py-32`}>
+            <h2 className={`${DISPLAY} max-w-[20ch] text-[clamp(2.75rem,7vw,6rem)]`}>
               Your interview date is already on the calendar. Start today.
-            </motion.h2>
-            <motion.div {...fade} className="mt-8">
-              <Link
-                to={primaryTo}
-                className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl bg-white text-stone-900 text-[14.5px] font-semibold hover:bg-stone-100 transition-colors"
-              >
+            </h2>
+            <div className="mt-10 flex flex-col gap-6 sm:flex-row sm:items-center">
+              <Link to={primaryTo} className={`${BTN_PRIMARY} !shadow-[4px_4px_0_var(--color-paper)] active:!shadow-none`}>
                 {primaryLabel}
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="h-4 w-4" aria-hidden />
               </Link>
-            </motion.div>
+              <p className="max-w-[34ch] text-base opacity-80">Create an account in under a minute. Works best on a phone or laptop.</p>
+            </div>
           </div>
         </section>
       </main>
 
-      <footer className="border-t border-stone-200">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6 py-8 flex flex-col sm:flex-row gap-4 sm:items-center sm:justify-between">
-          <span className="font-['Merriweather'] font-black text-[0.8rem] text-stone-700">HARRY THE BLAZE</span>
-          <div className="flex flex-wrap gap-x-5 gap-y-2 text-[12px] text-stone-500">
-            <Link to="/about" className="hover:text-stone-800">About</Link>
-            <Link to="/blog" className="hover:text-stone-800">Blog</Link>
-            <Link to="/placed-guru" className="hover:text-stone-800">Be a Guru</Link>
-            <Link to="/terms" className="hover:text-stone-800">Terms</Link>
-            <Link to="/refund" className="hover:text-stone-800">Refund policy</Link>
-          </div>
+      {/* Footer: a mast, the wordmark over the links */}
+      <footer className="bg-[var(--color-paper)]">
+        <div className={`${WRAP} flex flex-col gap-6 py-12`}>
+          <span className={`${DISPLAY} text-4xl sm:text-5xl`}>Harry the Blaze</span>
+          <nav aria-label="Footer" className="flex flex-wrap gap-x-7 gap-y-2 text-base">
+            <Link to="/about" className="underline decoration-[var(--color-rule)] underline-offset-4 hover:decoration-[var(--color-ink)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-focus)]">
+              About
+            </Link>
+            <Link to="/blog" className="underline decoration-[var(--color-rule)] underline-offset-4 hover:decoration-[var(--color-ink)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-focus)]">
+              Blog
+            </Link>
+            <Link to="/placed-guru" className="underline decoration-[var(--color-rule)] underline-offset-4 hover:decoration-[var(--color-ink)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-focus)]">
+              Be a Guru
+            </Link>
+            <Link to="/terms" className="underline decoration-[var(--color-rule)] underline-offset-4 hover:decoration-[var(--color-ink)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-focus)]">
+              Terms
+            </Link>
+            <Link to="/refund" className="underline decoration-[var(--color-rule)] underline-offset-4 hover:decoration-[var(--color-ink)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-focus)]">
+              Refund policy
+            </Link>
+          </nav>
         </div>
       </footer>
     </div>

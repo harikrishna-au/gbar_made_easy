@@ -123,7 +123,7 @@ const Dashboard = () => {
       )}
 
       {!companyId && (
-        <div className={`w-full flex flex-col items-center transition-all duration-700 z-50`}>
+        <div className="w-full flex flex-col items-center z-50">
           {/* Header - Transparent/Minimal */}
           <Header onStartTour={() => setShowTour(true)} />
         </div>
@@ -143,7 +143,7 @@ const Dashboard = () => {
         mode={companyId ? 'journey' : 'landing'}
       />
 
-      <div className={`relative z-10 flex-1 flex flex-col items-center w-full transition-all duration-500 ${companyId ? 'justify-start pt-16 p-3 sm:p-4' : 'p-3 sm:p-4 pt-16 md:p-8'}`}>
+      <div className={`relative z-10 flex-1 flex flex-col items-center w-full transition-[padding] duration-500 ${companyId ? 'justify-start pt-16 p-3 sm:p-4' : 'p-3 sm:p-4 pt-16 md:p-8'}`}>
         <SignedIn>
           <div className={`flex flex-col items-center w-full max-w-6xl flex-1 ${companyId ? 'justify-start' : 'min-h-[60vh] justify-start'}`}>
 
@@ -170,7 +170,7 @@ const Dashboard = () => {
 
         <SignedOut>
           <div className="text-center mt-20">
-            <h2 className="text-2xl font-bold mb-4 font-['Merriweather'] text-stone-700">Please sign in to continue</h2>
+            <h2 className="text-2xl font-semibold mb-4 text-foreground">Please sign in to continue</h2>
             <SignInButton mode="modal">
               <OutlineButton variant="large">
                 SIGN IN

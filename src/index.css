@@ -1,4 +1,17 @@
+/* Hallmark · shape: kept shell (Home recomposed as a flyer wall) · genre: playful · theme: brand (Paste-up material) · redesign: full
+ * paper: oklch(97% 0.008 90) · accent: oklch(66% 0.2 38) · display: Anton · body: Inter · hero: Stage (/) · nav: sheet bar, wordmark left, links and one action right · footer: mast, wordmark over links · signature: the Admit one ticket that lists the three rounds
+ * axes: light/display-condensed/warm · posture: committed · contrast: pass · fold: pass · v2.0.0 */
+/* Hallmark · pre-emit critique: P4 H4 E4 S3 R4 V4 · weakest: S, the dashboard cannot be rendered signed-in here so its states are judged from code */
+/* Hallmark · reworded "Practice the real rounds. Then talk to someone who just got placed." to "Practice the real rounds." and "Then book 20 minutes with someone just placed." · 58 names the 12-word headline
+ * dropped "Cognitive games and communication rounds in the style companies like Accenture actually run. When you are ready, book a 20-minute live call with a recently placed senior." · 58 names the 27-word hero paragraph; the Rounds and Connect sections already say it
+ * dropped the "Accenture 2026 campaign" eyebrow · 54 names it; "Accenture 2026" stays on the ticket
+ * dropped the scrolling game strip · it repeated the Rounds list and looped without a pause (18); the toner band counts the same list
+ * reworded "Unlocks the full practice suite" to "Opens the full practice suite" · 19 names "unlocks"
+ * dropped the Student Reviews pill and the testimonial scroller loop · 54, 18; every quote stays, "Placed · Accenture" is now "Placed, Accenture" · 63
+ * waive 26b :disabled · the Header and Home have no disabled control; the states the app has logic for are drawn */
+@import "./tokens.css";
 /* Typography Imports - Japandi (Refined, Humanist) */
+@import "@fontsource/anton/400.css";
 @import "@fontsource/merriweather/400.css";
 @import "@fontsource/merriweather/700.css";
 @import "@fontsource/inter/400.css";
@@ -20,19 +33,22 @@ All colors MUST be HSL.
     /* Base: Warm Paper / Rice Paper */
     --background: 60 7% 97%;
     /* #fcfcf9 - Warm Off-White */
-    --foreground: 30 5% 25%;
+    --foreground: 24 12% 9%;
     /* #423e3b - Soft Charcoal/Iron */
 
     /* Cards: Matte, Handcrafted Feel */
     --card: 40 10% 94%;
     /* #f2efe9 - Stone/Beige */
-    --card-foreground: 30 5% 25%;
+    --card-foreground: 24 12% 9%;
 
     --popover: 60 7% 97%;
     --popover-foreground: 30 5% 25%;
 
     /* Primary: Deep Moss / Zen Garden Green */
-    --primary: 156 20% 41%;
+    --primary: 21 90% 40%;
+    /* Flame orange (#C2410C): buttons and links, white text passes 4.5:1 */
+    --flame: 17 89% 54%;
+    /* Bright flame (#F25C1F): large poster blocks only, always with ink text */
     /* #557d6b - Muted Sage/Moss */
     --primary-foreground: 0 0% 100%;
 
@@ -55,7 +71,7 @@ All colors MUST be HSL.
     /* Border: Subtle, like pencil lines */
     --border: 30 5% 85%;
     --input: 30 5% 85%;
-    --ring: 156 20% 41%;
+    --ring: 21 90% 40%;
     /* Moss Focus Ring */
 
     /* Radius: Gentle, crafted curves (not fully round, not sharp) */
@@ -114,8 +130,8 @@ All colors MUST be HSL.
 }
 
 @keyframes splashLine {
-  from { width: 0; }
-  to   { width: 200px; }
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
 }
 
 @layer base {
@@ -127,6 +143,20 @@ All colors MUST be HSL.
   body,
   #root {
     min-height: 100%;
+  }
+
+  html,
+  body {
+    overflow-x: clip;
+  }
+
+  html {
+    scrollbar-color: var(--color-muted) var(--color-paper);
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--color-accent) 40%, transparent);
+    color: var(--color-ink);
   }
 
   body {
@@ -221,11 +251,11 @@ All colors MUST be HSL.
 
 @keyframes typing {
   from {
-    width: 0
+    clip-path: inset(0 100% 0 0)
   }
 
   to {
-    width: 100%
+    clip-path: inset(0 0 0 0)
   }
 }
 /* Respect the OS reduced-motion setting: stop ambient and decorative motion. */

@@ -19,21 +19,12 @@ const SplashScreen = ({ onFinish }: { onFinish: () => void }) => {
 
     return (
         <div
-            className="fixed inset-0 z-[100] flex items-center justify-center transition-opacity duration-700 ease-in-out"
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-background transition-opacity duration-700 ease-in-out"
             style={{
-                background: 'linear-gradient(135deg, #18181a 0%, #2c2b2e 100%)',
                 opacity: phase === 'out' ? 0 : 1,
                 pointerEvents: phase === 'out' ? 'none' : 'auto',
             }}
         >
-            {/* Ambient glow behind logo */}
-            <div
-                className="absolute inset-0 pointer-events-none"
-                style={{
-                    background: 'radial-gradient(ellipse 60% 40% at 50% 50%, rgba(219,168,76,0.08) 0%, transparent 70%)',
-                }}
-            />
-
             <div
                 className="relative flex flex-col items-center gap-5"
                 style={{
@@ -41,20 +32,14 @@ const SplashScreen = ({ onFinish }: { onFinish: () => void }) => {
                 }}
             >
                 {/* Full wordmark */}
-                <img
-                    src="/logo.svg"
-                    alt="Harry The Blaze"
-                    className="w-72 md:w-96"
-                    style={{ filter: 'drop-shadow(0 8px 32px rgba(219,168,76,0.25))' }}
-                />
+                <img src="/logo.svg" alt="Harry The Blaze" className="w-72 md:w-96" />
 
-                {/* Animated underline */}
+                {/* Flame rule, drawn with transform */}
                 <div
-                    className="h-px rounded-full"
+                    className="h-1 w-48 origin-left bg-flame"
                     style={{
-                        background: 'linear-gradient(90deg, transparent, #dba84c, transparent)',
+                        transform: 'scaleX(0)',
                         animation: 'splashLine 1.2s cubic-bezier(0.22,1,0.36,1) 0.4s forwards',
-                        width: 0,
                     }}
                 />
             </div>
