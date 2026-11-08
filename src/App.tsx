@@ -20,7 +20,8 @@ import TermsOfService from "./pages/TermsOfService";
 import RefundPolicy from "./pages/RefundPolicy";
 import AboutUs from "./pages/AboutUs";
 import CouponDashboard from "./pages/CouponDashboard";
-import AIInterview from "./pages/AIInterview";
+// Loaded on demand: pulls in the Azure speech SDK, which must not run at app start.
+const AIInterview = lazy(() => import("./pages/AIInterview"));
 import AIInterviewSelection from "./pages/AIInterviewSelection";
 import PremiumRoute from "@/components/PremiumRoute";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
@@ -53,7 +54,7 @@ import SwithChallenge from "./pages/SwithChallenge";
 import InductiveChallenge from "./pages/InductiveChallenge";
 import DualTaskChallenge from "./pages/DualTaskChallenge";
 
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import SplashScreen from "@/components/SplashScreen";
 import CustomerSupport from "@/components/CustomerSupport";
 import { MetaPixelTracker } from "@/components/MetaPixelTracker";
@@ -119,7 +120,16 @@ const App = () => {
               <Route path="/about" element={<AboutUs />} />
               <Route path="/coupon-stats" element={<PrivateRoute><CouponDashboard /></PrivateRoute>} />
               <Route path="/ai-interview" element={<PremiumRoute><AIInterviewSelection /></PremiumRoute>} />
-              <Route path="/ai-interview/:type" element={<PremiumRoute><AIInterview /></PremiumRoute>} />
+              <Route
+                path="/ai-interview/:type"
+                element={
+                  <PremiumRoute>
+                    <Suspense fallback={<div className="min-h-screen bg-[var(--color-paper)]" />}>
+                      <AIInterview />
+                    </Suspense>
+                  </PremiumRoute>
+                }
+              />
               <Route path="/forge" element={<PremiumRoute><ForgePage /></PremiumRoute>} />
               <Route path="/forge/profile" element={<PremiumRoute><ForgeProfilePage /></PremiumRoute>} />
               <Route path="/radar" element={<PremiumRoute><RadarPage /></PremiumRoute>} />
