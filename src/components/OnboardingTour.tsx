@@ -27,7 +27,7 @@ const JOURNEY_STEPS: TourStep[] = [
 const LANDING_STEPS: TourStep[] = [
     {
         title: "Welcome to Harry The Blaze",
-        description: "Every tool you need for MNC hiring, from cognitive puzzles to job matching. A quick tour, six stops.",
+        description: "Every tool you need for MNC hiring, from cognitive puzzles to job matching. A quick tour, seven stops.",
     },
     {
         targetId: 'onboarding-tr-group',
@@ -43,6 +43,11 @@ const LANDING_STEPS: TourStep[] = [
         targetId: 'onboarding-ai-card',
         title: "AI mock interview",
         description: "A live AI interviewer asks questions and scores your answers on confidence, clarity and relevance. Good HR prep.",
+    },
+    {
+        targetId: 'onboarding-infosys-card',
+        title: "Infosys coding questions",
+        description: "Questions collected from people who got the Infosys SP and DSE roles. 50 are free, the full set comes with Premium.",
     },
     {
         targetId: 'onboarding-connect-card',

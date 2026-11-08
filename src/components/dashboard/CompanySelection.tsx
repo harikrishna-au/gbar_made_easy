@@ -164,17 +164,43 @@ export const CompanySelection = ({ onSelectCompany, isPremium, onSubscribe }: Co
         />
       </div>
 
-      <div data-reveal className="mt-16">
+      {/* Infosys question set: a step below Connect in weight (paper sheet, small flame tag), above the toolkit. */}
+      <div data-reveal className="mt-14">
+        <Link
+          id="onboarding-infosys-card"
+          to="/coding-questions"
+          className="group grid items-center gap-5 bg-[var(--color-paper-3)] p-6 shadow-[var(--shadow-offset)] transition-[transform,box-shadow] duration-[120ms] hover:translate-x-px hover:translate-y-px hover:shadow-[3px_3px_0_var(--color-ink)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--color-focus)] sm:p-8 md:grid-cols-[minmax(0,1fr)_auto]"
+        >
+          <div className="min-w-0">
+            <span className="inline-block bg-[var(--color-accent)] px-2.5 py-1 text-xs font-semibold">
+              {isPremium ? "Full set unlocked" : "50 free"}
+            </span>
+            <h2 className="mt-3 font-display text-4xl font-normal uppercase leading-[0.98] sm:text-5xl">
+              Infosys SP and DSE coding questions
+            </h2>
+            <p className="mt-3 max-w-[56ch] text-base leading-relaxed">
+              Collected from a survey of people who got the roles, section by section, with references for each.
+              {isPremium ? "" : " Open 50 now, the rest with Premium."}
+            </p>
+          </div>
+          <span className="inline-flex items-center gap-2 text-base font-semibold underline decoration-[var(--color-ink)] underline-offset-4">
+            Open the questions
+            <ArrowUpRight className="h-5 w-5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden />
+          </span>
+        </Link>
+      </div>
+
+      <div data-reveal className="mt-14">
         <ConnectFeature />
       </div>
 
       <SectionHeading title="Toolkit" hint="Extra prep alongside the rounds" />
       <div data-reveal-group className="border-t border-border md:grid md:grid-cols-2 md:gap-x-10">
         <Tool
-          title="Important Coding Questions"
-          body="330+ DSA problems across 16 topics, with a progress checklist."
-          note="DSA"
-          to="/coding-questions"
+          title="Infosys prep hub"
+          body="Syllabus by role, previous-year questions, tips and study resources."
+          note="Infosys"
+          to="/hackwithinfy"
         />
         <Tool
           title="Study Resources"
