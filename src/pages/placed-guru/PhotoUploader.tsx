@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { Upload, X, Loader2, FileText } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@clerk/clerk-react';
 import { toast } from 'sonner';
 
 interface PhotoUploaderProps {
@@ -20,6 +20,7 @@ const PhotoUploader = ({
   label = 'Profile Photo',
   hint,
 }: PhotoUploaderProps) => {
+  const { getToken } = useAuth();
   const [uploading, setUploading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -44,14 +45,19 @@ const PhotoUploader = ({
 
     setUploading(true);
     try {
-      const ext = file.name.split('.').pop() || 'jpg';
-      const filename = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-      const { error: uploadError } = await supabase.storage
-        .from(bucket)
-        .upload(filename, file);
-      if (uploadError) throw uploadError;
-
-      const { data: { publicUrl } } = supabase.storage.from(bucket).getPublicUrl(filename);
+      const token = await getToken();
+      if (!token) throw new Error('Please sign in again');
+      const body = new FormData();
+      body.append('bucket', bucket);
+      body.append('file', file);
+      const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/connect-upload`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}` },
+        body,
+      });
+      const result = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(result.error || 'Upload failed');
+      const publicUrl: string = result.url;
       onChange(publicUrl);
       toast.success('File uploaded!');
     } catch (err: any) {
