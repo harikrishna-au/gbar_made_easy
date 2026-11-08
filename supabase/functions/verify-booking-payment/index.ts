@@ -2,6 +2,7 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { crypto } from "https://deno.land/std@0.168.0/crypto/mod.ts";
 import { verifyClerkToken } from "../_shared/clerk.ts";
+import { LATE_STATUSES, recoverLatePayment } from "../_shared/late-payment.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -124,7 +125,7 @@ serve(async (req: Request) => {
     if (["paid", "confirmed", "completed"].includes(booking.status)) {
       return json({ success: true, booking_id: booking.id, already_verified: true });
     }
-    if (booking.status !== "payment_pending") {
+    if (booking.status !== "payment_pending" && !LATE_STATUSES.includes(booking.status)) {
       return json({ error: `Booking cannot be paid from status ${booking.status}` }, 409);
     }
 
@@ -147,39 +148,63 @@ serve(async (req: Request) => {
       return json({ error: "Paid amount does not match this booking" }, 400);
     }
 
-    const verifiedAt = new Date().toISOString();
-    const { data: updated, error: updateError } = await supabase
-      .from("bookings")
-      .update({
+    if (booking.status !== "payment_pending") {
+      // Paid after the checkout hold expired: re-claim the slot or flag a refund.
+      const outcome = await recoverLatePayment(supabase, booking, {
+        razorpay_order_id,
         razorpay_payment_id,
-        status: "paid",
-        payment_verified_at: verifiedAt,
-        payment_failure_reason: null,
-      })
-      .eq("id", booking.id)
-      .eq("status", "payment_pending")
-      .select("id")
-      .maybeSingle();
-    if (updateError) throw updateError;
-    if (!updated) {
-      const { data: raced } = await supabase
-        .from("bookings")
-        .select("status")
-        .eq("id", booking.id)
-        .single();
-      if (raced && ["paid", "confirmed", "completed"].includes(raced.status)) {
-        return json({ success: true, booking_id: booking.id, already_verified: true });
+        source: "client",
+      });
+      if (outcome === "refund_needed") {
+        const adminEmail = Deno.env.get("CONNECT_ADMIN_EMAIL");
+        if (adminEmail) {
+          await sendEmail(
+            adminEmail,
+            `REFUND NEEDED — late Connect payment from ${booking.user_name}`,
+            `<p>Payment ${escapeHtml(razorpay_payment_id)} (order ${escapeHtml(razorpay_order_id)}) arrived after the checkout hold expired and the slot (${escapeHtml(booking.date)}, ${escapeHtml(String(booking.start_time).slice(0, 5))} IST) is no longer free. Refund it in Razorpay and mark the booking refunded in Connect Ops.</p>`,
+          ).catch((e) => console.error("[verify-booking-payment] admin email", e));
+        }
+        return json({
+          error: "Your payment arrived after the booking hold expired and that slot is no longer available. It will be refunded — contact support if you don't see it within 5-7 days.",
+          refund_pending: true,
+        }, 409);
       }
-      throw new Error("Could not finalize booking");
-    }
+    } else {
+      const verifiedAt = new Date().toISOString();
+      const { data: updated, error: updateError } = await supabase
+        .from("bookings")
+        .update({
+          razorpay_payment_id,
+          status: "paid",
+          payment_verified_at: verifiedAt,
+          payment_failure_reason: null,
+        })
+        .eq("id", booking.id)
+        .eq("status", "payment_pending")
+        .select("id")
+        .maybeSingle();
+      if (updateError) throw updateError;
+      if (!updated) {
+        const { data: raced } = await supabase
+          .from("bookings")
+          .select("status")
+          .eq("id", booking.id)
+          .single();
+        if (raced && ["paid", "confirmed", "completed"].includes(raced.status)) {
+          return json({ success: true, booking_id: booking.id, already_verified: true });
+        }
+        throw new Error("Could not finalize booking");
+      }
 
-    await supabase.from("booking_events").insert({
-      booking_id: booking.id,
-      event_type: "payment_verified",
-      from_status: "payment_pending",
-      to_status: "paid",
-      details: { razorpay_order_id, razorpay_payment_id, source: "client" },
-    });
+      await supabase.from("booking_events").insert({
+        booking_id: booking.id,
+        event_type: "payment_verified",
+        from_status: "payment_pending",
+        to_status: "paid",
+        details: { razorpay_order_id, razorpay_payment_id, source: "client" },
+      });
+
+    }
 
     const expert = booking.experts as { name: string; email: string | null } | null;
     const emailBase = {

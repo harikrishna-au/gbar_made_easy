@@ -94,15 +94,15 @@ serve(async (req: Request) => {
       return json({ error: "This time is outside the expert's availability" }, 400);
     }
 
-    const { data: conflict } = await supabase
+    const { data: expertBookings } = await supabase
       .from("bookings")
-      .select("id")
+      .select("start_time, end_time")
       .eq("expert_id", expert_id)
       .eq("date", date)
-      .eq("start_time", start_time)
-      .in("status", ["payment_pending", "paid", "confirmed"])
-      .maybeSingle();
-    if (conflict) return json({ error: "This slot was just taken. Choose another time." }, 409);
+      .in("status", ["payment_pending", "paid", "confirmed"]);
+    if ((expertBookings ?? []).some((item) => start_time < item.end_time && end_time > item.start_time)) {
+      return json({ error: "This slot was just taken. Choose another time." }, 409);
+    }
 
     const { data: overlap } = await supabase
       .from("bookings")

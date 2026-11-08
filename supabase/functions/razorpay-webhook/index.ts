@@ -2,6 +2,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { crypto } from "https://deno.land/std@0.168.0/crypto/mod.ts";
+import { LATE_STATUSES, recoverLatePayment } from "../_shared/late-payment.ts";
 
 function escapeHtml(value: string) {
     return value
@@ -99,7 +100,7 @@ serve(async (req: Request) => {
             if (paymentType === 'expert_session' && bookingId) {
                 const { data: booking, error: bookingError } = await supabaseAdmin
                     .from('bookings')
-                    .select('id, status, payment_amount, razorpay_order_id, user_name, user_email, date, start_time, experts(name, email)')
+                    .select('id, status, expert_id, end_time, payment_amount, razorpay_order_id, user_name, user_email, date, start_time, experts(name, email)')
                     .eq('id', bookingId)
                     .single();
 
@@ -113,6 +114,7 @@ serve(async (req: Request) => {
                     throw new Error(`Connect payment amount mismatch for booking ${bookingId}`);
                 }
 
+                let justPaid = false;
                 if (booking.status === 'payment_pending') {
                     const verifiedAt = new Date().toISOString();
                     const { error: updateError } = await supabaseAdmin
@@ -134,6 +136,28 @@ serve(async (req: Request) => {
                         to_status: 'paid',
                         details: { razorpay_order_id: orderId, razorpay_payment_id: payment.id, source: 'webhook' },
                     });
+                    justPaid = true;
+                } else if (LATE_STATUSES.includes(booking.status)) {
+                    const outcome = await recoverLatePayment(supabaseAdmin, booking as never, {
+                        razorpay_order_id: orderId,
+                        razorpay_payment_id: payment.id,
+                        source: 'webhook',
+                    });
+                    if (outcome === 'paid') {
+                        justPaid = true;
+                    } else {
+                        const adminEmail = Deno.env.get('CONNECT_ADMIN_EMAIL');
+                        if (adminEmail) {
+                            await sendConnectEmail(
+                                adminEmail,
+                                `REFUND NEEDED — late Connect payment from ${booking.user_name ?? 'a student'}`,
+                                `Payment ${payment.id} (order ${orderId}) arrived after the checkout hold expired and the slot (${booking.date}, ${String(booking.start_time).slice(0, 5)} IST) is no longer free. Please refund it in Razorpay and mark the booking refunded in Connect Ops.`,
+                            );
+                        }
+                    }
+                }
+
+                if (justPaid) {
 
                     const expert = booking.experts as { name: string; email: string | null } | null;
                     const schedule = `${booking.date}, ${String(booking.start_time).slice(0, 5)} IST`;
