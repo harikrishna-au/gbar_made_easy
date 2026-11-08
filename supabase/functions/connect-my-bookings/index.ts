@@ -26,6 +26,13 @@ serve(async (req: Request) => {
       Deno.env.get("SUPABASE_URL") ?? "",
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
     );
+    // Release lapsed checkout holds so abandoned checkouts show as expired,
+    // not "Payment Incomplete" forever.
+    await supabase
+      .from("bookings")
+      .update({ status: "payment_expired", payment_failure_reason: "Checkout hold expired" })
+      .eq("status", "payment_pending")
+      .lt("payment_expires_at", new Date().toISOString());
     const selection = "id, expert_id, user_name, user_email, message, date, start_time, end_time, meet_link, status, created_at, experts(id, name, title, photo_url)";
     const [{ data: owned, error: ownedError }, { data: legacy, error: legacyError }] = await Promise.all([
       supabase

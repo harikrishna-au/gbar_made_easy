@@ -109,13 +109,16 @@ const PaymentHandler = ({ expert, date, slot, formData, onSuccess, onError }: Pa
         handler: async (response: any) => {
           const orderId: string = response.razorpay_order_id;
           try {
+            // Clerk session tokens expire after ~60s. The student may spend longer
+            // than that inside the UPI app, so never reuse the token from checkout start.
+            const verifyToken = (await getToken()) ?? clerkToken;
             const verifyRes = await fetch(
               `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/verify-booking-payment`,
               {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
-                  Authorization: `Bearer ${clerkToken}`,
+                  Authorization: `Bearer ${verifyToken}`,
                 },
                 body: JSON.stringify({
                   booking_id: bookingId,
