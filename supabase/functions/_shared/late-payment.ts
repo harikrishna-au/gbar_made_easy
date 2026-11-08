@@ -23,6 +23,15 @@ export async function recoverLatePayment(
 ): Promise<"paid" | "refund_needed"> {
   const now = new Date().toISOString();
 
+  // Release lapsed checkout holds first so they can't block the slot (the DB
+  // overlap constraint counts payment_pending rows even after they expire).
+  await supabase
+    .from("bookings")
+    .update({ status: "payment_expired", payment_failure_reason: "Checkout hold expired" })
+    .eq("status", "payment_pending")
+    .lt("payment_expires_at", now)
+    .neq("id", booking.id);
+
   const { data: others, error } = await supabase
     .from("bookings")
     .select("id, start_time, end_time, status, payment_expires_at")
@@ -61,8 +70,9 @@ export async function recoverLatePayment(
       });
       return "paid";
     }
-    // 23505 = someone took the slot between the check and the claim.
-    if (claimError && claimError.code !== "23505") throw claimError;
+    // 23505 (unique) / 23P01 (overlap exclusion) = someone took the slot
+    // between the check and the claim: fall through to the refund path.
+    if (claimError && claimError.code !== "23505" && claimError.code !== "23P01") throw claimError;
   }
 
   await supabase
