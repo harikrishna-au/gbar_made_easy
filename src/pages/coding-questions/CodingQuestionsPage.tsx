@@ -93,7 +93,7 @@ export default function CodingQuestionsPage() {
         description="Coding questions collected from a survey of people who got Infosys SP and DSE roles. 50 free, the full set for Premium."
       />
 
-      <div className="mx-auto max-w-[1180px] px-4 pb-16 pt-6 sm:px-8 sm:pt-8">
+      <div className="mx-auto min-w-0 max-w-[1180px] px-4 pb-16 pt-6 sm:px-8 sm:pt-8">
         <Link
           to="/dashboard"
           className="mb-6 inline-flex items-center gap-2 text-[15px] underline decoration-[var(--color-rule)] underline-offset-4 hover:decoration-[var(--color-ink)]"
@@ -103,7 +103,7 @@ export default function CodingQuestionsPage() {
         </Link>
 
         {/* ── Header: title + offer side by side ── */}
-        <header className="grid items-end gap-6 lg:grid-cols-12">
+        <header className="grid grid-cols-[minmax(0,1fr)] items-end gap-6 lg:grid-cols-12">
           <div className="lg:col-span-8">
             <h1
               data-intro
@@ -190,7 +190,7 @@ export default function CodingQuestionsPage() {
         </div>
 
         {/* ── Topics + questions ── */}
-        <div className="mt-6 grid gap-6 lg:grid-cols-[230px_minmax(0,1fr)]">
+        <div className="mt-6 grid grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[230px_minmax(0,1fr)]">
           {/* Topic picker: chips on small screens, sticky list on large */}
           <nav aria-label="Topics" className="lg:sticky lg:top-6 lg:min-w-0 lg:self-start">
             <ul className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-2 [scrollbar-width:none] lg:mx-0 lg:block lg:space-y-1 lg:overflow-visible lg:px-0 lg:pb-0">
@@ -245,7 +245,7 @@ export default function CodingQuestionsPage() {
                           >
                             {checked && <Check className="h-3.5 w-3.5" strokeWidth={3} />}
                           </span>
-                          <span className="w-5 flex-shrink-0 text-right text-xs tabular-nums text-[var(--color-muted)]">{idx + 1}</span>
+                          <span className="hidden w-5 flex-shrink-0 text-right text-xs tabular-nums text-[var(--color-muted)] sm:block">{idx + 1}</span>
                           <span className={`min-w-0 flex-1 text-[15px] leading-snug ${checked ? "text-[var(--color-muted)] line-through" : "font-medium"}`}>
                             {p.title}
                             {q && <span className="ml-2 text-xs font-normal text-[var(--color-muted)]">{t.title}</span>}
@@ -256,7 +256,7 @@ export default function CodingQuestionsPage() {
                             <ExternalLink className="h-4 w-4" aria-hidden />
                           </a>
                         )}
-                        <span className={`hidden flex-shrink-0 px-2 py-0.5 text-xs font-semibold sm:inline ${DIFF_STYLE[p.difficulty]}`}>{p.difficulty}</span>
+                        <span className={`flex-shrink-0 px-1.5 py-0.5 text-[11px] font-semibold sm:px-2 sm:text-xs ${DIFF_STYLE[p.difficulty]}`}>{p.difficulty}</span>
                       </li>
                     );
                   })}

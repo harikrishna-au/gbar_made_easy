@@ -99,7 +99,13 @@ export const OnboardingTour = ({ isOpen, onClose, mode = 'journey' }: Onboarding
     useLayoutEffect(() => {
         if (!isOpen) return;
         const el = step?.targetId ? document.getElementById(step.targetId) : null;
-        el?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        if (el && window.innerWidth < 640) {
+            // Phone: the card is a bottom sheet, so park the target near the top where it stays visible.
+            const top = el.getBoundingClientRect().top + window.scrollY - 90;
+            window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+        } else {
+            el?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        }
         measure();
 
         let raf = 0;
