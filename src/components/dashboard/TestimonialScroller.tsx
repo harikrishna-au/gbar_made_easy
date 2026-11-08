@@ -1,5 +1,8 @@
 
+import { useLayoutEffect, useRef } from "react";
+import gsap from "gsap";
 import { Star } from "lucide-react";
+import { useGsapReveal } from "@/hooks/useGsapReveal";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -105,20 +108,21 @@ const ROW_2: Testimonial[] = [
 
 // ─── Layout ───────────────────────────────────────────────────────────────────
 
-const TILTS = ["-rotate-1", "rotate-0", "rotate-1", "rotate-0", "rotate-0", "-rotate-1"];
+const TILTS = [-1.5, 0.5, 1.5, -0.5, 1, -1];
 
-function Sheet({ t, tilt }: { t: Testimonial; tilt: string }) {
+function Sheet({ t, tilt }: { t: Testimonial; tilt: number }) {
   return (
     <figure
-      className={`mb-6 break-inside-avoid bg-[var(--color-paper-3)] p-6 shadow-[var(--shadow-card)] ${tilt}`}
+      className="mr-6 flex w-[300px] shrink-0 flex-col bg-[var(--color-paper-3)] p-5 shadow-[var(--shadow-card)] sm:w-[340px]"
+      style={{ transform: `rotate(${tilt}deg)` }}
     >
       <div className="flex gap-0.5" role="img" aria-label={`${t.stars} out of 5`}>
         {Array.from({ length: t.stars }).map((_, i) => (
-          <Star key={i} className="h-4 w-4 fill-[var(--color-ink)] text-[var(--color-ink)]" aria-hidden />
+          <Star key={i} className="h-4 w-4 fill-[var(--color-accent)] text-[var(--color-ink)]" aria-hidden />
         ))}
       </div>
-      <blockquote className="mt-4 text-base leading-relaxed text-[var(--color-ink)]">"{t.text}"</blockquote>
-      <figcaption className="mt-5 border-t border-[var(--color-rule)] pt-4">
+      <blockquote className="mt-3 line-clamp-5 text-[15px] leading-relaxed text-[var(--color-ink)]">"{t.text}"</blockquote>
+      <figcaption className="mt-auto border-t border-[var(--color-rule)] pt-3">
         <span className="block text-[15px] font-semibold text-[var(--color-ink)]">{t.author}</span>
         <span className="block text-sm text-[var(--color-muted)]">{t.role}</span>
       </figcaption>
@@ -126,26 +130,76 @@ function Sheet({ t, tilt }: { t: Testimonial; tilt: string }) {
   );
 }
 
+/**
+ * One drifting row. The set is rendered twice and the track slides exactly one set,
+ * so the loop is seamless. Hover or keyboard focus slows it to a stop.
+ * Under reduced motion it stays a plain row you scroll by hand.
+ */
+function Row({ items, reverse }: { items: Testimonial[]; reverse?: boolean }) {
+  const track = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    const el = track.current;
+    if (!el || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const half = () => el.scrollWidth / 2;
+    const tween = gsap.fromTo(
+      el,
+      { x: reverse ? () => -half() : 0 },
+      { x: reverse ? 0 : () => -half(), duration: 70, ease: "none", repeat: -1, invalidateOnRefresh: true },
+    );
+    const slow = () => gsap.to(tween, { timeScale: 0, duration: 0.5, overwrite: true });
+    const go = () => gsap.to(tween, { timeScale: 1, duration: 0.8, overwrite: true });
+    const wrap = el.parentElement!;
+    wrap.addEventListener("mouseenter", slow);
+    wrap.addEventListener("mouseleave", go);
+    wrap.addEventListener("focusin", slow);
+    wrap.addEventListener("focusout", go);
+    return () => {
+      wrap.removeEventListener("mouseenter", slow);
+      wrap.removeEventListener("mouseleave", go);
+      wrap.removeEventListener("focusin", slow);
+      wrap.removeEventListener("focusout", go);
+      tween.kill();
+      gsap.set(el, { clearProps: "transform" });
+    };
+  }, [reverse]);
+
+  return (
+    <div className="overflow-x-auto py-4 motion-safe:overflow-hidden [scrollbar-width:none]">
+      <div ref={track} className="flex w-max">
+        {[0, 1].map((copy) => (
+          <div key={copy} className="flex shrink-0" aria-hidden={copy === 1 || undefined}>
+            {items.map((t, i) => (
+              <Sheet key={i} t={t} tilt={TILTS[(i + (reverse ? 3 : 0)) % TILTS.length]} />
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 // ─── Main export ──────────────────────────────────────────────────────────────
 
 export const TestimonialScroller = () => {
-  const all = [...ROW_1, ...ROW_2];
+  const section = useRef<HTMLElement>(null);
+  useGsapReveal(section);
 
   return (
-    <section className="w-full bg-[var(--color-paper-2)]" aria-labelledby="reviews-title">
-      <div className="mx-auto max-w-[1360px] px-4 py-20 sm:px-8 sm:py-28 lg:px-12">
+    <section ref={section} className="w-full overflow-hidden bg-[var(--color-paper-2)]" aria-labelledby="reviews-title">
+      <div className="mx-auto max-w-[1360px] px-4 pt-20 sm:px-8 sm:pt-24 lg:px-12">
         <h2
           id="reviews-title"
+          data-reveal
           className="max-w-[16ch] font-display text-[clamp(2.5rem,6vw,5rem)] font-normal uppercase leading-[0.95] [text-wrap:balance]"
         >
           Trusted by aspirants across campuses.
         </h2>
+      </div>
 
-        <div className="mt-12 columns-1 gap-6 sm:columns-2 lg:columns-3">
-          {all.map((t, i) => (
-            <Sheet key={i} t={t} tilt={TILTS[i % TILTS.length]} />
-          ))}
-        </div>
+      <div data-reveal className="mt-10 pb-20 sm:pb-24">
+        <Row items={ROW_1} />
+        <Row items={ROW_2} reverse />
       </div>
     </section>
   );

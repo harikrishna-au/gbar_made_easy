@@ -8,66 +8,44 @@ export function BlogCard({ blog }: { blog: Blog }) {
   return (
     <Link
       to={`/blog/${blog.slug}`}
-      className="group bg-card border border-stone-200/60 rounded-xl p-5 flex flex-col gap-3 shadow-sm hover:bg-white hover:shadow-md hover:-translate-y-1 hover:border-stone-300 transition-all duration-300"
+      className="group flex h-full flex-col gap-3 bg-[var(--color-paper-3)] p-5 shadow-[var(--shadow-sheet)] transition-transform duration-200 hover:-translate-y-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--color-focus)]"
     >
-      {/* Emoji + type tag */}
       <div className="flex items-start justify-between gap-2">
-        <span className="text-3xl leading-none select-none">{blog.cover_emoji}</span>
+        <span className="select-none text-3xl leading-none" aria-hidden>{blog.cover_emoji}</span>
         <BlogTypeTag type={blog.type} size="sm" />
       </div>
 
-      {/* Title */}
-      <h3 className="font-['Merriweather'] font-bold text-stone-800 text-[0.95rem] leading-snug group-hover:text-stone-900 transition-colors line-clamp-2">
+      <h3 className="line-clamp-2 font-display text-[1.65rem] font-normal uppercase leading-[1.02] text-[var(--color-ink)]">
         {blog.title}
       </h3>
 
-      {/* Excerpt */}
       {blog.excerpt && (
-        <p className="font-['Inter'] text-[13px] text-stone-500 leading-relaxed line-clamp-3 font-light">
-          {blog.excerpt}
-        </p>
+        <p className="line-clamp-3 text-sm leading-relaxed text-[var(--color-ink)]/80">{blog.excerpt}</p>
       )}
 
-      {/* Tags */}
       {blog.tags?.length > 0 && (
-        <div className="flex flex-wrap gap-1.5">
+        <div className="flex flex-wrap gap-x-3 gap-y-1">
           {blog.tags.slice(0, 3).map(tag => (
-            <span
-              key={tag}
-              className="px-2 py-0.5 rounded-full bg-stone-100 border border-stone-200 text-stone-500 text-[11px] font-['Inter'] font-medium"
-            >
-              #{tag}
-            </span>
+            <span key={tag} className="text-xs font-medium text-[var(--color-muted)]">#{tag}</span>
           ))}
         </div>
       )}
 
-      {/* Footer */}
-      <div className="flex items-center justify-between pt-2 border-t border-stone-100 mt-auto">
-        <div className="flex items-center gap-1.5 min-w-0">
-          <div className="w-5 h-5 rounded-full bg-stone-200 flex items-center justify-center text-[11px] font-bold text-stone-600 flex-shrink-0 font-['Inter']">
+      <div className="mt-auto flex items-center justify-between border-t border-[var(--color-rule)] pt-3">
+        <div className="flex min-w-0 items-center gap-2">
+          <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center bg-[var(--color-accent)] text-xs font-bold text-[var(--color-ink)]">
             {displayAuthor(blog.author_name).charAt(0).toUpperCase()}
           </div>
-          <span className="text-[11px] font-['Inter'] text-stone-500 truncate max-w-[90px]">
-            {displayAuthor(blog.author_name)}
-          </span>
+          <span className="max-w-[100px] truncate text-xs text-[var(--color-ink)]">{displayAuthor(blog.author_name)}</span>
         </div>
-        <div className="flex items-center gap-3">
-          <span className="flex items-center gap-1 text-[11px] font-['Inter'] text-stone-400">
-            <Clock className="w-3 h-3 flex-shrink-0" />
-            {blog.read_time}m
-          </span>
-          <span className="flex items-center gap-1 text-[11px] font-['Inter'] text-stone-400">
-            <Eye className="w-3 h-3 flex-shrink-0" />
-            {blog.views}
-          </span>
+        <div className="flex items-center gap-3 text-xs text-[var(--color-muted)]">
+          <span className="flex items-center gap-1"><Clock className="h-3 w-3" aria-hidden />{blog.read_time}m</span>
+          <span className="flex items-center gap-1"><Eye className="h-3 w-3" aria-hidden />{blog.views}</span>
         </div>
       </div>
 
       {blog.published_at && (
-        <p className="text-[11px] font-['Inter'] text-stone-400 -mt-1 tracking-wide">
-          {formatDate(blog.published_at)}
-        </p>
+        <p className="-mt-1 text-xs text-[var(--color-muted)]">{formatDate(blog.published_at)}</p>
       )}
     </Link>
   );

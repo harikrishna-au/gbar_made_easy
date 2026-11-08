@@ -25,7 +25,9 @@ export function useGsapReveal(scope: RefObject<HTMLElement>, deps: unknown[] = [
 
     const ctx = gsap.context(() => {
       const intro = gsap.utils.toArray<HTMLElement>("[data-intro]");
-      if (intro.length) {
+      // Re-runs (new deps, e.g. data finished loading) must not replay the entrance.
+      if (intro.length && !root.dataset.introDone) {
+        root.dataset.introDone = "1";
         gsap.from(intro, { y: 36, opacity: 0, duration: 0.8, ease: "power3.out", stagger: 0.1, clearProps: "transform,opacity" });
       }
 

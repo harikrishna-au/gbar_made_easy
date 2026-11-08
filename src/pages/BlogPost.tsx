@@ -10,21 +10,21 @@ import { formatDate, displayAuthor, BLOG_TYPES } from '@/lib/blog-utils';
 function renderMarkdown(md: string): string {
   return md
     .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-    .replace(/^#{3}\s(.+)/gm, '<h4 style="font-family:Merriweather,serif;font-weight:700;font-size:1.05rem;color:#1c1c1b;margin-top:2rem;margin-bottom:0.4rem;line-height:1.4">$1</h4>')
-    .replace(/^#{2}\s(.+)/gm, '<h3 style="font-family:Merriweather,serif;font-weight:700;font-size:1.2rem;color:#1c1c1b;margin-top:2.25rem;margin-bottom:0.5rem;line-height:1.4">$1</h3>')
-    .replace(/^#{1}\s(.+)/gm, '<h2 style="font-family:Merriweather,serif;font-weight:700;font-size:1.45rem;color:#1c1c1b;margin-top:2.75rem;margin-bottom:0.75rem;line-height:1.3">$1</h2>')
+    .replace(/^#{3}\s(.+)/gm, '<h4 style="font-family:Anton,Impact,sans-serif;font-weight:400;text-transform:uppercase;letter-spacing:0.005em;font-size:1.5rem;color:#1c1c1b;margin-top:2rem;margin-bottom:0.4rem;line-height:1.4">$1</h4>')
+    .replace(/^#{2}\s(.+)/gm, '<h3 style="font-family:Anton,Impact,sans-serif;font-weight:400;text-transform:uppercase;letter-spacing:0.005em;font-size:1.9rem;color:#1c1c1b;margin-top:2.25rem;margin-bottom:0.5rem;line-height:1.4">$1</h3>')
+    .replace(/^#{1}\s(.+)/gm, '<h2 style="font-family:Anton,Impact,sans-serif;font-weight:400;text-transform:uppercase;letter-spacing:0.005em;font-size:2.4rem;color:#1c1c1b;margin-top:2.75rem;margin-bottom:0.75rem;line-height:1.3">$1</h2>')
     .replace(/\*\*(.+?)\*\*/g, '<strong style="font-weight:700;color:#1c1c1b">$1</strong>')
-    .replace(/\*(.+?)\*/g, '<em style="font-style:italic;color:#57534e">$1</em>')
-    .replace(/`([^`]+)`/g, '<code style="padding:2px 7px;border-radius:5px;background:#f2efe9;color:#44403c;font-size:13px;font-family:monospace;border:1px solid #e7e5e0">$1</code>')
-    .replace(/^>\s(.+)/gm, '<blockquote style="padding:0.75rem 1rem;border-left:3px solid #c4bdb4;color:#78716c;font-style:italic;margin:1.25rem 0;background:#faf9f7;border-radius:0 8px 8px 0">$1</blockquote>')
-    .replace(/^[-*]\s(.+)/gm, '<li style="margin-left:1.5rem;list-style-type:disc;color:#57534e;margin-top:5px;line-height:1.75">$1</li>')
-    .replace(/^\d+\.\s(.+)/gm, '<li style="margin-left:1.5rem;list-style-type:decimal;color:#57534e;margin-top:5px;line-height:1.75">$1</li>')
+    .replace(/\*(.+?)\*/g, '<em style="font-style:italic;color:#26221f">$1</em>')
+    .replace(/`([^`]+)`/g, '<code style="padding:2px 7px;background:#ebe6dc;color:#1c1a18;font-size:13px;font-family:monospace">$1</code>')
+    .replace(/^>\s(.+)/gm, '<blockquote style="padding:0.75rem 1rem;border-left:4px solid #f26a3d;color:#26221f;margin:1.25rem 0;background:#fdfcf9">$1</blockquote>')
+    .replace(/^[-*]\s(.+)/gm, '<li style="margin-left:1.5rem;list-style-type:disc;color:#26221f;margin-top:5px;line-height:1.75">$1</li>')
+    .replace(/^\d+\.\s(.+)/gm, '<li style="margin-left:1.5rem;list-style-type:decimal;color:#26221f;margin-top:5px;line-height:1.75">$1</li>')
     .replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, text, url) => {
       const safe = /^https?:\/\//i.test(url) || /^mailto:/i.test(url) || url.startsWith('/') || url.startsWith('#');
       if (!safe) return text;
-      return `<a href="${url.replace(/"/g, '%22')}" style="color:#557d6b;text-decoration:underline;text-underline-offset:3px;font-weight:500" target="_blank" rel="noopener noreferrer">${text}</a>`;
+      return `<a href="${url.replace(/"/g, '%22')}" style="color:#c2410c;text-decoration:underline;text-underline-offset:3px;font-weight:500" target="_blank" rel="noopener noreferrer">${text}</a>`;
     })
-    .replace(/\n\n/g, '</p><p style="margin-top:1.25rem;color:#57534e;line-height:1.85;font-family:Inter,sans-serif;font-size:15.5px">')
+    .replace(/\n\n/g, '</p><p style="margin-top:1.25rem;color:#26221f;line-height:1.85;font-family:Inter,sans-serif;font-size:15.5px">')
     .replace(/\n/g, '<br/>');
 }
 
@@ -60,17 +60,17 @@ export default function BlogPost() {
 
   if (loading) {
     return (
-      <div className="min-h-screen" style={{ background: '#fcfcf9' }}>
+      <div className="min-h-screen" style={{ background: 'var(--color-paper)' }}>
         <Header />
         <main className="container mx-auto px-6 pt-28 pb-20 max-w-2xl">
           <div className="animate-pulse space-y-5">
-            <div className="h-4 w-16 bg-stone-100 rounded-full" />
-            <div className="h-10 w-3/4 bg-stone-100 rounded-xl" />
-            <div className="h-4 w-1/2 bg-stone-100 rounded-lg" />
-            <div className="h-px bg-stone-100 w-full" />
+            <div className="h-4 w-16 bg-[var(--color-paper-2)]-full" />
+            <div className="h-10 w-3/4 bg-[var(--color-paper-2)]" />
+            <div className="h-4 w-1/2 bg-[var(--color-paper-2)]" />
+            <div className="h-px bg-[var(--color-paper-2)] w-full" />
             <div className="space-y-3 pt-6">
               {[100, 92, 97, 85, 90].map((w, i) => (
-                <div key={i} className="h-4 bg-stone-100 rounded" style={{ width: `${w}%` }} />
+                <div key={i} className="h-4 bg-[var(--color-paper-2)]" style={{ width: `${w}%` }} />
               ))}
             </div>
           </div>
@@ -81,20 +81,19 @@ export default function BlogPost() {
 
   if (error || !blog) {
     return (
-      <div className="min-h-screen" style={{ background: '#fcfcf9' }}>
+      <div className="min-h-screen" style={{ background: 'var(--color-paper)' }}>
         <Header />
         <main className="container mx-auto px-6 pt-28 pb-20 max-w-2xl text-center">
-          <div className="w-16 h-16 rounded-2xl bg-white border border-stone-200 flex items-center justify-center mx-auto mb-5 shadow-sm">
+          <div className="w-16 h-16 bg-[var(--color-paper-3)] flex items-center justify-center mx-auto mb-5 shadow-[var(--shadow-sheet)]">
             <span className="text-2xl">🔍</span>
           </div>
-          <h2 className="font-['Merriweather'] font-bold text-stone-800 text-2xl mb-2 tracking-tight">Blog not found</h2>
-          <p className="font-['Inter'] text-stone-500 text-[14px] mb-7 font-light">
+          <h2 className="font-display font-normal uppercase text-[var(--color-ink)] text-5xl mb-3">Blog not found</h2>
+          <p className="text-[var(--color-ink)] text-base mb-7">
             This post may have been removed or the link is incorrect.
           </p>
           <button
             onClick={() => navigate('/blog')}
-            className="px-5 py-2.5 rounded-xl text-[13px] font-semibold font-['Inter'] text-white transition-all hover:opacity-90 active:scale-95"
-            style={{ background: 'linear-gradient(135deg, #1c1c1e 0%, #3d3d40 100%)' }}
+            className="px-5 py-2.5 text-[15px] font-semibold text-[var(--color-ink)] bg-[var(--color-accent)] shadow-[var(--shadow-offset)] active:translate-x-1 active:translate-y-1 active:shadow-none"
           >
             Back to Blogs
           </button>
@@ -138,7 +137,7 @@ export default function BlogPost() {
   };
 
   return (
-    <div className="min-h-screen relative" style={{ background: '#fcfcf9' }}>
+    <div className="min-h-screen relative" style={{ background: 'var(--color-paper)' }}>
       <SEO
         title={`${blog.title} | Harry The Blaze`}
         description={blog.excerpt ?? `${blogTypeLabel} — ${blog.title}`}
@@ -150,39 +149,24 @@ export default function BlogPost() {
         jsonLd={jsonLd}
       />
       {/* Reading progress bar */}
-      <div className="fixed top-0 left-0 right-0 z-[60] h-[2px]" style={{ background: '#e7e5e0' }}>
+      <div className="fixed top-0 left-0 right-0 z-[60] h-[2px]" style={{ background: 'var(--color-rule)' }}>
         <div
           className="h-full transition-all duration-75"
           style={{
             width: `${readProgress}%`,
-            background: 'linear-gradient(90deg, #8a6a3a, #c9a46e)',
+            background: 'var(--color-accent)',
           }}
-        />
-      </div>
-
-      {/* Background */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div
-          className="absolute inset-0 opacity-[0.22]"
-          style={{
-            backgroundImage: 'radial-gradient(circle, #c4bdb4 1px, transparent 1px)',
-            backgroundSize: '28px 28px',
-          }}
-        />
-        <div
-          className="absolute -top-24 -right-24 w-[400px] h-[400px] blur-[100px] opacity-30"
-          style={{ background: 'radial-gradient(ellipse, rgba(201,164,110,0.14) 0%, transparent 70%)' }}
         />
       </div>
 
       <Header />
 
-      <main className="relative z-10 container mx-auto px-6 pt-24 pb-28 max-w-2xl">
+      <main className="relative z-10 container mx-auto px-6 pt-28 pb-28 max-w-2xl">
 
         {/* Back button */}
         <button
           onClick={() => navigate('/blog')}
-          className="flex items-center gap-1.5 text-[13px] font-['Inter'] text-stone-400 hover:text-stone-700 transition-colors mb-10 group"
+          className="flex items-center gap-1.5 text-[15px] text-[var(--color-ink)] underline decoration-[var(--color-rule)] underline-offset-4 hover:decoration-[var(--color-ink)] mb-10 group"
         >
           <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
           All Blogs
@@ -195,7 +179,7 @@ export default function BlogPost() {
             {blog.tags?.map(t => (
               <span
                 key={t}
-                className="px-2.5 py-0.5 bg-white border border-stone-200 rounded-full text-[11px] font-medium font-['Inter'] text-stone-500"
+                className="text-xs font-medium text-[var(--color-muted)]"
               >
                 #{t}
               </span>
@@ -207,8 +191,8 @@ export default function BlogPost() {
 
           {/* Title */}
           <h1
-            className="font-['Merriweather'] font-black text-stone-900 leading-[1.12] tracking-tight mb-6"
-            style={{ fontSize: 'clamp(1.55rem, 4vw, 2.2rem)' }}
+            className="font-display font-normal uppercase text-[var(--color-ink)] leading-[0.98] tracking-[0.005em] mb-6"
+            style={{ fontSize: 'clamp(2.5rem, 6vw, 4.25rem)' }}
           >
             {blog.title}
           </h1>
@@ -216,40 +200,37 @@ export default function BlogPost() {
           {/* Meta row */}
           <div
             className="flex items-center gap-3 flex-wrap py-3.5 mb-8"
-            style={{ borderTop: '1px solid #e7e5e0', borderBottom: '1px solid #e7e5e0' }}
+            style={{ borderTop: '2px solid var(--color-ink)', borderBottom: '1px solid var(--color-rule)' }}
           >
             <div className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-bold text-white font-['Inter'] flex-shrink-0"
-                style={{ background: 'linear-gradient(135deg, #8a6a3a, #c9a46e)' }}
+              <div className="w-7 h-7 flex items-center justify-center text-[12px] font-bold text-[var(--color-ink)] flex-shrink-0 bg-[var(--color-accent)]"
               >
                 {displayAuthor(blog.author_name).charAt(0).toUpperCase()}
               </div>
-              <span className="font-['Inter'] text-[13px] font-semibold text-stone-700">{displayAuthor(blog.author_name)}</span>
+              <span className="text-[14px] font-semibold text-[var(--color-ink)]">{displayAuthor(blog.author_name)}</span>
             </div>
 
-            <span className="text-stone-300 select-none">·</span>
+            <span className="text-[var(--color-muted)] select-none">·</span>
 
-            <span className="flex items-center gap-1 text-[12px] font-['Inter'] text-stone-400">
+            <span className="flex items-center gap-1 text-[13px] text-[var(--color-muted)]">
               <Calendar className="w-3.5 h-3.5 flex-shrink-0" />
               {blog.published_at ? formatDate(blog.published_at) : formatDate(blog.created_at)}
             </span>
 
-            <span className="flex items-center gap-1 text-[12px] font-['Inter'] text-stone-400">
+            <span className="flex items-center gap-1 text-[13px] text-[var(--color-muted)]">
               <Clock className="w-3.5 h-3.5 flex-shrink-0" />
               {blog.read_time} min read
             </span>
 
-            <span className="flex items-center gap-1 text-[12px] font-['Inter'] text-stone-400">
+            <span className="flex items-center gap-1 text-[13px] text-[var(--color-muted)]">
               <Eye className="w-3.5 h-3.5 flex-shrink-0" />
               {blog.views} views
             </span>
 
             <button
               onClick={handleShare}
-              className={`ml-auto flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-[12px] font-['Inter'] transition-all duration-200 active:scale-95 ${
-                copied
-                  ? 'border-[#bfd4c8] bg-[#f4f8f5] text-[#4a7060]'
-                  : 'border-stone-200 bg-white text-stone-500 hover:border-stone-300 hover:text-stone-700'
+              className={`ml-auto flex items-center gap-1.5 px-3 py-1.5 text-[13px] font-semibold text-[var(--color-ink)] shadow-[3px_3px_0_var(--color-ink)] transition-[transform,box-shadow] duration-[120ms] active:translate-x-[3px] active:translate-y-[3px] active:shadow-none ${
+                copied ? 'bg-[var(--color-accent)]' : 'bg-[var(--color-paper-3)]'
               }`}
             >
               {copied ? <Check className="w-3.5 h-3.5" /> : <Share2 className="w-3.5 h-3.5" />}
@@ -260,8 +241,8 @@ export default function BlogPost() {
           {/* Excerpt highlight */}
           {blog.excerpt && (
             <p
-              className="font-['Inter'] text-[15px] text-stone-600 leading-relaxed mb-8 pl-4 font-light italic"
-              style={{ borderLeft: '3px solid #c4bdb4' }}
+              className="text-[17px] text-[var(--color-ink)] leading-relaxed mb-8 pl-4"
+              style={{ borderLeft: '4px solid var(--color-accent)' }}
             >
               {blog.excerpt}
             </p>
@@ -272,27 +253,25 @@ export default function BlogPost() {
             className="prose-content"
             style={{ fontFamily: 'Inter, sans-serif' }}
             dangerouslySetInnerHTML={{
-              __html: `<p style="color:#57534e;line-height:1.85;font-family:Inter,sans-serif;font-size:15.5px">${renderMarkdown(blog.content)}</p>`,
+              __html: `<p style="color:#26221f;line-height:1.85;font-family:Inter,sans-serif;font-size:15.5px">${renderMarkdown(blog.content)}</p>`,
             }}
           />
 
           {/* Divider */}
-          <div className="mt-14 mb-8" style={{ borderTop: '1px solid #e7e5e0' }} />
+          <div className="mt-14 mb-8" style={{ borderTop: '2px solid var(--color-ink)' }} />
 
           {/* Author card */}
           <div
-            className="p-5 rounded-xl border border-stone-200/60 flex items-center gap-4 shadow-sm"
-            style={{ background: '#f2efe9' }}
+            className="p-5 flex items-center gap-4 bg-[var(--color-paper-3)] shadow-[var(--shadow-sheet)]"
           >
             <div
-              className="w-12 h-12 rounded-full flex items-center justify-center text-base font-bold text-white flex-shrink-0 font-['Inter'] shadow-sm"
-              style={{ background: 'linear-gradient(135deg, #8a6a3a, #c9a46e)' }}
+              className="w-12 h-12 flex items-center justify-center text-base font-bold text-[var(--color-ink)] flex-shrink-0 bg-[var(--color-accent)]"
             >
               {displayAuthor(blog.author_name).charAt(0).toUpperCase()}
             </div>
             <div className="flex-1">
-              <p className="font-['Merriweather'] font-bold text-stone-800 text-[0.95rem]">{displayAuthor(blog.author_name)}</p>
-              <p className="font-['Inter'] text-[12px] text-stone-500 mt-0.5 font-light">
+              <p className="font-display font-normal uppercase text-[var(--color-ink)] text-2xl leading-none">{displayAuthor(blog.author_name)}</p>
+              <p className="text-[13px] text-[var(--color-muted)] mt-1">
                 Contributed to Harry The Blaze community
               </p>
             </div>
@@ -301,7 +280,7 @@ export default function BlogPost() {
           {/* Related posts */}
           {relatedBlogs.length > 0 && (
             <div className="mt-10">
-              <p className="font-['Inter'] text-[11px] font-semibold text-stone-400 uppercase tracking-widest mb-4">
+              <p className="text-sm font-semibold text-[var(--color-ink)] mb-4">
                 More {blogTypeLabel}
               </p>
               <div className="flex flex-col gap-3">
@@ -309,14 +288,14 @@ export default function BlogPost() {
                   <Link
                     key={r.id}
                     to={`/blog/${r.slug}`}
-                    className="flex items-start gap-3 p-4 rounded-xl border border-stone-200/60 bg-white hover:border-stone-300 hover:shadow-sm transition-all duration-200 group"
+                    className="flex items-start gap-3 p-4 bg-[var(--color-paper-3)] shadow-[var(--shadow-card)] hover:-translate-y-0.5 transition-transform duration-200 group"
                   >
                     <span className="text-2xl flex-shrink-0 leading-none mt-0.5">{r.cover_emoji}</span>
                     <div className="flex-1 min-w-0">
-                      <p className="font-['Merriweather'] font-bold text-stone-800 text-[0.88rem] leading-snug group-hover:text-stone-900 transition-colors line-clamp-2">
+                      <p className="font-display font-normal uppercase text-[var(--color-ink)] text-xl leading-tight line-clamp-2">
                         {r.title}
                       </p>
-                      <p className="font-['Inter'] text-[11px] text-stone-400 mt-1">
+                      <p className="text-xs text-[var(--color-muted)] mt-1">
                         {r.read_time} min read · {displayAuthor(r.author_name)}
                       </p>
                     </div>
@@ -330,15 +309,14 @@ export default function BlogPost() {
           <div className="mt-8 flex items-center justify-between flex-wrap gap-3">
             <button
               onClick={() => navigate('/blog')}
-              className="flex items-center gap-1.5 text-[13px] font-['Inter'] text-stone-400 hover:text-stone-700 transition-colors group"
+              className="flex items-center gap-1.5 text-[15px] text-[var(--color-ink)] underline decoration-[var(--color-rule)] underline-offset-4 hover:decoration-[var(--color-ink)] group"
             >
               <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
               Back to all blogs
             </button>
             <Link
               to="/blog/write"
-              className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-[13px] font-['Inter'] text-white transition-all hover:opacity-90 active:scale-95"
-              style={{ background: 'linear-gradient(135deg, #1c1c1e 0%, #3d3d40 100%)' }}
+              className="flex items-center gap-2 px-4 py-2.5 font-semibold text-[14px] text-[var(--color-ink)] bg-[var(--color-accent)] shadow-[var(--shadow-offset)] transition-[transform,box-shadow] duration-[120ms] hover:translate-x-px hover:translate-y-px active:translate-x-1 active:translate-y-1 active:shadow-none"
             >
               <PenLine className="w-3.5 h-3.5" />
               Write your own
