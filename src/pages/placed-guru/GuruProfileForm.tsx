@@ -28,7 +28,9 @@ const GuruProfileForm = ({ userId, expertId, initialData, onSuccess, onCancel }:
   const [title, setTitle] = useState(initialData?.title ?? '');
   const [bio, setBio] = useState(initialData?.bio ?? '');
   const [photoUrl, setPhotoUrl] = useState(initialData?.photo_url ?? '');
-  const [price, setPrice] = useState(initialData?.price_inr ?? 100);
+  // Held as text so the field can be emptied while typing; the minimum is enforced on blur and save.
+  const [priceText, setPriceText] = useState(String(initialData?.price_inr ?? 100));
+  const price = Math.max(1, parseInt(priceText, 10) || 1);
   const [skillInput, setSkillInput] = useState('');
   const [skills, setSkills] = useState<string[]>(initialData?.skills ?? []);
 
@@ -89,7 +91,7 @@ const GuruProfileForm = ({ userId, expertId, initialData, onSuccess, onCancel }:
   };
 
   const resetForm = () => {
-    setName(''); setEmail(''); setTitle(''); setBio(''); setPhotoUrl(''); setPrice(100);
+    setName(''); setEmail(''); setTitle(''); setBio(''); setPhotoUrl(''); setPriceText('100');
     setSkills([]); setSkillInput('');
     setCompany(''); setCustomCompany(''); setInterviewDate('');
     setPackageLpa(''); setProofUrl('');
@@ -354,8 +356,10 @@ const GuruProfileForm = ({ userId, expertId, initialData, onSuccess, onCancel }:
         <div className="flex items-center gap-2">
           <span className="text-stone-500 text-sm font-['Inter']">₹</span>
           <input
-            type="number" value={price} min={1}
-            onChange={(e) => setPrice(Math.max(1, Number(e.target.value)))}
+            type="text" inputMode="numeric" pattern="[0-9]*" value={priceText}
+            aria-label="Price in rupees per 20-minute session"
+            onChange={(e) => setPriceText(e.target.value.replace(/\D/g, '').slice(0, 6))}
+            onBlur={() => setPriceText(String(price))}
             className="w-28 px-3.5 py-2.5 bg-stone-50 border border-stone-200 rounded-xl text-stone-900 text-sm focus:outline-none focus:ring-2 focus:ring-stone-300 transition-all font-['Inter']"
           />
           <span className="text-stone-400 text-xs font-['Inter']">per 20-min session</span>
