@@ -61,14 +61,14 @@ export const LandingDesktop = ({
           className="w-8 h-8 flex-shrink-0"
           style={{ filter: "drop-shadow(0 2px 10px rgba(0,0,0,0.22))" }}
         />
-        <span className="font-['Merriweather'] font-black text-[0.9rem] tracking-tight text-stone-800">
+        <span className="font-display text-xl font-normal uppercase tracking-[0.005em] text-[var(--color-ink)]">
           HARRY THE BLAZE
         </span>
       </Rise>
 
       <div className="py-2">
         <Rise delay={120} className="mb-5">
-          <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-stone-900 text-white font-['Inter'] text-[12px] font-semibold">
+          <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-[var(--color-ink)] text-[var(--color-paper)] font-['Inter'] text-[12px] font-semibold">
             <span className="relative flex w-2 h-2">
               <span className="absolute inline-flex w-full h-full rounded-full bg-emerald-400 opacity-75 animate-ping" />
               <span className="relative inline-flex w-2 h-2 rounded-full bg-emerald-400" />
@@ -80,8 +80,8 @@ export const LandingDesktop = ({
         <Rise
           as="h1"
           delay={160}
-          className="font-['Merriweather'] font-black text-stone-900 leading-[1.06] tracking-tight mb-5"
-          style={{ fontSize: "clamp(2.4rem, 4vw, 4rem)" }}
+          className="font-display font-normal uppercase text-[var(--color-ink)] leading-[0.95] tracking-[0.005em] mb-6"
+          style={{ fontSize: "clamp(3rem, 5.2vw, 5.5rem)" }}
         >
           Practice the real
           <br />
@@ -95,7 +95,7 @@ export const LandingDesktop = ({
         <Rise
           as="p"
           delay={250}
-          className="font-['Inter'] text-stone-600 leading-relaxed mb-6 max-w-md"
+          className="font-['Inter'] text-[var(--color-ink)] leading-relaxed mb-8 max-w-md"
           style={{ fontSize: "0.96rem" }}
         >
           Cognitive games and communication rounds modelled on the 2026 assessment, plus a 20-minute Connect 1:1 with a senior who cleared them. We confirm the slot and send one meeting link to both of you.
@@ -104,15 +104,14 @@ export const LandingDesktop = ({
         <Rise delay={300} className="mb-8">
           <Link
             to="/connect"
-            className="group inline-flex items-center gap-2.5 px-6 py-3.5 rounded-2xl bg-stone-900 text-white font-['Inter'] font-semibold text-[15px] hover:bg-stone-700 transition-colors"
-            style={{ boxShadow: "0 12px 32px rgba(28,25,23,0.28)" }}
+            className="group inline-flex items-center gap-2.5 px-6 py-3.5 bg-[var(--color-accent)] text-[var(--color-ink)] font-['Inter'] font-semibold text-[15px] shadow-[var(--shadow-offset)] transition-[transform,box-shadow] duration-[120ms] hover:translate-x-px hover:translate-y-px hover:shadow-[3px_3px_0_var(--color-ink)] active:translate-x-1 active:translate-y-1 active:shadow-none"
           >
             Book a Connect 1:1
             <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
           </Link>
           <Link
             to="/"
-            className="ml-3 inline-flex items-center gap-2 px-5 py-3.5 rounded-2xl border-2 border-stone-200 bg-white text-stone-800 font-['Inter'] font-semibold text-[15px] hover:border-stone-900 transition-colors"
+            className="ml-4 inline-flex items-center gap-2 px-5 py-3.5 bg-[var(--color-paper-3)] text-[var(--color-ink)] font-['Inter'] font-semibold text-[15px] shadow-[var(--shadow-offset)] transition-[transform,box-shadow] duration-[120ms] hover:translate-x-px hover:translate-y-px hover:shadow-[3px_3px_0_var(--color-ink)] active:translate-x-1 active:translate-y-1 active:shadow-none"
           >
             See how it works
           </Link>
@@ -127,7 +126,7 @@ export const LandingDesktop = ({
           { label: "Connect 1:1", to: "/connect" },
           { label: "Be a Guru", to: "/placed-guru" },
         ].map(({ label, to }) => (
-          <Link key={label} to={to} className="text-[11.5px] font-['Inter'] text-stone-400 hover:text-stone-600 transition-colors">
+          <Link key={label} to={to} className="text-[13px] font-['Inter'] text-[var(--color-muted)] underline decoration-[var(--color-rule)] underline-offset-4 hover:decoration-[var(--color-ink)] transition-colors">
             {label}
           </Link>
         ))}
@@ -147,25 +146,15 @@ export const LandingDesktop = ({
           className="w-full h-full relative"
         >
         <div
-          className="bg-white rounded-3xl p-8 border border-stone-100 relative"
-          style={{
-            boxShadow:
-              "0 24px 64px rgba(0,0,0,0.09), 0 4px 16px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.9)",
-          }}
+          className="relative bg-[var(--color-paper-3)] p-8 shadow-[var(--shadow-sheet)]"
         >
-          {/* top accent line — inset + rounded so it doesn't need overflow-hidden
-              (which was clipping Clerk's form labels) */}
-          <div
-            className="absolute top-0 left-10 right-10 h-[3px] rounded-full"
-            style={{ background: "linear-gradient(90deg, transparent, rgba(201,164,110,0.5), transparent)" }}
-          />
 
           <SignedOut>
             {!isLoaded ? (
               <AuthSkeleton />
             ) : (
               <>
-                <div className={`flex gap-1 p-1 rounded-2xl bg-stone-100 border border-stone-200 mb-7 ${isClerkVerificationStep ? "hidden" : ""}`}>
+                <div className={`flex gap-1 p-1 bg-[var(--color-paper-2)] mb-7 ${isClerkVerificationStep ? "hidden" : ""}`}>
                   {(["sign-up", "sign-in"] as AuthView[]).map((v) => {
                     const active = view === v;
                     const Icon = v === "sign-up" ? UserPlus : LogIn;
@@ -173,11 +162,11 @@ export const LandingDesktop = ({
                       <button
                         key={v}
                         onClick={() => setView(v)}
-                        className="flex-1 py-2.5 rounded-xl font-['Inter'] transition-all duration-200 active:scale-[0.97] flex flex-col items-center leading-tight gap-0.5"
+                        className="flex-1 py-2.5 font-['Inter'] transition-all duration-200 active:scale-[0.97] flex flex-col items-center leading-tight gap-0.5"
                         style={
                           active
-                            ? { background: "#ffffff", color: "#1c1c1e", boxShadow: "0 2px 8px rgba(0,0,0,0.10)" }
-                            : { color: "#a8a29e" }
+                            ? { background: "var(--color-ink)", color: "var(--color-paper)" }
+                            : { color: "var(--color-muted)" }
                         }
                       >
                         <span className="flex items-center gap-1.5 text-[13px] font-bold">
@@ -203,20 +192,20 @@ export const LandingDesktop = ({
                       className="mb-5"
                     >
                       {view === "sign-in" ? (
-                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-['Inter'] font-semibold bg-stone-100 text-stone-600 border border-stone-200 mb-3">
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-['Inter'] font-semibold bg-[var(--color-paper-2)] text-[var(--color-ink)] mb-3">
                           <span className="w-1.5 h-1.5 rounded-full bg-stone-400 inline-block" />
                           Welcome back
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-['Inter'] font-semibold bg-stone-100 text-stone-600 border border-stone-200 mb-3">
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-['Inter'] font-semibold bg-[var(--color-paper-2)] text-[var(--color-ink)] mb-3">
                           <Sparkles className="w-3 h-3" />
                           Free forever · No credit card
                         </span>
                       )}
-                      <h2 className="font-['Merriweather'] font-bold text-[1.35rem] text-stone-900 mb-1">
+                      <h2 className="font-display font-normal uppercase text-[1.9rem] leading-none text-[var(--color-ink)] mb-2">
                         {view === "sign-in" ? "Welcome back" : "Create your free account"}
                       </h2>
-                      <p className="font-['Inter'] text-[13px] text-stone-500">
+                      <p className="font-['Inter'] text-[13px] text-[var(--color-muted)]">
                         {view === "sign-in"
                           ? "Sign in to continue your prep."
                           : "Create an account. Takes under a minute."}
@@ -225,8 +214,8 @@ export const LandingDesktop = ({
                       {view === "sign-up" && (
                         <div className="flex flex-wrap items-center gap-x-3.5 gap-y-1 mt-3">
                           {["Free forever", "No credit card", "Ready in 60s"].map((b) => (
-                            <span key={b} className="inline-flex items-center gap-1 text-[11px] font-['Inter'] font-medium text-stone-500">
-                              <Check className="w-3 h-3 text-stone-500" strokeWidth={3} />
+                            <span key={b} className="inline-flex items-center gap-1 text-[11px] font-['Inter'] font-medium text-[var(--color-muted)]">
+                              <Check className="w-3 h-3 text-[var(--color-muted)]" strokeWidth={3} />
                               {b}
                             </span>
                           ))}
@@ -237,13 +226,13 @@ export const LandingDesktop = ({
                 )}
 
                 {isClerkVerificationStep && (
-                  <div className="mb-5 flex items-start gap-3 p-3.5 rounded-xl bg-stone-50 border border-stone-200">
-                    <Mail className="w-4 h-4 text-stone-600 flex-shrink-0 mt-0.5" />
+                  <div className="mb-5 flex items-start gap-3 p-3.5 bg-[var(--color-paper-2)]">
+                    <Mail className="w-4 h-4 text-[var(--color-ink)] flex-shrink-0 mt-0.5" />
                     <div>
-                      <p className="font-['Inter'] text-[12.5px] font-semibold text-stone-900 leading-snug">
+                      <p className="font-['Inter'] text-[12.5px] font-semibold text-[var(--color-ink)] leading-snug">
                         Check your email to verify
                       </p>
-                      <p className="font-['Inter'] text-[11.5px] text-stone-600 leading-snug mt-0.5">
+                      <p className="font-['Inter'] text-[11.5px] text-[var(--color-ink)] leading-snug mt-0.5">
                         We just sent you a verification email. Open the link in it or enter the code below, in this same browser. If it hasn't arrived in a minute, check your <span className="font-semibold">spam folder</span>, then tap Resend once.
                       </p>
                     </div>
@@ -268,11 +257,11 @@ export const LandingDesktop = ({
                 </AnimatePresence>
 
                 {!isClerkVerificationStep && (
-                  <p className="mt-5 text-center font-['Inter'] text-[12.5px] text-stone-500">
+                  <p className="mt-5 text-center font-['Inter'] text-[12.5px] text-[var(--color-muted)]">
                     {view === "sign-in" ? "New to Harry The Blaze? " : "Already have an account? "}
                     <button
                       onClick={() => setView(view === "sign-in" ? "sign-up" : "sign-in")}
-                      className="font-semibold text-stone-900 hover:underline underline-offset-2"
+                      className="font-semibold text-[var(--color-ink)] underline decoration-[var(--color-rule)] underline-offset-4 hover:decoration-[var(--color-ink)]"
                     >
                       {view === "sign-in" ? "Create a free account" : "Sign in instead"}
                     </button>
@@ -287,34 +276,34 @@ export const LandingDesktop = ({
               <div className="flex justify-center mb-5">
                 <UserButton />
               </div>
-              <h2 className="font-['Merriweather'] font-bold text-[1.3rem] text-stone-900 mb-2">
+              <h2 className="font-display font-normal uppercase text-[2rem] leading-none text-[var(--color-ink)] mb-3">
                 Welcome back!
               </h2>
               {isPremium ? (
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-stone-900 border border-stone-900 mb-3">
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-[var(--color-ink)] mb-3">
                   <Sparkles className="w-3.5 h-3.5 text-white" />
                   <span className="text-[12px] font-semibold font-['Inter'] text-white">Premium Member</span>
                 </div>
               ) : (
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-stone-100 border border-stone-200 mb-3">
-                  <span className="text-[12px] font-medium font-['Inter'] text-stone-500">Free Plan</span>
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-[var(--color-paper-2)] mb-3">
+                  <span className="text-[12px] font-medium font-['Inter'] text-[var(--color-muted)]">Free Plan</span>
                 </div>
               )}
-              <p className="font-['Inter'] text-[13.5px] text-stone-500 mb-7">
+              <p className="font-['Inter'] text-[13.5px] text-[var(--color-muted)] mb-7">
                 Continue where you left off.
               </p>
               <motion.button
                 whileHover={{ scale: 1.01 }}
                 whileTap={{ scale: 0.97 }}
                 onClick={() => navigate("/dashboard")}
-                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl font-['Inter'] font-semibold text-[14px] bg-stone-900 text-white hover:bg-stone-700 transition-colors duration-200"
+                className="w-full flex items-center justify-center gap-2 py-3 font-['Inter'] font-semibold text-[14px] bg-[var(--color-accent)] text-[var(--color-ink)] shadow-[var(--shadow-offset)] transition-[transform,box-shadow] duration-[120ms] hover:translate-x-px hover:translate-y-px hover:shadow-[3px_3px_0_var(--color-ink)] active:translate-x-1 active:translate-y-1 active:shadow-none"
               >
                 Go to Dashboard
                 <ArrowRight className="w-4 h-4" />
               </motion.button>
               <Link
                 to="/connect"
-                className="mt-3 flex items-center justify-center gap-2 py-3 rounded-xl font-['Inter'] font-medium text-[13.5px] text-stone-500 border border-stone-200 hover:bg-stone-50 transition-colors duration-200"
+                className="mt-5 flex items-center justify-center gap-2 py-3 font-['Inter'] font-medium text-[13.5px] text-[var(--color-ink)] underline decoration-[var(--color-rule)] underline-offset-4 hover:decoration-[var(--color-ink)]"
               >
                 Browse Placed Gurus
               </Link>
@@ -322,11 +311,6 @@ export const LandingDesktop = ({
           </SignedIn>
         </div>
 
-        {/* card glow */}
-        <div
-          className="absolute -inset-4 -z-10 blur-[40px] opacity-30 rounded-3xl"
-          style={{ background: "radial-gradient(ellipse, rgba(28,25,23,0.08) 0%, transparent 70%)" }}
-        />
         </motion.div>
       </Rise>
 
@@ -334,9 +318,9 @@ export const LandingDesktop = ({
       <SignedOut>
         <Rise
           delay={500}
-          className="flex items-center gap-2 text-stone-400"
+          className="flex items-center gap-2 text-[var(--color-muted)]"
         >
-          <ShieldCheck className="w-3.5 h-3.5 text-stone-400" />
+          <ShieldCheck className="w-3.5 h-3.5 text-[var(--color-muted)]" />
           <span className="font-['Inter'] text-[11.5px]">
             Secure sign-in · We never share your data
           </span>

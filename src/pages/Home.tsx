@@ -1,7 +1,9 @@
+import { useRef } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@clerk/clerk-react";
 import { ArrowRight } from "lucide-react";
 import SEO from "@/components/SEO";
+import { useGsapReveal } from "@/hooks/useGsapReveal";
 
 const GAMES = [
   "Matrix (find the min)",
@@ -49,9 +51,11 @@ export default function Home() {
   const { isSignedIn } = useAuth();
   const primaryTo = isSignedIn ? "/dashboard" : "/login";
   const primaryLabel = isSignedIn ? "Go to dashboard" : "Start practicing";
+  const page = useRef<HTMLDivElement>(null);
+  useGsapReveal(page);
 
   return (
-    <div className="min-h-screen bg-[var(--color-paper)] font-sans text-[var(--color-ink)]">
+    <div ref={page} className="min-h-screen bg-[var(--color-paper)] font-sans text-[var(--color-ink)]">
       <SEO
         title="Harry The Blaze: Practice Accenture rounds, then talk to someone placed"
         description="Practice Accenture-style cognitive games and communication rounds, then book a 20-minute 1:1 with a recently placed senior."
@@ -93,11 +97,11 @@ export default function Home() {
         {/* Hero (Stage): the headline on the board, the ticket as the paste-up */}
         <section className={`${WRAP} grid items-center gap-12 pb-24 pt-12 lg:grid-cols-12 lg:gap-8 lg:pb-32 lg:pt-16`}>
           <div className="lg:col-span-7">
-            <h1 className={`${DISPLAY} text-[clamp(3.25rem,9vw,8rem)] leading-[0.92]`}>Practice the real rounds.</h1>
-            <p className="mt-6 max-w-[34ch] text-[clamp(1.125rem,0.35vw+1rem,1.375rem)] leading-snug">
+            <h1 data-intro className={`${DISPLAY} text-[clamp(3.25rem,9vw,8rem)] leading-[0.92]`}>Practice the real rounds.</h1>
+            <p data-intro className="mt-6 max-w-[34ch] text-[clamp(1.125rem,0.35vw+1rem,1.375rem)] leading-snug">
               Then book 20 minutes with someone just placed.
             </p>
-            <div className="mt-9 flex flex-col gap-5 sm:flex-row">
+            <div data-intro className="mt-9 flex flex-col gap-5 sm:flex-row">
               <Link to={primaryTo} className={BTN_PRIMARY}>
                 {primaryLabel}
                 <ArrowRight className="h-4 w-4" aria-hidden />
@@ -112,9 +116,11 @@ export default function Home() {
           <div className="relative mx-auto w-full max-w-[26rem] pb-6 pt-10 lg:col-span-5 lg:max-w-none lg:pt-0">
             <div
               aria-hidden
-              className="absolute inset-x-0 bottom-0 top-6 -rotate-3 bg-[var(--color-accent)] shadow-[var(--shadow-sheet)] sm:inset-x-6"
+              data-drop="-3"
+              data-parallax="-30"
+              className="absolute inset-x-0 bottom-0 top-6 bg-[var(--color-accent)] shadow-[var(--shadow-sheet)] sm:inset-x-6"
             />
-            <div className={`${SHEET} relative rotate-2 lg:mx-4`}>
+            <div data-drop="2" className={`${SHEET} relative lg:mx-4`}>
               <div className="flex items-start justify-between p-6 pb-5">
                 <div>
                   <p className={`${DISPLAY} text-5xl sm:text-6xl`}>Admit one</p>
@@ -145,7 +151,7 @@ export default function Home() {
         {/* Toner band: the game list, counted from the list itself */}
         <div className="bg-[var(--color-ink)] text-[var(--color-paper)]">
           <div className={`${WRAP} py-10 sm:py-14`}>
-            <p className={`${DISPLAY} max-w-[26ch] text-[clamp(2.25rem,5.5vw,4.75rem)] sm:max-w-none`}>
+            <p data-reveal className={`${DISPLAY} max-w-[26ch] text-[clamp(2.25rem,5.5vw,4.75rem)] sm:max-w-none`}>
               Ten games. Two communication sets. One senior on the call.
             </p>
           </div>
@@ -153,17 +159,17 @@ export default function Home() {
 
         {/* Rounds: two sheets */}
         <section id="rounds" className={`${WRAP} py-24 sm:py-32`}>
-          <h2 className={`${DISPLAY} max-w-[18ch] text-[clamp(2.5rem,6vw,5rem)]`}>Two kinds of rounds. Both practiced under time.</h2>
+          <h2 data-reveal className={`${DISPLAY} max-w-[18ch] text-[clamp(2.5rem,6vw,5rem)]`}>Two kinds of rounds. Both practiced under time.</h2>
           <p className="mt-5 max-w-[48ch] text-lg">Start with the round you are actually facing, not a feature tour.</p>
 
-          <div className="mt-12 grid items-start gap-6 lg:grid-cols-12 lg:gap-8">
+          <div data-reveal-group className="mt-12 grid items-start gap-6 lg:grid-cols-12 lg:gap-8">
             <div className={`${SHEET} p-6 sm:p-9 lg:col-span-7`}>
               <p className={`${DISPLAY} text-7xl sm:text-8xl`}>01</p>
               <h3 className="mt-4 text-2xl font-semibold">Cognitive games</h3>
               <p className="mt-2 max-w-[44ch] text-lg leading-relaxed">
                 The game-based aptitude round, played the way it is played on test day.
               </p>
-              <ul className="mt-8 grid gap-x-8 sm:grid-cols-2">
+              <ul data-reveal-group className="mt-8 grid gap-x-8 sm:grid-cols-2">
                 {GAMES.map((g) => (
                   <li key={g} className="border-t border-[var(--color-rule)] py-3 text-base">{g}</li>
                 ))}
@@ -186,7 +192,7 @@ export default function Home() {
         {/* Connect: the one flame sheet of this screen, steps on a typed sheet */}
         <section id="connect" className={`${WRAP} pb-24 sm:pb-32`}>
           <div className="grid items-start gap-8 lg:grid-cols-12">
-            <div className="-rotate-1 bg-[var(--color-accent)] p-6 shadow-[var(--shadow-sheet)] sm:p-10 lg:col-span-7">
+            <div data-drop="-1" className="bg-[var(--color-accent)] p-6 shadow-[var(--shadow-sheet)] sm:p-10 lg:col-span-7">
               <h2 className={`${DISPLAY} text-[clamp(2.5rem,5.5vw,4.75rem)]`}>
                 20 minutes with someone who sat the same rounds last year.
               </h2>
@@ -204,7 +210,7 @@ export default function Home() {
               </Link>
             </div>
 
-            <ol className={`${SHEET} divide-y divide-[var(--color-rule)] px-6 sm:px-9 lg:col-span-5 lg:mt-16`}>
+            <ol data-reveal-group className={`${SHEET} divide-y divide-[var(--color-rule)] px-6 sm:px-9 lg:col-span-5 lg:mt-16`}>
               {STEPS.map((s) => (
                 <li key={s.n} className="flex gap-6 py-7">
                   <span className={`${DISPLAY} w-10 shrink-0 text-6xl`}>{s.n}</span>
@@ -220,8 +226,8 @@ export default function Home() {
 
         {/* Also inside: one typed sheet, a row per tool */}
         <section className={`${WRAP} pb-24 sm:pb-32`}>
-          <h2 className={`${DISPLAY} text-[clamp(2.25rem,5vw,4rem)]`}>Also inside</h2>
-          <ul className={`${SHEET} mt-8 divide-y divide-[var(--color-rule)]`}>
+          <h2 data-reveal className={`${DISPLAY} text-[clamp(2.25rem,5vw,4rem)]`}>Also inside</h2>
+          <ul data-reveal className={`${SHEET} mt-8 divide-y divide-[var(--color-rule)]`}>
             {ALSO.map((a) => (
               <li key={a.title}>
                 <Link
@@ -242,11 +248,11 @@ export default function Home() {
         {/* Pricing: two sheets, the price set huge because it is the offer */}
         <section id="pricing" className="bg-[var(--color-paper-2)]">
           <div className={`${WRAP} py-24 sm:py-32`}>
-            <h2 className={`${DISPLAY} text-[clamp(2.5rem,6vw,5rem)]`}>Two ways in</h2>
+            <h2 data-reveal className={`${DISPLAY} text-[clamp(2.5rem,6vw,5rem)]`}>Two ways in</h2>
             <p className="mt-4 max-w-[48ch] text-lg">Practice gets you ready. Connect gets you a real conversation.</p>
 
             <div className="mt-12 grid max-w-5xl gap-8 md:grid-cols-2">
-              <div className={`${SHEET} flex flex-col p-6 sm:p-9`}>
+              <div data-reveal className={`${SHEET} flex flex-col p-6 sm:p-9`}>
                 <h3 className="text-xl font-semibold">Premium practice</h3>
                 <p className="mt-4 flex items-baseline gap-4">
                   <span className={`${DISPLAY} num text-[clamp(4.5rem,8vw,7rem)]`}>₹299</span>
@@ -260,7 +266,7 @@ export default function Home() {
                 </Link>
               </div>
 
-              <div className="flex rotate-1 flex-col bg-[var(--color-accent)] p-6 shadow-[var(--shadow-sheet)] sm:p-9">
+              <div data-drop="1" className="flex flex-col bg-[var(--color-accent)] p-6 shadow-[var(--shadow-sheet)] sm:p-9">
                 <h3 className="text-xl font-semibold">Connect 1:1</h3>
                 <p className={`${DISPLAY} mt-4 text-[clamp(3rem,5.5vw,4.75rem)]`}>Priced per senior</p>
                 <p className="mt-3 flex-1 text-lg leading-relaxed">
@@ -278,7 +284,7 @@ export default function Home() {
         {/* Final call: toner band */}
         <section className="bg-[var(--color-ink)] text-[var(--color-paper)]">
           <div className={`${WRAP} py-24 sm:py-32`}>
-            <h2 className={`${DISPLAY} max-w-[20ch] text-[clamp(2.75rem,7vw,6rem)]`}>
+            <h2 data-reveal className={`${DISPLAY} max-w-[20ch] text-[clamp(2.75rem,7vw,6rem)]`}>
               Your interview date is already on the calendar. Start today.
             </h2>
             <div className="mt-10 flex flex-col gap-6 sm:flex-row sm:items-center">

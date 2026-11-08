@@ -108,6 +108,7 @@ const Dashboard = () => {
     setShowPaymentPopup(true);
   };
 
+  const showBanner = !companyId && (searchParams.get("promo") === "1" || (!isPremium && !premiumLoading));
   const companyName = companyId ? companyId.charAt(0).toUpperCase() + companyId.slice(1) : 'Assessment';
 
   return (
@@ -117,7 +118,7 @@ const Dashboard = () => {
         description="Your central hub for MNC cognitive practice. Track progress, access games, and sharpen your skills for top company assessments."
       />
       {!companyId && (searchParams.get("promo") === "1" || (!isPremium && !premiumLoading)) && (
-        <div className="w-full relative z-40 mt-[72px] -mb-12">
+        <div className="w-full relative z-40 mt-16">
           <PromoBanner onClaim={handleSubscribe} />
         </div>
       )}
@@ -143,7 +144,7 @@ const Dashboard = () => {
         mode={companyId ? 'journey' : 'landing'}
       />
 
-      <div className={`relative z-10 flex-1 flex flex-col items-center w-full transition-[padding] duration-500 ${companyId ? 'justify-start pt-16 p-3 sm:p-4' : 'p-3 sm:p-4 pt-16 md:p-8'}`}>
+      <div className={`relative z-10 flex-1 flex flex-col items-center w-full transition-[padding] duration-500 ${companyId ? 'justify-start pt-16 p-3 sm:p-4' : `p-3 sm:p-4 md:p-8 ${showBanner ? 'pt-6 md:pt-8' : 'pt-20 md:pt-24'}`}`}>
         <SignedIn>
           <div className={`flex flex-col items-center w-full max-w-6xl flex-1 ${companyId ? 'justify-start' : 'min-h-[60vh] justify-start'}`}>
 

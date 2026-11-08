@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
-import type { ReactNode } from "react";
+import { useRef, type ReactNode } from "react";
 import { ArrowUpRight, Lock } from "lucide-react";
-import { Card } from "@/components/ui/card";
+import { useGsapReveal } from "@/hooks/useGsapReveal";
 import { cn } from "@/lib/utils";
 import { ConnectFeature } from "./ConnectFeature";
 
@@ -37,7 +37,7 @@ const CellLink = ({ id, to, onClick, className, children }: CellLinkProps) =>
   );
 
 const SectionHeading = ({ title, hint }: { title: string; hint?: string }) => (
-  <div className="mb-4 mt-14 flex items-baseline justify-between gap-4 border-b-2 border-[var(--color-ink)] pb-2">
+  <div data-reveal className="mb-6 mt-16 flex items-baseline justify-between gap-4 border-b-2 border-[var(--color-ink)] pb-2">
     <h2 className="font-display text-4xl font-normal uppercase leading-none text-foreground">{title}</h2>
     {hint && <p className="hidden text-sm text-muted-foreground sm:block">{hint}</p>}
   </div>
@@ -61,7 +61,7 @@ const Round = ({ id, label, title, body, covers, cta, to, onClick }: RoundProps)
     id={id}
     to={to}
     onClick={onClick}
-    className="border-b border-[var(--color-rule)] p-6 last:border-b-0 sm:p-8 md:border-b-0 md:border-r md:last:border-r-0"
+    className="h-full bg-[var(--color-paper-3)] p-6 shadow-[var(--shadow-sheet)] transition-[transform,box-shadow] duration-200 hover:-translate-y-1 hover:bg-[var(--color-paper-3)] active:bg-[var(--color-paper-3)] sm:p-8"
   >
     <span className="flex h-full flex-col">
       <span className="text-sm font-medium text-muted-foreground">{label}</span>
@@ -120,19 +120,22 @@ interface CompanySelectionProps {
 }
 
 export const CompanySelection = ({ onSelectCompany, isPremium, onSubscribe }: CompanySelectionProps) => {
+  const page = useRef<HTMLDivElement>(null);
+  useGsapReveal(page);
+
   return (
-    <div className="mx-auto w-full max-w-[1360px] px-1 py-6 sm:px-6 sm:py-12">
-      <header className="mb-7 sm:mb-9">
-        <p className="mb-2 text-base font-medium text-muted-foreground">Accenture 2026</p>
-        <h1 className="font-display text-6xl font-normal uppercase leading-[0.95] text-foreground sm:text-7xl">
+    <div ref={page} className="mx-auto w-full max-w-[1360px] px-1 py-6 sm:px-6 sm:py-10">
+      <header className="mb-10 sm:mb-12">
+        <p data-intro className="mb-2 text-base font-medium text-muted-foreground">Accenture 2026</p>
+        <h1 data-intro className="font-display text-6xl font-normal uppercase leading-[0.95] text-foreground sm:text-7xl">
           Your prep dashboard
         </h1>
+        <p data-intro className="mt-3 max-w-xl text-base text-muted-foreground">
+          Start with a round. Book a senior when you want the real picture.
+        </p>
       </header>
 
-      <ConnectFeature />
-
-      <SectionHeading title="Practice the rounds first" hint="The same round types you will face" />
-      <Card className="grid overflow-hidden rounded-none border-0 bg-[var(--color-paper-3)] shadow-[var(--shadow-sheet)] md:grid-cols-3">
+      <div data-reveal-group className="grid gap-6 md:grid-cols-3">
         <Round
           label="Round 1"
           title="Cognitive Puzzles"
@@ -159,10 +162,14 @@ export const CompanySelection = ({ onSelectCompany, isPremium, onSubscribe }: Co
           cta="Start interview"
           to="/ai-interview"
         />
-      </Card>
+      </div>
+
+      <div data-reveal className="mt-16">
+        <ConnectFeature />
+      </div>
 
       <SectionHeading title="Toolkit" hint="Extra prep alongside the rounds" />
-      <div className="border-t border-border md:grid md:grid-cols-2 md:gap-x-10">
+      <div data-reveal-group className="border-t border-border md:grid md:grid-cols-2 md:gap-x-10">
         <Tool
           title="Important Coding Questions"
           body="330+ DSA problems across 16 topics, with a progress checklist."
