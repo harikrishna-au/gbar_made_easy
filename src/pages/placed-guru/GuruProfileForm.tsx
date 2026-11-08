@@ -3,7 +3,7 @@ import { toast } from 'sonner';
 import { CheckCircle2, Loader2, X, Plus } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import PhotoUploader from './PhotoUploader';
-import AvailabilityScheduler, { WeeklyAvailability } from './AvailabilityScheduler';
+import AvailabilityScheduler, { WeeklyAvailability, availabilityProblem } from './AvailabilityScheduler';
 import { Expert } from '../connect/ExpertCard';
 import { useAuth } from '@clerk/clerk-react';
 
@@ -104,6 +104,9 @@ const GuruProfileForm = ({ userId, expertId, initialData, onSuccess, onCancel }:
     if (!name.trim()) { toast.error('Expert name is required'); return; }
     if (!company) { toast.error('Please select the company they got placed into'); return; }
 
+    const timeProblem = availabilityProblem(availability);
+    if (timeProblem) { toast.error(timeProblem); return; }
+
     const resolvedCompany = company === 'Other' ? customCompany.trim() : company;
     if (company === 'Other' && !customCompany.trim()) {
       toast.error('Please enter the company name');
@@ -171,29 +174,29 @@ const GuruProfileForm = ({ userId, expertId, initialData, onSuccess, onCancel }:
 
   /* ── Styles ─────────────────────────────────────────────────────── */
   const inputCls =
-    "w-full px-3.5 py-2.5 bg-stone-50 border border-stone-200 rounded-xl text-stone-900 text-sm placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-stone-300 focus:border-transparent transition-all font-['Inter']";
-  const labelCls = "block text-sm font-medium text-stone-700 mb-1.5 font-['Inter']";
+    "w-full px-3.5 py-2.5 bg-[var(--color-paper-3)] border-[1.5px] border-[var(--color-ink)] text-[var(--color-ink)] text-sm placeholder:text-[var(--color-muted)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] transition-all font-['Inter']";
+  const labelCls = "block text-sm font-medium text-[var(--color-ink)] mb-1.5 font-['Inter']";
   const sectionLabel =
-    "text-xs font-semibold text-stone-400 uppercase tracking-widest mb-4 font-['Inter']";
+    "text-xs font-semibold text-[var(--color-muted)] uppercase tracking-widest mb-4 font-['Inter']";
 
   /* ── Success screen (only when used standalone, no onSuccess prop) ── */
   if (success) {
     return (
       <div className="flex flex-col items-center text-center py-10 space-y-5">
         <div className="relative">
-          <div className="relative w-16 h-16 bg-stone-100 border border-stone-200 rounded-full flex items-center justify-center">
-            <CheckCircle2 className="w-8 h-8 text-stone-700" />
+          <div className="relative w-16 h-16 bg-[var(--color-paper-2)] border border-[var(--color-rule)] rounded-full flex items-center justify-center">
+            <CheckCircle2 className="w-8 h-8 text-[var(--color-ink)]" />
           </div>
         </div>
         <div>
-          <h2 className="text-xl font-['Merriweather'] text-stone-900 mb-1">Profile Submitted!</h2>
-          <p className="text-stone-500 text-sm font-['Inter']">
+          <h2 className="text-xl font-display uppercase text-[var(--color-ink)] mb-1">Profile Submitted!</h2>
+          <p className="text-[var(--color-muted)] text-sm font-['Inter']">
             An admin will review it before it appears on Connect.
           </p>
         </div>
         <button
           onClick={resetForm}
-          className="px-6 py-2.5 bg-stone-900 text-white rounded-xl text-sm font-medium font-['Inter'] hover:bg-stone-700 active:scale-95 transition-all"
+          className="px-6 py-2.5 bg-[var(--color-accent)] text-[var(--color-ink)] shadow-[3px_3px_0_var(--color-ink)] hover:translate-x-px hover:translate-y-px hover:shadow-[2px_2px_0_var(--color-ink)] active:translate-x-[3px] active:translate-y-[3px] active:shadow-none rounded-none text-sm font-medium font-['Inter']  transition-all"
         >
           Add Another Expert
         </button>
@@ -211,7 +214,7 @@ const GuruProfileForm = ({ userId, expertId, initialData, onSuccess, onCancel }:
           <PhotoUploader value={photoUrl} onChange={setPhotoUrl} label="Profile Photo" />
           <div className="flex-1 w-full space-y-3">
             <div>
-              <label className={labelCls}>Full Name <span className="text-stone-400">*</span></label>
+              <label className={labelCls}>Full Name <span className="text-[var(--color-muted)]">*</span></label>
               <input
                 type="text" value={name} required
                 onChange={(e) => setName(e.target.value)}
@@ -221,7 +224,7 @@ const GuruProfileForm = ({ userId, expertId, initialData, onSuccess, onCancel }:
             </div>
             <div>
               <label className={labelCls}>
-                Your Email <span className="text-stone-400 font-normal text-xs">(for session notifications)</span>
+                Your Email <span className="text-[var(--color-muted)] font-normal text-xs">(for session notifications)</span>
               </label>
               <input
                 type="email" value={email}
@@ -259,16 +262,16 @@ const GuruProfileForm = ({ userId, expertId, initialData, onSuccess, onCancel }:
 
           {/* Company selector */}
           <div>
-            <label className={labelCls}>Company Placed Into <span className="text-stone-400">*</span></label>
+            <label className={labelCls}>Company Placed Into <span className="text-[var(--color-muted)]">*</span></label>
             <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
               {([...MAIN_COMPANIES, 'Other'] as const).map((c) => (
                 <button
                   key={c} type="button"
                   onClick={() => { setCompany(c); if (c !== 'Other') setCustomCompany(''); }}
-                  className={`py-2.5 px-3 rounded-xl text-sm font-medium border transition-all font-['Inter'] ${
+                  className={`py-2.5 px-3 rounded-none text-sm font-medium border transition-all font-['Inter'] ${
                     company === c
-                      ? 'bg-stone-900 text-white border-stone-900'
-                      : 'bg-stone-50 text-stone-600 border-stone-200 hover:border-stone-400 hover:bg-stone-100'
+                      ? 'bg-[var(--color-accent)] text-[var(--color-ink)] shadow-[3px_3px_0_var(--color-ink)] hover:translate-x-px hover:translate-y-px hover:shadow-[2px_2px_0_var(--color-ink)] active:translate-x-[3px] active:translate-y-[3px] active:shadow-none border-[var(--color-ink)]'
+                      : 'bg-[var(--color-paper-2)] text-[var(--color-ink)] border-[var(--color-rule)] hover:border-[var(--color-ink)] hover:bg-[var(--color-paper-2)]'
                   }`}
                 >
                   {c}
@@ -306,7 +309,7 @@ const GuruProfileForm = ({ userId, expertId, initialData, onSuccess, onCancel }:
                   min={0} step={0.1}
                   className={`${inputCls} pr-12`}
                 />
-                <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-stone-400 text-xs font-['Inter']">LPA</span>
+                <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[var(--color-muted)] text-xs font-['Inter']">LPA</span>
               </div>
             </div>
           </div>
@@ -328,9 +331,9 @@ const GuruProfileForm = ({ userId, expertId, initialData, onSuccess, onCancel }:
         <p className={sectionLabel}>Skills & Tags</p>
         <div className="flex flex-wrap gap-2 mb-2">
           {skills.map((skill, i) => (
-            <span key={i} className="inline-flex items-center gap-1 px-2.5 py-1 bg-stone-100 text-stone-700 rounded-full text-xs font-medium font-['Inter']">
+            <span key={i} className="inline-flex items-center gap-1 px-2.5 py-1 bg-[var(--color-paper-2)] text-[var(--color-ink)] rounded-full text-xs font-medium font-['Inter']">
               {skill}
-              <button type="button" onClick={() => setSkills((p) => p.filter((_, j) => j !== i))} className="text-stone-400 hover:text-red-400 transition-colors">
+              <button type="button" onClick={() => setSkills((p) => p.filter((_, j) => j !== i))} className="text-[var(--color-muted)] hover:text-[var(--color-error)] transition-colors">
                 <X className="w-3 h-3" />
               </button>
             </span>
@@ -344,7 +347,7 @@ const GuruProfileForm = ({ userId, expertId, initialData, onSuccess, onCancel }:
             placeholder="Type a skill and press Enter (e.g. DSA, HR Interview, Accenture)"
             className={`${inputCls} flex-1`}
           />
-          <button type="button" onClick={addSkill} className="px-3 py-2.5 bg-stone-100 text-stone-600 rounded-xl hover:bg-stone-200 transition-colors flex-shrink-0">
+          <button type="button" onClick={addSkill} className="px-3 py-2.5 bg-[var(--color-paper-2)] text-[var(--color-ink)] rounded-none hover:bg-[var(--color-paper-2)] transition-colors flex-shrink-0">
             <Plus className="w-4 h-4" />
           </button>
         </div>
@@ -354,15 +357,15 @@ const GuruProfileForm = ({ userId, expertId, initialData, onSuccess, onCancel }:
       <div>
         <p className={sectionLabel}>Session Settings</p>
         <div className="flex items-center gap-2">
-          <span className="text-stone-500 text-sm font-['Inter']">₹</span>
+          <span className="text-[var(--color-muted)] text-sm font-['Inter']">₹</span>
           <input
             type="text" inputMode="numeric" pattern="[0-9]*" value={priceText}
             aria-label="Price in rupees per 20-minute session"
             onChange={(e) => setPriceText(e.target.value.replace(/\D/g, '').slice(0, 6))}
             onBlur={() => setPriceText(String(price))}
-            className="w-28 px-3.5 py-2.5 bg-stone-50 border border-stone-200 rounded-xl text-stone-900 text-sm focus:outline-none focus:ring-2 focus:ring-stone-300 transition-all font-['Inter']"
+            className="w-28 px-3.5 py-2.5 bg-[var(--color-paper-3)] border-[1.5px] border-[var(--color-ink)] text-[var(--color-ink)] text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] transition-all font-['Inter']"
           />
-          <span className="text-stone-400 text-xs font-['Inter']">per 20-min session</span>
+          <span className="text-[var(--color-muted)] text-xs font-['Inter']">per 20-min session</span>
         </div>
       </div>
 
@@ -370,7 +373,7 @@ const GuruProfileForm = ({ userId, expertId, initialData, onSuccess, onCancel }:
       <div>
         <p className={sectionLabel}>Availability</p>
         {fetchingAvailability ? (
-          <div className="flex items-center gap-2 py-4 text-stone-400 text-sm font-['Inter']">
+          <div className="flex items-center gap-2 py-4 text-[var(--color-muted)] text-sm font-['Inter']">
             <Loader2 className="w-4 h-4 animate-spin" />
             Loading availability...
           </div>
@@ -385,7 +388,7 @@ const GuruProfileForm = ({ userId, expertId, initialData, onSuccess, onCancel }:
           <button
             type="button"
             onClick={onCancel}
-            className="flex-1 py-3.5 bg-stone-100 text-stone-700 rounded-xl text-sm font-medium font-['Inter'] hover:bg-stone-200 active:scale-95 transition-all duration-200"
+            className="flex-1 py-3.5 bg-[var(--color-paper-2)] text-[var(--color-ink)] rounded-none text-sm font-medium font-['Inter'] hover:bg-[var(--color-paper-2)]  transition-all duration-200"
           >
             Cancel
           </button>
@@ -393,7 +396,7 @@ const GuruProfileForm = ({ userId, expertId, initialData, onSuccess, onCancel }:
         <button
           type="submit"
           disabled={loading || fetchingAvailability}
-          className={`${onCancel ? 'flex-1' : 'w-full'} py-3.5 bg-stone-900 text-white rounded-xl text-sm font-medium font-['Inter'] hover:bg-stone-700 active:scale-95 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2`}
+          className={`${onCancel ? 'flex-1' : 'w-full'} py-3.5 bg-[var(--color-accent)] text-[var(--color-ink)] shadow-[3px_3px_0_var(--color-ink)] hover:translate-x-px hover:translate-y-px hover:shadow-[2px_2px_0_var(--color-ink)] active:translate-x-[3px] active:translate-y-[3px] active:shadow-none rounded-none text-sm font-medium font-['Inter']  transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2`}
         >
           {loading ? (
             <><Loader2 className="w-4 h-4 animate-spin" /> {isEdit ? 'Saving...' : 'Creating Profile...'}</>

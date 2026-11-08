@@ -64,34 +64,34 @@ const PhotoUploader = ({
 
   return (
     <div>
-      <label className="block text-sm font-medium text-stone-700 mb-1.5 font-['Inter']">
+      <label className="block text-sm font-medium text-[var(--color-ink)] mb-1.5 font-['Inter']">
         {label}
       </label>
 
       {value ? (
         <div className="relative w-24 h-24 group">
           {isPdf ? (
-            <div className="w-24 h-24 rounded-2xl bg-stone-100 border border-stone-200 flex flex-col items-center justify-center gap-1">
-              <FileText className="w-6 h-6 text-stone-500" />
-              <span className="text-[11px] text-stone-500 font-['Inter']">PDF</span>
+            <div className="w-24 h-24 rounded-none bg-[var(--color-paper-2)] border border-[var(--color-rule)] flex flex-col items-center justify-center gap-1">
+              <FileText className="w-6 h-6 text-[var(--color-muted)]" />
+              <span className="text-[11px] text-[var(--color-muted)] font-['Inter']">PDF</span>
             </div>
           ) : (
             <img
               src={value}
               alt="Preview"
-              className="w-24 h-24 rounded-2xl object-cover border border-stone-200"
+              className="w-24 h-24 rounded-none object-cover border border-[var(--color-rule)]"
             />
           )}
           <div
             onClick={() => inputRef.current?.click()}
-            className="absolute inset-0 rounded-2xl bg-black/0 group-hover:bg-black/20 transition-colors cursor-pointer flex items-center justify-center"
+            className="absolute inset-0 rounded-none bg-black/0 group-hover:bg-black/20 transition-colors cursor-pointer flex items-center justify-center"
           >
             <Upload className="w-5 h-5 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
           </div>
           <button
             type="button"
             onClick={() => onChange('')}
-            className="absolute -top-2 -right-2 w-5 h-5 bg-white border border-stone-200 rounded-full flex items-center justify-center text-stone-500 hover:text-red-500 hover:border-red-200 transition-colors shadow-sm z-10"
+            className="absolute -top-2 -right-2 w-5 h-5 bg-[var(--color-paper-3)] border border-[var(--color-rule)] rounded-full flex items-center justify-center text-[var(--color-muted)] hover:text-[var(--color-error)] hover:border-red-200 transition-colors shadow-sm z-10"
           >
             <X className="w-3 h-3" />
           </button>
@@ -99,20 +99,20 @@ const PhotoUploader = ({
       ) : (
         <div
           onClick={() => !uploading && inputRef.current?.click()}
-          className={`rounded-2xl border-2 border-dashed border-stone-200 bg-stone-50 flex flex-col items-center justify-center gap-1.5 hover:border-stone-400 hover:bg-stone-100 transition-all cursor-pointer ${
+          className={`rounded-none border-2 border-dashed border-[var(--color-rule)] bg-[var(--color-paper-2)] flex flex-col items-center justify-center gap-1.5 hover:border-[var(--color-ink)] hover:bg-[var(--color-paper-2)] transition-all cursor-pointer ${
             isProof ? 'w-full h-20' : 'w-24 h-24'
           }`}
         >
           {uploading ? (
-            <Loader2 className="w-5 h-5 text-stone-400 animate-spin" />
+            <Loader2 className="w-5 h-5 text-[var(--color-muted)] animate-spin" />
           ) : (
             <>
               {isProof ? (
-                <FileText className="w-5 h-5 text-stone-400" />
+                <FileText className="w-5 h-5 text-[var(--color-muted)]" />
               ) : (
-                <Upload className="w-5 h-5 text-stone-400" />
+                <Upload className="w-5 h-5 text-[var(--color-muted)]" />
               )}
-              <span className="text-xs text-stone-400 font-['Inter']">
+              <span className="text-xs text-[var(--color-muted)] font-['Inter']">
                 {isProof ? 'Upload proof (image or PDF)' : 'Upload'}
               </span>
             </>
@@ -121,7 +121,7 @@ const PhotoUploader = ({
       )}
 
       {hint && (
-        <p className="text-xs text-stone-400 mt-1 font-['Inter']">{hint}</p>
+        <p className="text-xs text-[var(--color-muted)] mt-1 font-['Inter']">{hint}</p>
       )}
 
       <input
