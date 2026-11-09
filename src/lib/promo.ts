@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
  * banner disappears and checkout goes back to ₹299. The banner timer is per
  * browser session: it counts up from the moment the visitor's session began.
  */
-export const PROMO_ACTIVE = true;
+export const PROMO_ACTIVE = false;
 const SESSION_KEY = "promo_session_started_at";
 export const PROMO_PRICE = 99;
 export const REGULAR_PRICE = 299;
