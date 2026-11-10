@@ -1,6 +1,10 @@
 {
     "rewrites": [
         {
+            "source": "/placement/:code",
+            "destination": "/api/placement-meta?code=:code"
+        },
+        {
             "source": "/(.*)",
             "destination": "/index.html"
         }
