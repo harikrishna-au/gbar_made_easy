@@ -42,11 +42,12 @@ export default function PlacementPage() {
     }
     let cancelled = false;
     setState("loading");
-    (supabase as any)
+    const isId = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(code);
+    const q = (supabase as any)
       .from("jobs")
       .select("title,company,type,location,description,apply_url,package_lpa,skills_required,code")
-      .eq("active", true)
-      .ilike("code", clean(code))
+      .eq("active", true);
+    (isId ? q.eq("id", code) : q.ilike("code", clean(code)))
       .maybeSingle()
       .then(({ data }: { data: Opportunity | null }) => {
         if (cancelled) return;
