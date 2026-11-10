@@ -8,14 +8,14 @@ import {
 import Header from "@/components/Header";
 import { useResume } from "@/hooks/useResume";
 import { supabase } from "@/integrations/supabase/client";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { SignedIn, SignedOut } from "@clerk/clerk-react";
 
 /* ── Types ── */
 type DBJob = {
   id: string; title: string; company: string | null; type: string;
   location: string | null; skills_required: string[]; description: string | null;
-  apply_url: string | null; package_lpa: number | null; active: boolean;
+  apply_url: string | null; package_lpa: number | null; active: boolean; code?: string | null;
 };
 
 type MatchedJob = DBJob & {
@@ -163,12 +163,19 @@ function JobCard({ job, index }: { job: MatchedJob; index: number }) {
       </div>
 
       {/* Apply button pinned to bottom */}
-      {job.apply_url && (
+      {(job.code || job.apply_url) && (
         <div className="px-5 pb-4 pt-2 border-t border-stone-50">
-          <a href={job.apply_url} target="_blank" rel="noreferrer"
-            className="flex items-center justify-center gap-1.5 w-full py-2 rounded-xl bg-stone-900 text-white text-xs font-semibold font-['Inter'] hover:bg-stone-700 active:scale-95 transition-all">
-            <ExternalLink className="w-3.5 h-3.5" /> Apply Now
-          </a>
+          {job.code ? (
+            <Link to={`/placement/${job.code}`}
+              className="flex items-center justify-center gap-1.5 w-full py-2 rounded-xl bg-stone-900 text-white text-xs font-semibold font-['Inter'] hover:bg-stone-700 active:scale-95 transition-all">
+              <ExternalLink className="w-3.5 h-3.5" /> Apply Now
+            </Link>
+          ) : (
+            <a href={job.apply_url!} target="_blank" rel="noreferrer"
+              className="flex items-center justify-center gap-1.5 w-full py-2 rounded-xl bg-stone-900 text-white text-xs font-semibold font-['Inter'] hover:bg-stone-700 active:scale-95 transition-all">
+              <ExternalLink className="w-3.5 h-3.5" /> Apply Now
+            </a>
+          )}
         </div>
       )}
     </motion.div>
