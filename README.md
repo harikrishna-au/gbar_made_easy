@@ -10,6 +10,8 @@ Cognitive games and communication rounds modelled on company assessments (Accent
 
 [Live site](https://www.harrytheblaze.site) · [Report an issue](https://github.com/harikrishna-au/gbar_made_easy/issues)
 
+**6,165 registered users** (total sign-ups per the Clerk dashboard, 8 Dec 2025 – 9 Nov 2026). Licensed under MIT.
+
 </div>
 
 ---
