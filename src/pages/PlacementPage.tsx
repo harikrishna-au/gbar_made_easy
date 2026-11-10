@@ -15,6 +15,7 @@ type Opportunity = {
   skills_required: string[] | null;
   code: string | null;
   created_at?: string | null;
+  details?: Record<string, string> | null;
 };
 
 type Related = { id: string; title: string; company: string | null; location: string | null; package_lpa: number | null; code: string | null };
@@ -59,7 +60,7 @@ export default function PlacementPage() {
     const isId = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(code);
     const q = (supabase as any)
       .from("jobs")
-      .select("title,company,type,location,description,apply_url,package_lpa,skills_required,code,created_at")
+      .select("title,company,type,location,description,apply_url,package_lpa,skills_required,code,created_at,details")
       .eq("active", true);
     (isId ? q.eq("id", code) : q.ilike("code", clean(code)))
       .maybeSingle()
@@ -170,6 +171,34 @@ function postedAgo(iso?: string | null) {
   return `Posted ${Math.floor(d / 30)} mo ago`;
 }
 
+const NA = "Not specified for this role";
+const lines = (v?: string | null) => (v ?? "").split(/\n+/).map((t) => t.trim().replace(/^[-•*]\s*/, "")).filter(Boolean);
+
+function Bullet({ children }: { children: React.ReactNode }) {
+  return (
+    <li className="flex gap-3 text-[15px] leading-relaxed" style={{ color: "#3d3630" }}>
+      <span className="mt-2 shrink-0 w-2 h-2" style={{ background: ACCENT }} aria-hidden />
+      <span>{children}</span>
+    </li>
+  );
+}
+
+function Block({ title, text, bullets }: { title: string; text?: string | null; bullets?: string[] }) {
+  const hasBullets = !!bullets?.length;
+  return (
+    <section style={card} className="p-6 sm:p-8">
+      <h2 className="uppercase text-2xl" style={{ fontFamily: DISPLAY }}>{title}</h2>
+      {hasBullets ? (
+        <ul className="mt-4 space-y-3">{bullets!.map((t, i) => <Bullet key={i}>{t}</Bullet>)}</ul>
+      ) : text ? (
+        <p className="mt-3 text-[15px] leading-relaxed whitespace-pre-line" style={{ color: "#3d3630" }}>{text}</p>
+      ) : (
+        <p className="mt-3 text-sm italic" style={{ color: "#9a9086" }}>{NA}</p>
+      )}
+    </section>
+  );
+}
+
 /** Break a paragraph into readable bullet points (one per sentence). */
 function toPoints(text: string) {
   return text
@@ -179,7 +208,19 @@ function toPoints(text: string) {
 }
 
 function JobView({ job, related, share, copied }: { job: Opportunity; related: Related[]; share: () => void; copied: boolean }) {
+  const d = job.details ?? {};
   const points = job.description ? toPoints(job.description) : [];
+  const faqs = lines(d.faqs).map((l) => l.split("::").map((x) => x.trim())).filter((x) => x[0] && x[1]) as [string, string][];
+  const overview: [string, string | null][] = [
+    ["Role", job.title],
+    ["Company", job.company],
+    ["Location", job.location],
+    ["Work mode", d.work_mode || null],
+    ["Category", d.category || null],
+    ["Job ID", d.job_id || null],
+    ["Job type", job.type],
+    ["Salary", d.salary || (job.package_lpa ? `₹${job.package_lpa} LPA` : null)],
+  ];
   const ago = postedAgo(job.created_at);
   const url = typeof window !== "undefined" ? window.location.href : "";
   const text = encodeURIComponent(`${job.title}${job.company ? ` at ${job.company}` : ""} — apply here: `);
@@ -230,52 +271,85 @@ function JobView({ job, related, share, copied }: { job: Opportunity; related: R
 
       <div className="mt-6 grid lg:grid-cols-[1fr_320px] gap-6 items-start">
         <div className="space-y-6">
-          {/* About */}
-          {points.length > 0 && (
-            <section style={card} className="p-6 sm:p-8">
-              <h2 className="uppercase text-2xl" style={{ fontFamily: DISPLAY }}>About the role</h2>
-              <ul className="mt-4 space-y-3">
-                {points.map((t, i) => (
-                  <li key={i} className="flex gap-3 text-[15px] leading-relaxed" style={{ color: "#3d3630" }}>
-                    <span className="mt-2 shrink-0 w-2 h-2" style={{ background: ACCENT }} aria-hidden />
-                    <span>{t}</span>
-                  </li>
-                ))}
-              </ul>
-            </section>
-          )}
+          {/* Overview table */}
+          <section style={card} className="p-6 sm:p-8">
+            <h2 className="uppercase text-2xl" style={{ fontFamily: DISPLAY }}>Job overview</h2>
+            <dl className="mt-4 divide-y" style={{ borderColor: "#e5dfd2" }}>
+              {overview.map(([k, v]) => (
+                <div key={k} className="py-2.5 grid grid-cols-[130px_1fr] gap-3 text-sm">
+                  <dt className="font-bold uppercase text-[11px] tracking-[.12em] pt-0.5" style={{ color: MUTED }}>{k}</dt>
+                  <dd className={v ? "font-semibold" : "italic"} style={v ? undefined : { color: "#9a9086" }}>{v || NA}</dd>
+                </div>
+              ))}
+            </dl>
+          </section>
+
+          <Block title="About the company" text={d.about_company} />
+          <Block title="Role summary" text={d.role_summary || (points.length ? "" : "")} bullets={d.role_summary ? undefined : points} />
+          <Block title="Key responsibilities" bullets={lines(d.responsibilities)} />
+          <Block title="Minimum qualifications" bullets={lines(d.min_qualifications)} />
+          <Block title="Preferred qualifications" bullets={lines(d.preferred_qualifications)} />
 
           {/* Skills */}
-          {!!job.skills_required?.length && (
-            <section style={card} className="p-6 sm:p-8">
-              <h2 className="uppercase text-2xl" style={{ fontFamily: DISPLAY }}>Skills they look for</h2>
+          <section style={card} className="p-6 sm:p-8">
+            <h2 className="uppercase text-2xl" style={{ fontFamily: DISPLAY }}>Skills they look for</h2>
+            {job.skills_required?.length ? (
               <div className="mt-4 flex flex-wrap gap-2">
                 {job.skills_required.map((sk) => (
                   <span key={sk} className="px-3 py-1.5 text-sm font-semibold bg-white" style={{ border: `1.5px solid ${INK}` }}>{sk}</span>
                 ))}
               </div>
-            </section>
-          )}
+            ) : (
+              <p className="mt-3 text-sm italic" style={{ color: "#9a9086" }}>{NA}</p>
+            )}
+          </section>
+
+          <Block title="Important dates" text={d.important_dates} />
 
           {/* How to apply */}
           <section style={card} className="p-6 sm:p-8">
             <h2 className="uppercase text-2xl" style={{ fontFamily: DISPLAY }}>How to apply</h2>
-            <ol className="mt-4 space-y-4">
-              {[
-                ["Get your resume ready", "Tailor it to this role — keep it to one page and lead with the skills listed above."],
-                ["Click Apply now", `You'll be taken to ${job.company ? `${job.company}'s` : "the official"} application page to submit.`],
-                ["Prepare while you wait", "Practice aptitude and communication rounds so you're ready when the call comes."],
-              ].map(([h, d], i) => (
-                <li key={h} className="flex gap-4">
-                  <span className="shrink-0 w-9 h-9 flex items-center justify-center text-lg" style={{ background: INK, color: "#fff", fontFamily: DISPLAY }}>{i + 1}</span>
-                  <div>
-                    <p className="font-bold">{h}</p>
-                    <p className="text-sm mt-0.5" style={{ color: MUTED }}>{d}</p>
-                  </div>
-                </li>
-              ))}
-            </ol>
+            {d.how_to_apply ? (
+              <ul className="mt-4 space-y-3">
+                {lines(d.how_to_apply).map((t, i) => <Bullet key={i}>{t}</Bullet>)}
+              </ul>
+            ) : (
+              <ol className="mt-4 space-y-4">
+                {[
+                  ["Get your resume ready", "Tailor it to this role — keep it to one page and lead with the skills listed above."],
+                  ["Click Apply now", `You'll be taken to ${job.company ? `${job.company}'s` : "the official"} application page to submit.`],
+                  ["Prepare while you wait", "Practice aptitude and communication rounds so you're ready when the call comes."],
+                ].map(([h, t], i) => (
+                  <li key={h} className="flex gap-4">
+                    <span className="shrink-0 w-9 h-9 flex items-center justify-center text-lg" style={{ background: INK, color: "#fff", fontFamily: DISPLAY }}>{i + 1}</span>
+                    <div>
+                      <p className="font-bold">{h}</p>
+                      <p className="text-sm mt-0.5" style={{ color: MUTED }}>{t}</p>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            )}
             <ApplyButton className="mt-6 w-full sm:w-auto sm:px-10" />
+          </section>
+
+          {/* FAQs */}
+          <section style={card} className="p-6 sm:p-8">
+            <h2 className="uppercase text-2xl" style={{ fontFamily: DISPLAY }}>FAQs</h2>
+            {faqs.length ? (
+              <div className="mt-4 divide-y" style={{ borderColor: "#e5dfd2" }}>
+                {faqs.map(([q, a], i) => (
+                  <details key={i} className="py-3 group">
+                    <summary className="cursor-pointer font-bold text-[15px] list-none flex justify-between gap-3">
+                      {q}<span style={{ color: ACCENT }} className="group-open:rotate-45 transition-transform">+</span>
+                    </summary>
+                    <p className="mt-2 text-sm leading-relaxed" style={{ color: "#3d3630" }}>{a}</p>
+                  </details>
+                ))}
+              </div>
+            ) : (
+              <p className="mt-3 text-sm italic" style={{ color: "#9a9086" }}>{NA}</p>
+            )}
           </section>
 
           {/* Prep tools */}

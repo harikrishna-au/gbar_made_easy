@@ -17,7 +17,7 @@ serve(async (req: Request) => {
 
   try {
     const body = await req.json();
-    const raw = typeof body?.raw === "string" ? body.raw.slice(0, 8000) : "";
+    const raw = typeof body?.raw === "string" ? body.raw.slice(0, 14000) : "";
     if (!raw.trim()) return err("No text provided.");
 
     const apiKey = Deno.env.get("OPENAI_API_KEY");
@@ -36,7 +36,10 @@ serve(async (req: Request) => {
 title (string), company (string), type (one of: "Internship" | "Full-time" | "Part-time"), location (string),
 description (string — concise 2-3 sentence summary), apply_url (string or ""),
 package_lpa (numeric string like "12" or "" if unknown), skills_required (array of skill strings).
-If a field is not mentioned use an empty string or empty array. Never add extra keys.`,
+Also return "details": an object with these keys (all strings; for lists put one item per line separated by "\n"; use "" when the text does not say):
+job_id, category, about_company, role_summary, responsibilities, min_qualifications, preferred_qualifications, work_mode, salary, important_dates, how_to_apply,
+faqs (one per line formatted "Question :: Answer").
+Copy facts faithfully from the text; never invent anything. If a field is not mentioned use an empty string or empty array. Never add other keys.`,
           },
           { role: "user", content: raw },
         ],
