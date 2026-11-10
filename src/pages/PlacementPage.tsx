@@ -73,7 +73,9 @@ export default function PlacementPage() {
       }
       if (cancelled) return;
       if (res.error) console.error("Placement lookup failed", res.error);
-      const data = res.error ? null : (res.data as Opportunity | null);
+      const raw = res.error ? null : (res.data as Opportunity | null);
+      // Only allow http(s) apply links so a stored `javascript:` URL can never reach an href.
+      const data = raw && { ...raw, apply_url: raw.apply_url && /^https?:\/\//i.test(raw.apply_url.trim()) ? raw.apply_url.trim() : null };
       setJob(data);
       setState(data ? "found" : res.error ? "error" : "missing");
     })();
