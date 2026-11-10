@@ -169,8 +169,6 @@ function JobCard({ job, index }: { job: MatchedJob; index: number }) {
           <ExternalLink className="w-3.5 h-3.5" /> Apply Now
         </Link>
       </div>
-        </div>
-      )}
     </motion.div>
   );
 }
