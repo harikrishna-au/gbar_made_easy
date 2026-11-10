@@ -1,7 +1,7 @@
 // WhatsApp, LinkedIn, Telegram etc. don't run JavaScript, so the React app can't set link-preview tags.
 // vercel.json routes /placement/:code here; we return the normal index.html with job-specific
 // Open Graph tags injected. If anything fails we return the untouched page, so the app still loads.
-import { fetchJob, money } from "./_job";
+import { fetchJob, money } from "./_job.js";
 
 export const config = { runtime: "edge" };
 

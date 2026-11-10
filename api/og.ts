@@ -1,8 +1,6 @@
 // 1200x630 link-preview card for /placement/:code, e.g. what WhatsApp shows when the link is shared.
 import { ImageResponse } from "@vercel/og";
-import { fetchJob, money } from "./_job";
-
-export const config = { runtime: "edge" };
+import { fetchJob, money } from "./_job.js";
 
 const INK = "#1a1613";
 const ACCENT = "#f4592a";
@@ -23,7 +21,7 @@ async function loadFont(): Promise<ArrayBuffer | null> {
   }
 }
 
-export default async function handler(req: Request): Promise<Response> {
+async function handler(req: Request): Promise<Response> {
   const code = new URL(req.url).searchParams.get("code");
   const [job, font] = await Promise.all([fetchJob(code), loadFont()]);
 
@@ -63,3 +61,6 @@ export default async function handler(req: Request): Promise<Response> {
     headers: { "cache-control": "public, s-maxage=3600, stale-while-revalidate=86400" },
   });
 }
+
+// Node runtime with a web-standard handler: @vercel/og can't be bundled as an Edge Function outside Next.js.
+export default { fetch: handler };
