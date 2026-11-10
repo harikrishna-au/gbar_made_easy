@@ -35,7 +35,7 @@ export default function PlacementPage() {
   const navigate = useNavigate();
   const [input, setInput] = useState("");
   const [job, setJob] = useState<Opportunity | null>(null);
-  const [state, setState] = useState<"idle" | "loading" | "found" | "missing">("idle");
+  const [state, setState] = useState<"idle" | "loading" | "found" | "missing" | "error">("idle");
   const [copied, setCopied] = useState(false);
   const [related, setRelated] = useState<Related[]>([]);
 
@@ -62,13 +62,21 @@ export default function PlacementPage() {
       .from("jobs")
       .select("title,company,type,location,description,apply_url,package_lpa,skills_required,code,created_at,details")
       .eq("active", true);
-    (isId ? q.eq("id", code) : q.ilike("code", clean(code)))
-      .maybeSingle()
-      .then(({ data }: { data: Opportunity | null }) => {
+    const run = () => (isId ? q.eq("id", code) : q.ilike("code", clean(code))).maybeSingle();
+    (async () => {
+      let res = await run();
+      // A transient failure (network blip, stale token) must not look like "code not found": retry once.
+      if (res.error) {
+        await new Promise((r) => setTimeout(r, 600));
         if (cancelled) return;
-        setJob(data);
-        setState(data ? "found" : "missing");
-      });
+        res = await run();
+      }
+      if (cancelled) return;
+      if (res.error) console.error("Placement lookup failed", res.error);
+      const data = res.error ? null : (res.data as Opportunity | null);
+      setJob(data);
+      setState(data ? "found" : res.error ? "error" : "missing");
+    })();
     return () => {
       cancelled = true;
     };
@@ -106,6 +114,18 @@ export default function PlacementPage() {
 
       <main className={`flex-1 mx-auto w-full px-4 py-8 ${state === "found" ? "max-w-5xl pb-28 lg:pb-12" : "max-w-xl"}`}>
         {state === "loading" && <p style={{ color: MUTED }}>Loading…</p>}
+
+        {state === "error" && (
+          <div>
+            <h1 className="uppercase text-4xl leading-tight" style={{ fontFamily: DISPLAY }}>Couldn't load</h1>
+            <p className="mt-3 text-[15px]" style={{ color: MUTED }}>
+              Something went wrong while loading this opportunity. The link is probably fine.
+            </p>
+            <button onClick={() => window.location.reload()} className="mt-6 px-5 py-3 font-bold uppercase" style={{ background: ACCENT, border: "2px solid #1a1613" }}>
+              Retry
+            </button>
+          </div>
+        )}
 
         {(state === "idle" || state === "missing") && (
           <div>
