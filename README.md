@@ -33,6 +33,7 @@ Connect is operated manually on purpose. Student-facing copy should keep saying 
 - **Communication rounds.** Two company patterns (Accenture, Cognizant) covering conversation, listening, reading aloud, repeat, fill-in-the-blank, error correction, speaking topic and written email. Question audio is Amazon Polly; answers are scored with AI feedback.
 - **Connect 1:1.** Browse seniors, pick a slot, pay, and get a confirmation. Includes an expert onboarding flow (`/placed-guru`) and a super-admin queue at `/admin?tab=connect`.
 - **AI interview**, **Forge** (resume builder), **Radar** (job match) and a **coding-questions checklist** are available to Premium users.
+- **Placement links.** Public, no-sign-in pages at `/placement/:code` for a single opportunity (company, role, package, skills, how to apply, FAQs). Share a short code such as `tcs-nov26`, or the job's UUID. `/placement` shows a code box. Jobs are posted and toggled active from the admin Jobs tab, and the AI `parse-job` function fills the details from a pasted description.
 - **Blog** with write, my-posts and admin views.
 
 ## Tech stack
@@ -46,6 +47,33 @@ Connect is operated manually on purpose. Student-facing copy should keep saying 
 | Email | Resend |
 | AI backend | FastAPI on AWS Lambda (via Mangum), DynamoDB, S3, Bedrock/OpenAI, Amazon Polly |
 | Hosting | Vercel (frontend), AWS SAM (backend) |
+
+## How it fits together
+
+```
+Browser (React + Vite, Vercel)
+   ├── Clerk ............ sign-in, session tokens
+   ├── Supabase ......... Postgres + RLS (jobs, bookings, scores, blog)
+   │      └── Edge functions: payments, Connect bookings, admin, resume/job parsing
+   ├── Razorpay ......... checkout; webhooks land in Supabase functions
+   └── FastAPI (AWS Lambda) .. AI interview, resume, game and communication grading
+          └── DynamoDB, S3, Bedrock/OpenAI, Polly
+```
+
+Public pages (landing, blog, `/placement`) read Supabase with the anon key under RLS. Anything that moves money or writes on a user's behalf goes through an edge function that verifies the Clerk token first.
+
+## Routes
+
+| Area | Paths |
+| --- | --- |
+| Marketing | `/`, `/about`, `/share`, `/terms`, `/refund` |
+| Practice | `/dashboard`, `/dashboard/:companyId`, `/game/*` (matrix, balloon, hidden-maze, geo-sudo, grid-challenge, motion, switch, digit, bart, inductive, dual-task), `/game/communication`, `/game/communication-p2` |
+| Premium tools | `/ai-interview`, `/forge`, `/radar`, `/coding-questions` |
+| Connect 1:1 | `/connect`, `/connect/:expertId`, `/placed-guru` |
+| Placement | `/placement`, `/placement/:code` (public) |
+| Blog | `/blog`, `/blog/write`, `/blog/my`, `/blog/:slug` |
+| Admin | `/admin`, `/admin/blog`, `/admin/connect` |
+| HackWithInfy | `/hackwithinfy/*` |
 
 ## Repository layout
 
@@ -153,6 +181,17 @@ python main.py        # serves on :8000
 
 It needs NLTK data; run `python download_nltk.py` once.
 
+## Troubleshooting
+
+| Symptom | Likely cause and fix |
+| --- | --- |
+| `/placement/<code>` shows "Couldn't load", and the console shows a `400` from `/rest/v1/jobs` | A column the page selects is missing in your Supabase project. Run the migrations (`supabase db push`), in particular the ones adding `jobs.code` and `jobs.details`, then reload the schema cache with `notify pgrst, 'reload schema';`. |
+| `/placement/<code>` shows "Code not found" | The job does not exist, is toggled Inactive in the admin Jobs tab, or the code has a typo. Only active jobs are public. |
+| Blank screen or redirect loop after sign-in | `VITE_CLERK_PUBLISHABLE_KEY` is missing or belongs to a different Clerk instance. |
+| `/api/...` requests fail locally | The backend is not running on port 8000, or `VITE_BACKEND_URL` points elsewhere. |
+| Edge function returns 401 or 500 | A secret is missing. Check `supabase secrets list` against the list above and read the function logs in the Supabase dashboard. |
+| Deep links 404 on a new host | The host needs the single-page-app rewrite that `vercel.json` provides. |
+
 ## Scripts
 
 | Command | Description |
@@ -188,4 +227,4 @@ Full context is in [`PRODUCT.md`](PRODUCT.md).
 
 ## License
 
-No license file is included yet. All rights are reserved by the author until one is added.
+Released under the terms in [`LICENSE`](LICENSE).
