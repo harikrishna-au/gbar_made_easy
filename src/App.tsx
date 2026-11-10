@@ -13,6 +13,7 @@ import FindMin from "./pages/findmin";
 import BalloonMathGame from "./pages/BalloonMath";
 import HiddenMaze from "./pages/HiddenMaze";
 import NotFound from "./pages/NotFound";
+import PlacementPage from "./pages/PlacementPage";
 import { CommunicationRounds } from "./pages/communication-rounds";
 import { CommunicationRoundsP2 } from "./pages/communication-rounds-p2";
 import { CommunicationPatternsPage } from "@/components/dashboard/CommunicationPatternsPage";
@@ -134,6 +135,8 @@ const App = () => {
               <Route path="/forge" element={<PremiumRoute><ForgePage /></PremiumRoute>} />
               <Route path="/forge/profile" element={<PremiumRoute><ForgeProfilePage /></PremiumRoute>} />
               <Route path="/radar" element={<PremiumRoute><RadarPage /></PremiumRoute>} />
+              <Route path="/placement" element={<PlacementPage />} />
+              <Route path="/placement/:code" element={<PlacementPage />} />
               <Route path="/share" element={<Campaign />} />
               <Route path="/campaign" element={<Navigate to="/share" replace />} />
               <Route path="/connect" element={<PrivateRoute><ConnectPage /></PrivateRoute>} />

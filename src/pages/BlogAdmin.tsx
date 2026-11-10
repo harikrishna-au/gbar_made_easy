@@ -38,7 +38,7 @@ async function connectAdminRequest(body: Record<string, unknown>) {
 type Job = {
   id: string; title: string; company: string | null; type: string;
   location: string | null; skills_required: string[]; description: string | null;
-  apply_url: string | null; package_lpa: number | null; active: boolean; created_at: string;
+  apply_url: string | null; package_lpa: number | null; active: boolean; created_at: string; code?: string | null;
 };
 
 const BLOG_TABS: { key: BlogTabFilter; label: string }[] = [
@@ -444,7 +444,7 @@ function JobsSection() {
 
   const [form, setForm] = useState({
     title: '', company: '', type: 'Full-time', location: '',
-    description: '', apply_url: '', package_lpa: '', skills_required: [] as string[],
+    description: '', apply_url: '', package_lpa: '', skills_required: [] as string[], code: '',
   });
 
   const loadJobs = async () => {
@@ -479,6 +479,7 @@ function JobsSection() {
         apply_url: parsed.apply_url ?? '',
         package_lpa: parsed.package_lpa ?? '',
         skills_required: parsed.skills_required ?? [],
+        code: '',
       });
       setEntryMode('manual');
       toast.success('Fields filled! Review and post.');
@@ -490,7 +491,7 @@ function JobsSection() {
   };
 
   const resetForm = () => {
-    setForm({ title: '', company: '', type: 'Full-time', location: '', description: '', apply_url: '', package_lpa: '', skills_required: [] });
+    setForm({ title: '', company: '', type: 'Full-time', location: '', description: '', apply_url: '', package_lpa: '', skills_required: [], code: '' });
     setSkillInput('');
     setRawText('');
     setEntryMode('ai');
@@ -509,11 +510,12 @@ function JobsSection() {
       apply_url: form.apply_url.trim() || null,
       package_lpa: form.package_lpa ? parseFloat(form.package_lpa) : null,
       skills_required: form.skills_required,
+      code: form.code.trim().toLowerCase().replace(/[^a-z0-9-]/g, '') || null,
       active: true,
     };
     const { error } = await (supabase as any).from('jobs').insert(payload);
     setSaving(false);
-    if (error) { toast.error('Failed to save job.'); return; }
+    if (error) { toast.error(error.code === '23505' ? 'That placement code is already used.' : 'Failed to save job.'); return; }
     toast.success('Job posted!');
     resetForm();
     loadJobs();
@@ -634,6 +636,10 @@ function JobsSection() {
                   <input type="number" value={form.package_lpa} onChange={e => setForm(f => ({ ...f, package_lpa: e.target.value }))}
                     placeholder="6" className={inputCls} />
                 </Field>
+                <Field label="Placement code (public link)">
+                  <input value={form.code} onChange={e => setForm(f => ({ ...f, code: e.target.value }))}
+                    placeholder="tcs-nov26" className={inputCls} />
+                </Field>
                 <Field label="Apply URL">
                   <input value={form.apply_url} onChange={e => setForm(f => ({ ...f, apply_url: e.target.value }))}
                     placeholder="https://…" className={inputCls} />
@@ -722,6 +728,12 @@ function JobsSection() {
 
                 {/* Actions */}
                 <div className="flex items-center gap-1.5 shrink-0">
+                  {job.code && (
+                    <button onClick={() => { navigator.clipboard.writeText(`https://www.harrytheblaze.site/placement/${job.code}`); toast.success('Link copied'); }}
+                      className="px-2 py-1 text-[11px] font-semibold font-['Inter'] text-stone-500 hover:bg-stone-100 rounded-lg" title="Copy public link">
+                      /{job.code}
+                    </button>
+                  )}
                   {job.apply_url && (
                     <a href={job.apply_url} target="_blank" rel="noreferrer"
                       className="p-2 text-stone-400 hover:text-stone-700 hover:bg-stone-100 rounded-lg transition-all" title="Open apply URL">
