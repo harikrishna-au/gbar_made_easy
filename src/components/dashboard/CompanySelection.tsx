@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useRef, type ReactNode } from "react";
-import { ArrowUpRight, Lock } from "lucide-react";
+import { ArrowUpRight, FileText, FolderOpen, GraduationCap, Lock, Target, type LucideIcon } from "lucide-react";
 import { useGsapReveal } from "@/hooks/useGsapReveal";
 import { cn } from "@/lib/utils";
 import { ConnectFeature } from "./ConnectFeature";
@@ -76,10 +76,11 @@ const Round = ({ id, label, title, body, covers, cta, to, onClick }: RoundProps)
   </CellLink>
 );
 
-// ─── Toolkit: plain ruled list ────────────────────────────────────────────────
+// ─── Toolkit: four cards with an icon tile ───────────────────────────────────
 
 interface ToolProps {
   id?: string;
+  icon: LucideIcon;
   title: string;
   body: string;
   note: string;
@@ -88,22 +89,30 @@ interface ToolProps {
   onClick?: () => void;
 }
 
-const Tool = ({ id, title, body, note, locked, to, onClick }: ToolProps) => (
+const Tool = ({ id, icon: Icon, title, body, note, locked, to, onClick }: ToolProps) => (
   <CellLink
     id={id}
     to={to}
     onClick={onClick}
-    className="border-b border-border px-1 py-4 sm:px-2"
+    className="h-full bg-[var(--color-paper-3)] p-5 shadow-[var(--shadow-sheet)] transition-[transform,box-shadow] duration-200 hover:-translate-y-1 hover:bg-[var(--color-paper-3)] active:bg-[var(--color-paper-3)]"
   >
-    <span className="flex items-center gap-4">
-      <span className="min-w-0 flex-1">
-        <span className="block text-base font-semibold text-foreground">{title}</span>
-        <span className="mt-0.5 block text-sm leading-snug text-muted-foreground">{body}</span>
+    <span className="flex h-full items-start gap-4">
+      <span className="flex h-12 w-12 flex-shrink-0 items-center justify-center border-2 border-[var(--color-ink)] bg-[var(--color-accent)] text-[var(--color-ink)]">
+        <Icon className="h-6 w-6" aria-hidden />
       </span>
-      <span className="flex flex-shrink-0 items-center gap-1.5 text-sm font-medium text-foreground/80">
-        {locked && <Lock className="h-3.5 w-3.5" aria-hidden />}
-        {note}
-        <ArrowUpRight className="h-4 w-4 text-muted-foreground transition-colors group-hover:text-foreground" aria-hidden />
+      <span className="min-w-0 flex-1">
+        <span className="flex items-start justify-between gap-3">
+          <span className="block text-lg font-semibold leading-tight text-foreground">{title}</span>
+          <ArrowUpRight
+            className="mt-0.5 h-5 w-5 flex-shrink-0 text-muted-foreground transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-foreground"
+            aria-hidden
+          />
+        </span>
+        <span className="mt-1.5 block text-[15px] leading-relaxed text-foreground/80">{body}</span>
+        <span className="mt-3 inline-flex items-center gap-1.5 border border-[var(--color-ink)]/30 px-2 py-0.5 text-xs font-semibold uppercase tracking-wide text-foreground/80">
+          {locked && <Lock className="h-3 w-3" aria-hidden />}
+          {note}
+        </span>
       </span>
     </span>
   </CellLink>
@@ -195,14 +204,16 @@ export const CompanySelection = ({ onSelectCompany, isPremium, onSubscribe }: Co
       </div>
 
       <SectionHeading title="Toolkit" hint="Extra prep alongside the rounds" />
-      <div data-reveal-group className="border-t border-border md:grid md:grid-cols-2 md:gap-x-10">
+      <div data-reveal-group className="grid gap-5 md:grid-cols-2">
         <Tool
+          icon={GraduationCap}
           title="Infosys prep hub"
           body="Syllabus by role, previous-year questions, tips and study resources."
           note="Infosys"
           to="/hackwithinfy"
         />
         <Tool
+          icon={FolderOpen}
           title="Study Resources"
           body="Prep materials and guides for MNC hiring rounds."
           note="Premium"
@@ -214,6 +225,7 @@ export const CompanySelection = ({ onSelectCompany, isPremium, onSubscribe }: Co
         />
         <Tool
           id="onboarding-premium-card"
+          icon={FileText}
           title="Resume Builder"
           body="Upload a PDF or DOCX and export it as LaTeX."
           note="Free"
@@ -221,6 +233,7 @@ export const CompanySelection = ({ onSelectCompany, isPremium, onSubscribe }: Co
         />
         <Tool
           id="onboarding-radar-card"
+          icon={Target}
           title="Job Match"
           body="Your skills scanned against real openings, with a match score and gaps."
           note="Radar"
