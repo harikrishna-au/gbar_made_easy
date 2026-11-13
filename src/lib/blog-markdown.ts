@@ -15,6 +15,20 @@ function inline(s: string): string {
     });
 }
 
+export const slugifyHeading = (t: string) =>
+  t.toLowerCase().replace(/<[^>]+>/g, '').replace(/[^a-z0-9\s-]/g, '').trim().replace(/\s+/g, '-').slice(0, 60);
+
+export function extractHeadings(md: string): { id: string; text: string }[] {
+  return md
+    .split('\n')
+    .map((l) => l.match(/^#{1,2}\s+(.+)/))
+    .filter((m): m is RegExpMatchArray => !!m)
+    .map((m) => {
+      const text = m[1].replace(/[*`]/g, '').trim();
+      return { id: slugifyHeading(text), text };
+    });
+}
+
 export function renderMarkdown(md: string): string {
   const lines = esc(md.replace(/\r\n/g, '\n')).split('\n');
   const out: string[] = [];
@@ -37,7 +51,7 @@ export function renderMarkdown(md: string): string {
     if (!line.trim()) { flushPara(); flushList(); continue; }
 
     if ((m = line.match(/^###\s+(.+)/))) { flushPara(); flushList(); out.push(`<h3>${inline(m[1])}</h3>`); continue; }
-    if ((m = line.match(/^#{1,2}\s+(.+)/))) { flushPara(); flushList(); out.push(`<h2>${inline(m[1])}</h2>`); continue; }
+    if ((m = line.match(/^#{1,2}\s+(.+)/))) { flushPara(); flushList(); out.push(`<h2 id="${slugifyHeading(m[1].replace(/[*`]/g, ''))}">${inline(m[1])}</h2>`); continue; }
     if ((m = line.match(/^&gt;\s?(.+)/))) { flushPara(); flushList(); out.push(`<blockquote>${inline(m[1])}</blockquote>`); continue; }
 
     if ((m = line.match(/^[-*]\s+(.+)/))) {
