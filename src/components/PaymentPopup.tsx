@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { X, Check, Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { useRazorpay } from "@/hooks/useRazorpay";
@@ -83,76 +82,85 @@ const PaymentPopup = ({ isOpen, onClose }: PaymentPopupProps) => {
     };
 
     return (
-        <div role="dialog" aria-modal="true" aria-labelledby="payment-title" className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-            <div className="bg-[#fcfcf9] rounded-2xl w-full max-w-md p-6 relative shadow-2xl space-y-5 max-h-[92vh] overflow-y-auto">
+        <div role="dialog" aria-modal="true" aria-labelledby="payment-title" className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+            <div className="relative w-full max-w-md max-h-[92vh] overflow-y-auto bg-[var(--color-paper-3)] p-6 sm:p-8 text-[var(--color-ink)] shadow-[var(--shadow-sheet)] space-y-6">
                 <button
                     onClick={onClose}
                     aria-label="Close"
-                    className="absolute top-4 right-4 text-stone-500 hover:text-stone-900 transition-colors"
+                    className="absolute top-4 right-4 border border-[var(--color-ink)] p-1.5 text-[var(--color-ink)] hover:bg-[var(--color-accent)] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-focus)]"
                 >
-                    <X className="w-5 h-5" />
+                    <X className="w-4 h-4" />
                 </button>
 
-                <div className="text-center space-y-1">
-                    <h2 id="payment-title" className="font-['Merriweather'] text-2xl font-bold text-stone-900">Unlock Premium practice</h2>
-                    <p className="text-stone-600 text-sm">One payment. No subscription, no renewal.</p>
+                <div className="space-y-2 pr-10">
+                    <h2 id="payment-title" className="font-display font-normal uppercase leading-[0.98] tracking-[0.005em] text-4xl sm:text-5xl [text-wrap:balance]">
+                        Unlock Premium practice
+                    </h2>
+                    <p className="text-[15px] text-[var(--color-muted)]">One payment. No subscription, no renewal.</p>
                 </div>
 
-                {/* Price display */}
-                <div className="rounded-xl border-2 border-stone-900 bg-white p-5 text-center space-y-1">
-                    {savings > 0 && <p className="text-stone-500 text-sm line-through">₹{LIST_PRICE}</p>}
-                    <p className="text-4xl font-bold text-stone-900">₹{finalAmount}</p>
+                {/* Price: the one flame block */}
+                <div className="bg-[var(--color-accent)] p-5 shadow-[var(--shadow-offset)]">
+                    <div className="flex items-baseline gap-4">
+                        <p className="font-display font-normal leading-none text-[clamp(3.5rem,14vw,5rem)]">₹{finalAmount}</p>
+                        {savings > 0 && <p className="text-xl line-through opacity-70">₹{LIST_PRICE}</p>}
+                    </div>
                     {savings > 0 && (
-                        <p className="text-stone-700 text-xs font-semibold">₹{savings} off list price</p>
+                        <p className="mt-2 text-sm font-semibold">₹{savings} off the list price</p>
                     )}
                 </div>
 
                 {/* What's included */}
-                <ul className="space-y-1.5 text-sm text-stone-700">
+                <ul className="divide-y divide-[var(--color-rule)] border-y border-[var(--color-rule)] text-[15px]">
                     {[
                         "Extra levels in Matrix Flow and Hidden Maze",
                         "Full communication rounds (Accenture and Cognizant patterns)",
                         "AI interview, Forge resume builder and Job Match",
                     ].map((item) => (
-                        <li key={item} className="flex items-center gap-2">
-                            <Check className="w-4 h-4 text-stone-900 shrink-0" />
-                            {item}
+                        <li key={item} className="flex items-start gap-3 py-3">
+                            <Check className="w-4 h-4 mt-1 shrink-0" aria-hidden />
+                            <span>{item}</span>
                         </li>
                     ))}
                 </ul>
 
                 {/* Coupon */}
                 <div className="space-y-2">
-                    <label className="text-sm font-medium text-stone-700">Have a coupon?</label>
+                    <label htmlFor="coupon-code" className="text-xs font-semibold uppercase tracking-[0.12em] text-[var(--color-muted)]">Have a coupon?</label>
                     <div className="flex gap-2">
                         <Input
+                            id="coupon-code"
                             placeholder="Enter code"
                             value={coupon}
                             onChange={(e) => { setCoupon(e.target.value); setCouponError(""); }}
                             onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); handleApplyCoupon(); } }}
-                            className="uppercase"
+                            className="h-11 rounded-none uppercase bg-[var(--color-paper)] border-[var(--color-ink)] text-[var(--color-ink)]"
                         />
-                        <Button
+                        <button
+                            type="button"
                             onClick={handleApplyCoupon}
                             disabled={validating || !coupon.trim()}
-                            variant="outline"
-                            className="shrink-0 min-w-[72px]"
+                            className="shrink-0 min-w-[84px] h-11 border border-[var(--color-ink)] bg-[var(--color-paper)] px-4 text-[15px] font-semibold hover:bg-[var(--color-paper-2)] disabled:opacity-50 disabled:pointer-events-none transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-focus)]"
                         >
-                            {validating ? <Loader2 className="w-4 h-4 animate-spin" /> : "Apply"}
-                        </Button>
+                            {validating ? <Loader2 className="w-4 h-4 animate-spin mx-auto" /> : "Apply"}
+                        </button>
                     </div>
-                    {couponError && <p className="text-destructive text-xs font-medium">{couponError}</p>}
+                    {couponError && <p className="text-sm font-semibold text-[#b42318]" role="alert">{couponError}</p>}
+                    {appliedAmount !== null && !couponError && (
+                        <p className="text-sm font-semibold">Coupon applied. Your price is ₹{appliedAmount}.</p>
+                    )}
                 </div>
 
-                <Button
+                <button
+                    type="button"
                     onClick={handlePayment}
                     disabled={isLoading}
-                    className="w-full h-12 text-base font-semibold bg-stone-900 hover:bg-stone-700 text-white"
+                    className="w-full inline-flex items-center justify-center bg-[var(--color-ink)] px-6 py-4 text-base font-semibold !text-[var(--color-paper)] shadow-[4px_4px_0_var(--color-accent)] transition-[transform,box-shadow] duration-[120ms] ease-out hover:translate-x-px hover:translate-y-px hover:shadow-[3px_3px_0_var(--color-accent)] active:translate-x-1 active:translate-y-1 active:shadow-none disabled:opacity-60 disabled:pointer-events-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--color-focus)]"
                 >
-                    {isLoading ? "Processing..." : `Pay ₹${finalAmount} — Get Full Access`}
-                </Button>
+                    {isLoading ? "Processing..." : `Pay ₹${finalAmount}: get full access`}
+                </button>
 
-                <p className="text-xs text-center text-stone-500">
+                <p className="text-xs text-center text-[var(--color-muted)]">
                     Secure payment powered by Razorpay. Connect 1:1 calls are booked and paid separately.
                 </p>
             </div>
