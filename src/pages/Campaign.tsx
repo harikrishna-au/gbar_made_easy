@@ -4,6 +4,25 @@ import { ArrowRight, Check, Copy, Share2, MessageCircle, BadgeCheck, CalendarClo
 import { toast } from 'sonner';
 import Header from '@/components/Header';
 
+
+// Hallmark: paper sheets on a board, controls on a hard ink offset.
+const SHEET = 'bg-[var(--color-paper-3)] shadow-[var(--shadow-sheet)]';
+const FOCUS = 'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-focus)]';
+const BTN =
+    'inline-flex items-center justify-center gap-2 whitespace-nowrap px-6 py-3.5 text-[15px] font-semibold text-[var(--color-ink)] ' +
+    'shadow-[var(--shadow-offset)] transition-[transform,box-shadow] duration-[120ms] ease-out ' +
+    'hover:translate-x-px hover:translate-y-px hover:shadow-[3px_3px_0_var(--color-ink)] ' +
+    'active:translate-x-1 active:translate-y-1 active:shadow-none motion-reduce:transition-none ' +
+    'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--color-focus)]';
+const BTN_PRIMARY = `${BTN} bg-[var(--color-accent)]`;
+const BTN_SECONDARY = `${BTN} bg-[var(--color-paper-3)]`;
+const BTN_INK = `${BTN} bg-[var(--color-ink)] !text-[var(--color-paper)] shadow-[4px_4px_0_var(--color-accent)]`;
+const GHOST =
+    'inline-flex items-center gap-2 border border-[var(--color-paper)] px-5 py-3 text-sm font-semibold text-[var(--color-paper)] ' +
+    'hover:bg-[var(--color-paper)] hover:text-[var(--color-ink)] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]';
+const DISPLAY = 'font-display font-normal uppercase leading-[0.95] tracking-[0.005em] [overflow-wrap:break-word] [text-wrap:balance]';
+const WRAP = 'mx-auto w-full max-w-[1360px] px-4 sm:px-8 lg:px-12';
+
 type Audience = 'placed' | 'prep';
 
 const SITE = 'https://www.harrytheblaze.site';
@@ -108,21 +127,23 @@ const Campaign = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#fcfcf9] text-stone-900 font-sans selection:bg-stone-200 overflow-x-hidden">
+        <div className="min-h-screen overflow-x-hidden bg-[var(--color-paper)] font-sans text-[var(--color-ink)]">
             <Header onStartTour={() => { }} />
 
-            <main className="max-w-5xl mx-auto px-4 sm:px-6">
+            <main className={WRAP}>
                 {/* Audience switch */}
-                <div className="pt-24 sm:pt-28 flex justify-center">
-                    <div role="tablist" aria-label="Who is this for" className="inline-flex p-1 rounded-2xl bg-stone-100 border border-stone-200/70">
+                <div className="flex justify-center pt-24 sm:pt-28">
+                    <div role="tablist" aria-label="Who is this for" className={`${SHEET} inline-flex gap-1 p-1`}>
                         {TABS.map((t) => (
                             <button
                                 key={t.key}
                                 role="tab"
                                 aria-selected={audience === t.key}
                                 onClick={() => setParams({ for: t.key }, { replace: true })}
-                                className={`px-5 py-2.5 rounded-xl text-sm font-medium font-['Inter'] transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-stone-900 ${
-                                    audience === t.key ? 'bg-white text-stone-900 shadow-sm' : 'text-stone-500 hover:text-stone-800'
+                                className={`px-5 py-2.5 text-[15px] font-semibold transition-colors ${FOCUS} ${
+                                    audience === t.key
+                                        ? 'bg-[var(--color-accent)] text-[var(--color-ink)]'
+                                        : 'text-[var(--color-muted)] hover:text-[var(--color-ink)]'
                                 }`}
                             >
                                 {t.label}
@@ -132,143 +153,122 @@ const Campaign = () => {
                 </div>
 
                 {/* Hero */}
-                <section className="pt-12 sm:pt-16 pb-14 sm:pb-20 max-w-3xl">
-                    <p className="inline-flex items-center gap-2 font-['Inter'] text-xs font-semibold uppercase tracking-[0.14em] text-primary">
-                        <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-                        {c.eyebrow}
-                    </p>
-                    <h1 className="font-['Merriweather'] font-black tracking-tight text-stone-900 text-[2.5rem] leading-[1.08] sm:text-6xl sm:leading-[1.05] mt-5">
-                        {c.title}
-                    </h1>
-                    <p className="font-['Inter'] text-base sm:text-lg text-stone-600 leading-relaxed mt-5 max-w-2xl">{c.body}</p>
+                <section className="max-w-4xl pb-16 pt-12 sm:pb-24 sm:pt-16">
+                    <p className="text-sm font-semibold uppercase tracking-[0.14em] text-[var(--color-muted)]">{c.eyebrow}</p>
+                    <h1 className={`${DISPLAY} mt-4 text-[clamp(2.75rem,8vw,6.5rem)] leading-[0.95]`}>{c.title}</h1>
+                    <p className="mt-6 max-w-[52ch] text-lg leading-relaxed">{c.body}</p>
 
-                    <ul className="flex flex-wrap gap-2 mt-6" aria-label="What students ask about">
+                    <ul className="mt-7 flex flex-wrap gap-2" aria-label="What students ask about">
                         {c.asked.map((t) => (
-                            <li key={t} className="px-3 py-1.5 rounded-full border border-stone-200 bg-white text-[13px] text-stone-700 font-['Inter']">
+                            <li key={t} className="border border-[var(--color-ink)] bg-[var(--color-paper-3)] px-3 py-1.5 text-sm">
                                 {t}
                             </li>
                         ))}
                     </ul>
 
-                    <div className="flex flex-wrap items-center gap-3 mt-8">
-                        <button
-                            onClick={() => navigate(c.cta.to)}
-                            className="inline-flex items-center gap-2 px-6 py-3.5 bg-stone-900 text-white rounded-2xl text-[15px] font-semibold font-['Inter'] hover:bg-stone-700 active:scale-[0.97] transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-stone-900"
-                        >
+                    <div className="mt-10 flex flex-col gap-5 sm:flex-row">
+                        <button onClick={() => navigate(c.cta.to)} className={BTN_PRIMARY}>
                             {c.cta.label}
-                            <ArrowRight className="w-4 h-4" />
+                            <ArrowRight className="h-4 w-4" aria-hidden />
                         </button>
-                        <Link
-                            to={c.second.to}
-                            className="inline-flex items-center gap-2 px-5 py-3.5 bg-white border border-stone-200 text-stone-700 rounded-2xl text-[15px] font-medium font-['Inter'] hover:border-stone-400 hover:text-stone-900 transition-all"
-                        >
+                        <Link to={c.second.to} className={BTN_SECONDARY}>
                             {c.second.label}
                         </Link>
                     </div>
                 </section>
 
                 {/* Steps */}
-                <section className="pb-16 sm:pb-20">
-                    <h2 className="font-['Merriweather'] text-3xl text-stone-900 tracking-tight">{c.stepsTitle}</h2>
-                    <ol className={`mt-8 grid gap-4 ${c.steps.length === 4 ? 'sm:grid-cols-2' : 'sm:grid-cols-3'}`}>
+                <section className="pb-16 sm:pb-24">
+                    <h2 className={`${DISPLAY} text-[clamp(2.25rem,5vw,4rem)]`}>{c.stepsTitle}</h2>
+                    <ol className={`mt-8 grid gap-6 ${c.steps.length === 4 ? 'sm:grid-cols-2' : 'sm:grid-cols-3'}`}>
                         {c.steps.map(({ icon: Icon, title, body }, i) => (
-                            <li key={title} className="rounded-3xl border border-stone-200 bg-white p-6 flex gap-4">
-                                <span className="w-11 h-11 rounded-2xl bg-primary/10 text-primary flex items-center justify-center flex-shrink-0">
-                                    <Icon className="w-5 h-5" />
+                            <li key={title} className={`${SHEET} flex gap-4 p-6`}>
+                                <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center bg-[var(--color-accent)]">
+                                    <Icon className="h-5 w-5" aria-hidden />
                                 </span>
                                 <span>
-                                    <span className="block font-['Inter'] text-[11px] font-semibold uppercase tracking-[0.14em] text-stone-400">Step {i + 1}</span>
-                                    <span className="block font-['Merriweather'] text-[17px] text-stone-900 leading-snug mt-1">{title}</span>
-                                    <span className="block font-['Inter'] text-sm text-stone-500 leading-relaxed mt-1.5">{body}</span>
+                                    <span className={`${DISPLAY} block text-3xl`}>0{i + 1}</span>
+                                    <span className="mt-1 block text-lg font-semibold leading-snug">{title}</span>
+                                    <span className="mt-1.5 block text-base leading-relaxed text-[var(--color-muted)]">{body}</span>
                                 </span>
                             </li>
                         ))}
                     </ol>
                 </section>
+            </main>
 
-                {/* Share */}
-                <section className="pb-16 sm:pb-20">
-                    <div className="rounded-3xl bg-stone-900 text-white p-6 sm:p-10 grid lg:grid-cols-[0.9fr_1.1fr] gap-8 items-start">
-                        <div>
-                            <h2 className="font-['Merriweather'] text-2xl sm:text-3xl leading-tight">
-                                {audience === 'placed' ? 'Know someone who got placed?' : 'Know someone prepping?'}
-                            </h2>
-                            <p className="font-['Inter'] text-stone-300 text-[15px] leading-relaxed mt-3">
-                                Send them this page. The message is ready, edit it if you like. The link opens this same page for them.
-                            </p>
-                        </div>
-                        <div>
-                            <label htmlFor="share-message" className="sr-only">Message to share</label>
-                            <textarea
-                                id="share-message"
-                                value={message}
-                                onChange={(e) => setMessage(e.target.value)}
-                                rows={5}
-                                className="w-full rounded-2xl bg-white/10 border border-white/15 text-white placeholder:text-stone-400 px-4 py-3 text-sm leading-relaxed font-['Inter'] focus:outline-none focus:ring-2 focus:ring-white/50 resize-none"
-                            />
-                            <div className="flex flex-wrap gap-2.5 mt-3">
-                                <a
-                                    href={`https://wa.me/?text=${encodeURIComponent(message)}`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="inline-flex items-center gap-2 px-5 py-3 bg-white text-stone-900 rounded-xl text-sm font-semibold font-['Inter'] hover:bg-stone-100 active:scale-[0.97] transition-all"
-                                >
-                                    <MessageCircle className="w-4 h-4" />
-                                    WhatsApp
-                                </a>
-                                <button
-                                    onClick={() => copy(message, 'Message copied')}
-                                    className="inline-flex items-center gap-2 px-5 py-3 border border-white/25 text-white rounded-xl text-sm font-medium font-['Inter'] hover:bg-white/10 active:scale-[0.97] transition-all"
-                                >
-                                    {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-                                    Copy message
-                                </button>
-                                <button
-                                    onClick={() => copy(url, 'Link copied')}
-                                    className="inline-flex items-center gap-2 px-5 py-3 border border-white/25 text-white rounded-xl text-sm font-medium font-['Inter'] hover:bg-white/10 active:scale-[0.97] transition-all"
-                                >
-                                    <Copy className="w-4 h-4" />
-                                    Copy link
-                                </button>
-                                <button
-                                    onClick={nativeShare}
-                                    className="sm:hidden inline-flex items-center gap-2 px-5 py-3 border border-white/25 text-white rounded-xl text-sm font-medium font-['Inter'] hover:bg-white/10"
-                                >
-                                    <Share2 className="w-4 h-4" />
-                                    More
-                                </button>
-                            </div>
+            {/* Share: toner band */}
+            <section className="bg-[var(--color-ink)] text-[var(--color-paper)]">
+                <div className={`${WRAP} grid items-start gap-8 py-14 sm:py-20 lg:grid-cols-[0.9fr_1.1fr]`}>
+                    <div>
+                        <h2 className={`${DISPLAY} text-[clamp(2.25rem,5vw,4rem)]`}>
+                            {audience === 'placed' ? 'Know someone who got placed?' : 'Know someone prepping?'}
+                        </h2>
+                        <p className="mt-4 max-w-[40ch] text-base leading-relaxed opacity-80">
+                            Send them this page. The message is ready, edit it if you like. The link opens this same page for them.
+                        </p>
+                    </div>
+                    <div>
+                        <label htmlFor="share-message" className="sr-only">Message to share</label>
+                        <textarea
+                            id="share-message"
+                            value={message}
+                            onChange={(e) => setMessage(e.target.value)}
+                            rows={5}
+                            className="w-full resize-none border border-[var(--color-paper)] bg-transparent px-4 py-3 text-sm leading-relaxed text-[var(--color-paper)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]"
+                        />
+                        <div className="mt-4 flex flex-wrap gap-4">
+                            <a
+                                href={`https://wa.me/?text=${encodeURIComponent(message)}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className={`${BTN_PRIMARY} !shadow-[4px_4px_0_var(--color-paper)] active:!shadow-none`}
+                            >
+                                <MessageCircle className="h-4 w-4" aria-hidden />
+                                WhatsApp
+                            </a>
+                            <button onClick={() => copy(message, 'Message copied')} className={GHOST}>
+                                {copied ? <Check className="h-4 w-4" aria-hidden /> : <Copy className="h-4 w-4" aria-hidden />}
+                                Copy message
+                            </button>
+                            <button onClick={() => copy(url, 'Link copied')} className={GHOST}>
+                                <Copy className="h-4 w-4" aria-hidden />
+                                Copy link
+                            </button>
+                            <button onClick={nativeShare} className={`${GHOST} sm:hidden`}>
+                                <Share2 className="h-4 w-4" aria-hidden />
+                                More
+                            </button>
                         </div>
                     </div>
-                </section>
+                </div>
+            </section>
 
-                {/* FAQ */}
-                <section className="pb-20 max-w-3xl">
-                    <h2 className="font-['Merriweather'] text-3xl text-stone-900 tracking-tight">Questions</h2>
-                    <div className="mt-6 divide-y divide-stone-200 border-y border-stone-200">
+            {/* FAQ */}
+            <section className={`${WRAP} py-16 sm:py-24`}>
+                <div className="max-w-3xl">
+                    <h2 className={`${DISPLAY} text-[clamp(2.25rem,5vw,4rem)]`}>Questions</h2>
+                    <div className={`${SHEET} mt-8 divide-y divide-[var(--color-rule)] px-6 sm:px-9`}>
                         {c.faqs.map(([q, a]) => (
                             <details key={q} className="group py-5">
-                                <summary className="flex items-center justify-between gap-4 cursor-pointer list-none font-['Merriweather'] text-[17px] text-stone-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-stone-900 rounded">
+                                <summary className={`flex cursor-pointer list-none items-center justify-between gap-4 text-lg font-semibold ${FOCUS}`}>
                                     {q}
-                                    <span className="text-stone-400 text-xl leading-none transition-transform group-open:rotate-45" aria-hidden>+</span>
+                                    <span className="text-2xl leading-none transition-transform group-open:rotate-45" aria-hidden>+</span>
                                 </summary>
-                                <p className="font-['Inter'] text-[15px] text-stone-600 leading-relaxed mt-3">{a}</p>
+                                <p className="mt-3 text-base leading-relaxed text-[var(--color-muted)]">{a}</p>
                             </details>
                         ))}
                     </div>
 
-                    <div className="mt-10 flex flex-wrap items-center gap-4">
-                        <button
-                            onClick={() => navigate(c.cta.to)}
-                            className="inline-flex items-center gap-2 px-6 py-3.5 bg-stone-900 text-white rounded-2xl text-[15px] font-semibold font-['Inter'] hover:bg-stone-700 active:scale-[0.97] transition-all"
-                        >
+                    <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6">
+                        <button onClick={() => navigate(c.cta.to)} className={BTN_INK}>
                             {c.cta.label}
-                            <ArrowRight className="w-4 h-4" />
+                            <ArrowRight className="h-4 w-4" aria-hidden />
                         </button>
-                        <span className="font-['Inter'] text-sm text-stone-500">Sign-in takes a minute.</span>
+                        <span className="text-sm text-[var(--color-muted)]">Sign-in takes a minute.</span>
                     </div>
-                </section>
-            </main>
+                </div>
+            </section>
         </div>
     );
 };
