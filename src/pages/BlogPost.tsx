@@ -6,27 +6,7 @@ import SEO from '@/components/SEO';
 import { BlogTypeTag } from '@/components/blog/BlogTypeTag';
 import { useBlogBySlug, useRelatedBlogs } from '@/hooks/useBlogs';
 import { formatDate, displayAuthor, BLOG_TYPES } from '@/lib/blog-utils';
-
-function renderMarkdown(md: string): string {
-  return md
-    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-    .replace(/^#{3}\s(.+)/gm, '<h4 style="font-family:Anton,Impact,sans-serif;font-weight:400;text-transform:uppercase;letter-spacing:0.005em;font-size:1.5rem;color:#1c1c1b;margin-top:2rem;margin-bottom:0.4rem;line-height:1.4">$1</h4>')
-    .replace(/^#{2}\s(.+)/gm, '<h3 style="font-family:Anton,Impact,sans-serif;font-weight:400;text-transform:uppercase;letter-spacing:0.005em;font-size:1.9rem;color:#1c1c1b;margin-top:2.25rem;margin-bottom:0.5rem;line-height:1.4">$1</h3>')
-    .replace(/^#{1}\s(.+)/gm, '<h2 style="font-family:Anton,Impact,sans-serif;font-weight:400;text-transform:uppercase;letter-spacing:0.005em;font-size:2.4rem;color:#1c1c1b;margin-top:2.75rem;margin-bottom:0.75rem;line-height:1.3">$1</h2>')
-    .replace(/\*\*(.+?)\*\*/g, '<strong style="font-weight:700;color:#1c1c1b">$1</strong>')
-    .replace(/\*(.+?)\*/g, '<em style="font-style:italic;color:#26221f">$1</em>')
-    .replace(/`([^`]+)`/g, '<code style="padding:2px 7px;background:#ebe6dc;color:#1c1a18;font-size:13px;font-family:monospace">$1</code>')
-    .replace(/^>\s(.+)/gm, '<blockquote style="padding:0.75rem 1rem;border-left:4px solid #f26a3d;color:#26221f;margin:1.25rem 0;background:#fdfcf9">$1</blockquote>')
-    .replace(/^[-*]\s(.+)/gm, '<li style="margin-left:1.5rem;list-style-type:disc;color:#26221f;margin-top:5px;line-height:1.75">$1</li>')
-    .replace(/^\d+\.\s(.+)/gm, '<li style="margin-left:1.5rem;list-style-type:decimal;color:#26221f;margin-top:5px;line-height:1.75">$1</li>')
-    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, text, url) => {
-      const safe = /^https?:\/\//i.test(url) || /^mailto:/i.test(url) || url.startsWith('/') || url.startsWith('#');
-      if (!safe) return text;
-      return `<a href="${url.replace(/"/g, '%22')}" style="color:#c2410c;text-decoration:underline;text-underline-offset:3px;font-weight:500" target="_blank" rel="noopener noreferrer">${text}</a>`;
-    })
-    .replace(/\n\n/g, '</p><p style="margin-top:1.25rem;color:#26221f;line-height:1.85;font-family:Inter,sans-serif;font-size:15.5px">')
-    .replace(/\n/g, '<br/>');
-}
+import { renderMarkdown } from '@/lib/blog-markdown';
 
 export default function BlogPost() {
   const { slug } = useParams<{ slug: string }>();
@@ -161,12 +141,12 @@ export default function BlogPost() {
 
       <Header />
 
-      <main className="relative z-10 container mx-auto px-6 pt-28 pb-28 max-w-2xl">
+      <main className="relative z-10 mx-auto w-full max-w-[46rem] px-5 sm:px-6 pt-24 sm:pt-28 pb-24">
 
         {/* Back button */}
         <button
           onClick={() => navigate('/blog')}
-          className="flex items-center gap-1.5 text-[15px] text-[var(--color-ink)] underline decoration-[var(--color-rule)] underline-offset-4 hover:decoration-[var(--color-ink)] mb-10 group"
+          className="flex items-center gap-1.5 text-[15px] text-[var(--color-ink)] underline decoration-[var(--color-rule)] underline-offset-4 hover:decoration-[var(--color-ink)] mb-8 group"
         >
           <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
           All Blogs
@@ -174,9 +154,9 @@ export default function BlogPost() {
 
         <article>
           {/* Type + tags */}
-          <div className="flex items-center gap-2 flex-wrap mb-5">
+          <div className="flex items-center gap-x-3 gap-y-1.5 flex-wrap mb-4">
             <BlogTypeTag type={blog.type} />
-            {blog.tags?.map(t => (
+            {blog.tags?.slice(0, 4).map(t => (
               <span
                 key={t}
                 className="text-xs font-medium text-[var(--color-muted)]"
@@ -187,19 +167,17 @@ export default function BlogPost() {
           </div>
 
           {/* Emoji */}
-          <span className="text-5xl block mb-5 select-none">{blog.cover_emoji}</span>
-
-          {/* Title */}
+                    {/* Title */}
           <h1
-            className="font-display font-normal uppercase text-[var(--color-ink)] leading-[0.98] tracking-[0.005em] mb-6"
-            style={{ fontSize: 'clamp(2.5rem, 6vw, 4.25rem)' }}
+            className="font-display font-normal uppercase text-[var(--color-ink)] leading-[1.02] tracking-[0.005em] mb-6 [text-wrap:balance]"
+            style={{ fontSize: 'clamp(2rem, 5vw, 3.25rem)' }}
           >
             {blog.title}
           </h1>
 
           {/* Meta row */}
           <div
-            className="flex items-center gap-3 flex-wrap py-3.5 mb-8"
+            className="flex items-center gap-3 flex-wrap py-3.5 mb-8 gap-y-2"
             style={{ borderTop: '2px solid var(--color-ink)', borderBottom: '1px solid var(--color-rule)' }}
           >
             <div className="flex items-center gap-2">
@@ -241,7 +219,7 @@ export default function BlogPost() {
           {/* Excerpt highlight */}
           {blog.excerpt && (
             <p
-              className="text-[17px] text-[var(--color-ink)] leading-relaxed mb-8 pl-4"
+              className="text-[17px] text-[var(--color-ink)] leading-relaxed mb-10 pl-4 py-1"
               style={{ borderLeft: '4px solid var(--color-accent)' }}
             >
               {blog.excerpt}
@@ -251,10 +229,7 @@ export default function BlogPost() {
           {/* Content */}
           <div
             className="prose-content"
-            style={{ fontFamily: 'Inter, sans-serif' }}
-            dangerouslySetInnerHTML={{
-              __html: `<p style="color:#26221f;line-height:1.85;font-family:Inter,sans-serif;font-size:15.5px">${renderMarkdown(blog.content)}</p>`,
-            }}
+            dangerouslySetInnerHTML={{ __html: renderMarkdown(blog.content) }}
           />
 
           {/* Divider */}
