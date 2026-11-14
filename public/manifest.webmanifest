@@ -1,0 +1,24 @@
+{
+  "id": "/",
+  "name": "Harry The Blaze",
+  "short_name": "The Blaze",
+  "description": "Campus placement prep: cognitive games, communication rounds, Infosys questions and 1:1 sessions with recently placed seniors.",
+  "lang": "en-IN",
+  "start_url": "/dashboard?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#f7f4ec",
+  "theme_color": "#f7f4ec",
+  "categories": ["education"],
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Practice games", "short_name": "Games", "url": "/dashboard?source=shortcut", "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Infosys questions", "short_name": "Infosys", "url": "/hackwithinfy?source=shortcut", "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Connect 1:1", "short_name": "Connect", "url": "/connect?source=shortcut", "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }] }
+  ]
+}

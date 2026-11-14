@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { useRazorpay } from "@/hooks/useRazorpay";
 import { supabase } from "@/integrations/supabase/client";
+import { track } from "@/lib/analytics";
 
 interface PaymentPopupProps {
     isOpen: boolean;
@@ -45,6 +46,10 @@ const PaymentPopup = ({ isOpen, onClose }: PaymentPopupProps) => {
                 toast.success("Referral coupon applied!");
             }
         });
+    }, [isOpen]);
+
+    useEffect(() => {
+        if (isOpen) track("premium_popup_view");
     }, [isOpen]);
 
     useEffect(() => {

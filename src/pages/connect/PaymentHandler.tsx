@@ -7,6 +7,7 @@ import { Expert } from './ExpertCard';
 import { TimeSlot } from './TimeSlotPicker';
 import { BookingFormData } from './BookingForm';
 import { trackMetaInitiateCheckout, trackMetaPurchase } from '@/lib/meta-pixel';
+import { track } from "@/lib/analytics";
 
 interface PaymentHandlerProps {
   expert: Expert;
@@ -131,6 +132,7 @@ const PaymentHandler = ({ expert, date, slot, formData, onSuccess, onError }: Pa
 
             if (verifyRes.ok) {
               await verifyRes.json();
+              track("connect_booking_paid", { expert_id: expert.id, amount: totalAmount });
               trackMetaPurchase({
                 value: totalAmount,
                 contentName: `Connect 1:1 — ${expert.name}`,
@@ -163,6 +165,7 @@ const PaymentHandler = ({ expert, date, slot, formData, onSuccess, onError }: Pa
       };
 
       const rzp = new (window as any).Razorpay(options);
+      track("connect_payment_started", { expert_id: expert.id, amount: totalAmount });
       rzp.open();
     } catch (err: any) {
       toast.error(err.message || 'Payment failed. Please try again.');

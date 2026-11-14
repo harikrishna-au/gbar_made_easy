@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useUser, useAuth } from "@clerk/clerk-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { track } from "@/lib/analytics";
 import { trackMetaInitiateCheckout, trackMetaPurchase } from "@/lib/meta-pixel";
 
 export function useRazorpay() {
@@ -55,6 +56,7 @@ export function useRazorpay() {
             }
 
             const order = await response.json();
+            track("payment_started", { amount, coupon: !!couponCode });
             trackMetaInitiateCheckout({
                 value: amount,
                 contentName: "Lifetime Premium",
@@ -109,6 +111,7 @@ export function useRazorpay() {
                         toast.dismiss("premium-confirm");
                     }
 
+                    track(verified ? "payment_success" : "payment_delayed", { amount, coupon: !!couponCode });
                     if (verified) {
                         trackMetaPurchase({
                             value: amount,
@@ -132,6 +135,7 @@ export function useRazorpay() {
 
             const rzp = new (window as any).Razorpay(options);
             rzp.on('payment.failed', (resp: any) => {
+                track("payment_failed", { amount, reason: String(resp.error?.code ?? "unknown").slice(0, 40) });
                 toast.error(`Payment failed: ${resp.error?.description}`);
             });
             rzp.open();

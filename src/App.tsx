@@ -57,6 +57,8 @@ import { lazy, Suspense, useState } from "react";
 import SplashScreen from "@/components/SplashScreen";
 import CustomerSupport from "@/components/CustomerSupport";
 import { MetaPixelTracker } from "@/components/MetaPixelTracker";
+import { AnalyticsTracker } from "@/components/AnalyticsTracker";
+import { InstallPrompt } from "@/components/InstallPrompt";
 
 // Loaded on demand: pulls in the Azure speech SDK, which must not run at app start.
 const AIInterview = lazy(() => import("./pages/AIInterview"));
@@ -112,6 +114,8 @@ const App = () => {
             }}
           >
             <MetaPixelTracker />
+            <AnalyticsTracker />
+            <InstallPrompt />
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Landing />} />
