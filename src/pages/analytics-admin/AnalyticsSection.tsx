@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { Loader2, RefreshCw } from "lucide-react";
 import { getAdminSecret } from "@/lib/admin-auth";
+import FeedbackSection from "./FeedbackSection";
 
 type Range = 7 | 30 | 90;
 
@@ -264,6 +265,8 @@ export default function AnalyticsSection() {
           </div>
         </>
       )}
+
+      <FeedbackSection />
     </div>
   );
 }
