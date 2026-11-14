@@ -25,6 +25,7 @@ import "./index.css";
 
 import { HelmetProvider } from 'react-helmet-async';
 import { registerServiceWorker } from "./lib/pwa";
+import "./lib/install"; // captures the browser's install prompt as early as possible
 
 createRoot(document.getElementById("root")!).render(
   <HelmetProvider>

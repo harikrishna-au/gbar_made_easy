@@ -4,6 +4,7 @@ import { useAuth } from "@clerk/clerk-react";
 import { ArrowRight } from "lucide-react";
 import SEO from "@/components/SEO";
 import { useGsapReveal } from "@/hooks/useGsapReveal";
+import { InstallAppButton } from "@/components/InstallAppButton";
 
 const GAMES = [
   "Matrix (find the min)",
@@ -302,6 +303,12 @@ export default function Home() {
       <footer className="bg-[var(--color-paper)]">
         <div className={`${WRAP} flex flex-col gap-6 py-12`}>
           <span className={`${DISPLAY} text-4xl sm:text-5xl`}>Harry the Blaze</span>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+            <p className="max-w-md text-base text-[var(--color-muted)]">
+              Install it on your phone. Practise from your home screen, full screen, no app store needed.
+            </p>
+            <InstallAppButton variant="outline" className="h-11 gap-2 self-start rounded-none border-[var(--color-ink)] font-semibold" />
+          </div>
           <nav aria-label="Footer" className="flex flex-wrap gap-x-7 gap-y-2 text-base">
             <Link to="/about" className="underline decoration-[var(--color-rule)] underline-offset-4 hover:decoration-[var(--color-ink)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-focus)]">
               About

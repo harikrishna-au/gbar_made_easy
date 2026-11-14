@@ -1,12 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { Download, X } from "lucide-react";
-import { isStandalone, track } from "@/lib/analytics";
-
-interface BeforeInstallPromptEvent extends Event {
-  prompt: () => Promise<void>;
-  userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
-}
+import { Download, Share, X } from "lucide-react";
+import { track } from "@/lib/analytics";
+import { installSteps, useInstall } from "@/lib/install";
 
 const DISMISS_KEY = "hb_install_dismissed_until";
 const SHOW_AFTER_MS = 15_000;
@@ -16,53 +12,26 @@ const dismissedRecently = () => {
   try { return Number(localStorage.getItem(DISMISS_KEY) || 0) > Date.now(); } catch { return false; }
 };
 
-/** A small "Install the app" card on the dashboard, shown only when the browser says it can. */
+/**
+ * A small card on the dashboard telling visitors they can install the site as an app.
+ * Android/desktop Chrome: a one-tap Install button. iPhone: the Add to Home Screen steps.
+ */
 export function InstallPrompt() {
   const { pathname } = useLocation();
-  const deferred = useRef<BeforeInstallPromptEvent | null>(null);
-  const [available, setAvailable] = useState(false);
+  const { platform, isInstalled, canPrompt, install } = useInstall();
   const [visible, setVisible] = useState(false);
 
-  useEffect(() => {
-    if (isStandalone()) return; // already the installed app
-    const onPrompt = (e: Event) => {
-      e.preventDefault(); // keep it for our own card instead of the browser's default mini-bar
-      deferred.current = e as BeforeInstallPromptEvent;
-      setAvailable(true);
-    };
-    const onInstalled = () => {
-      track("pwa_installed");
-      deferred.current = null;
-      setAvailable(false);
-      setVisible(false);
-    };
-    window.addEventListener("beforeinstallprompt", onPrompt);
-    window.addEventListener("appinstalled", onInstalled);
-    return () => {
-      window.removeEventListener("beforeinstallprompt", onPrompt);
-      window.removeEventListener("appinstalled", onInstalled);
-    };
-  }, []);
-
+  // Show on the dashboard when we can either install in one tap, or explain it (iPhone).
+  const worthShowing = !isInstalled && (canPrompt || platform === "ios");
   const onDashboard = pathname === "/dashboard";
+
   useEffect(() => {
-    if (!available || !onDashboard || dismissedRecently()) { setVisible(false); return; }
-    const t = setTimeout(() => { setVisible(true); track("install_prompt_shown"); }, SHOW_AFTER_MS);
+    if (!worthShowing || !onDashboard || dismissedRecently()) { setVisible(false); return; }
+    const t = setTimeout(() => { setVisible(true); track("install_prompt_shown", { platform }); }, SHOW_AFTER_MS);
     return () => clearTimeout(t);
-  }, [available, onDashboard]);
+  }, [worthShowing, onDashboard, platform]);
 
-  if (!visible || !deferred.current) return null;
-
-  const install = async () => {
-    const evt = deferred.current;
-    if (!evt) return;
-    setVisible(false);
-    await evt.prompt();
-    const { outcome } = await evt.userChoice;
-    track("install_prompt_result", { outcome });
-    deferred.current = null;
-    setAvailable(false);
-  };
+  if (!visible) return null;
 
   const dismiss = () => {
     try { localStorage.setItem(DISMISS_KEY, String(Date.now() + DISMISS_FOR_MS)); } catch { /* ignore */ }
@@ -74,20 +43,29 @@ export function InstallPrompt() {
     <div
       role="dialog"
       aria-label="Install the app"
-      className="fixed bottom-4 left-4 right-4 z-[90] mx-auto flex max-w-sm items-center gap-3 border border-[var(--color-ink)] bg-[var(--color-paper-3)] p-3 text-[var(--color-ink)] shadow-[var(--shadow-offset)] animate-in fade-in slide-in-from-bottom-4 sm:left-4 sm:right-auto sm:mx-0"
+      className="fixed bottom-4 left-4 right-4 z-[90] mx-auto flex max-w-sm items-start gap-3 border border-[var(--color-ink)] bg-[var(--color-paper-3)] p-3 text-[var(--color-ink)] shadow-[var(--shadow-offset)] animate-in fade-in slide-in-from-bottom-4 sm:left-4 sm:right-auto sm:mx-0"
     >
       <img src="/icons/icon-192.png" alt="" className="h-11 w-11 flex-shrink-0" />
       <div className="min-w-0 flex-1">
-        <p className="text-sm font-semibold leading-tight">Install Harry The Blaze</p>
-        <p className="text-xs text-[var(--color-muted)]">Open it from your home screen, full screen.</p>
+        <p className="text-sm font-semibold leading-tight">You can install this site as an app</p>
+        {canPrompt ? (
+          <p className="text-xs text-[var(--color-muted)]">Open it from your home screen, full screen. No app store needed.</p>
+        ) : (
+          <p className="text-xs text-[var(--color-muted)]">
+            <Share className="mr-1 inline h-3.5 w-3.5" aria-hidden />
+            {installSteps(platform).slice(1).join(" ")}
+          </p>
+        )}
+        {canPrompt && (
+          <button
+            type="button"
+            onClick={async () => { setVisible(false); await install(); }}
+            className="mt-2 inline-flex items-center gap-1.5 bg-[var(--color-accent)] px-3 py-2 text-sm font-semibold text-[var(--color-ink)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-focus)]"
+          >
+            <Download className="h-4 w-4" aria-hidden /> Install
+          </button>
+        )}
       </div>
-      <button
-        type="button"
-        onClick={install}
-        className="inline-flex items-center gap-1.5 bg-[var(--color-accent)] px-3 py-2 text-sm font-semibold text-[var(--color-ink)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-focus)]"
-      >
-        <Download className="h-4 w-4" aria-hidden /> Install
-      </button>
       <button
         type="button"
         onClick={dismiss}

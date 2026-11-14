@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Coffee, Linkedin, Mail, MessageSquare, Youtube } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { InstallAppButton } from "@/components/InstallAppButton";
 
 interface DashboardFooterProps {
   onFeedbackClick: () => void;
@@ -34,6 +35,13 @@ export const DashboardFooter = ({ onFeedbackClick, onSupportClick }: DashboardFo
               <Coffee aria-hidden />
               Buy me a chai
             </Button>
+          </div>
+          <div className="mt-6 max-w-md border-t border-[var(--color-rule)] pt-4">
+            <p className="text-[15px] font-semibold text-foreground">Practice from your home screen</p>
+            <p className="mt-1 text-sm leading-relaxed text-foreground/80">
+              You can install this site as an app on your phone. It opens full screen, with no app store needed.
+            </p>
+            <InstallAppButton className="mt-3 h-11 gap-2 font-semibold" />
           </div>
         </div>
 
