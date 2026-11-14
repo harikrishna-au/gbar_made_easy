@@ -61,3 +61,6 @@ verify_jwt = false
 # Authenticates the caller via Clerk JWT inside the function.
 [functions.create-razorpay-order]
 verify_jwt = false
+
+[functions.admin-analytics]
+verify_jwt = false

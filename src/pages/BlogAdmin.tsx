@@ -3,7 +3,7 @@ import {
   Shield, LogOut, RefreshCw, Eye, EyeOff, Hourglass, BookOpen,
   XCircle, LayoutList, Users, Check, Trash2, ExternalLink, UserCheck, UserX,
   Briefcase, Plus, X, MapPin, Package, Link, ToggleLeft, ToggleRight,
-  Sparkles, ClipboardPaste, PenLine, Loader2, CalendarDays
+  Sparkles, ClipboardPaste, PenLine, Loader2, CalendarDays, BarChart3
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
@@ -12,9 +12,10 @@ import { useAdminBlogs } from '@/hooks/useBlogs';
 import { getAdminSecret, isAdminAuthenticated, loginAdmin, logoutAdmin } from '@/lib/admin-auth';
 import type { BlogStatus } from '@/lib/blog-utils';
 import ConnectAdmin from './ConnectAdmin';
+import AnalyticsSection from './analytics-admin/AnalyticsSection';
 
 type BlogTabFilter = BlogStatus | 'all';
-type MainTab = 'blog' | 'experts' | 'jobs' | 'connect';
+type MainTab = 'blog' | 'experts' | 'jobs' | 'connect' | 'analytics';
 
 async function connectAdminRequest(body: Record<string, unknown>) {
   const response = await fetch(
@@ -801,9 +802,10 @@ function JobsSection() {
 /* ─────────────────── Main admin dashboard ─────────────────── */
 function AdminDashboard() {
   const [authed, setAuthed] = useState(true);
-  const [mainTab, setMainTab] = useState<MainTab>(() =>
-    new URLSearchParams(window.location.search).get('tab') === 'connect' ? 'connect' : 'blog'
-  );
+  const [mainTab, setMainTab] = useState<MainTab>(() => {
+    const t = new URLSearchParams(window.location.search).get('tab');
+    return t === 'connect' || t === 'analytics' ? t : 'blog';
+  });
 
   if (!authed) return <AdminLogin onLogin={() => setAuthed(true)} />;
 
@@ -850,6 +852,10 @@ function AdminDashboard() {
               className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-[12px] font-semibold font-['Inter'] transition-all whitespace-nowrap ${mainTab === 'connect' ? 'bg-white text-stone-900 shadow-sm' : 'text-stone-500 hover:text-stone-700'}`}>
               <CalendarDays className="w-3.5 h-3.5" /> Connect Ops
             </button>
+            <button onClick={() => setMainTab('analytics')}
+              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-[12px] font-semibold font-['Inter'] transition-all whitespace-nowrap ${mainTab === 'analytics' ? 'bg-white text-stone-900 shadow-sm' : 'text-stone-500 hover:text-stone-700'}`}>
+              <BarChart3 className="w-3.5 h-3.5" /> Analytics
+            </button>
           </div>
 
           <button onClick={() => { logoutAdmin(); setAuthed(false); }}
@@ -864,6 +870,7 @@ function AdminDashboard() {
         {mainTab === 'experts' && <ExpertsSection />}
         {mainTab === 'jobs'    && <JobsSection />}
         {mainTab === 'connect' && <ConnectAdmin embedded />}
+        {mainTab === 'analytics' && <AnalyticsSection />}
       </main>
     </div>
   );
