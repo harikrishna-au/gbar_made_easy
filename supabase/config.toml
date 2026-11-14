@@ -48,3 +48,16 @@ verify_jwt = false
 
 [functions.radar-jobs]
 verify_jwt = false
+
+# Razorpay/PayU call webhooks with no Supabase JWT; the functions verify the
+# provider signature themselves. Without this the gateway 401s every webhook,
+# so paid users never get upgraded when the browser-side verify step fails.
+[functions.razorpay-webhook]
+verify_jwt = false
+
+[functions.payu-webhook]
+verify_jwt = false
+
+# Authenticates the caller via Clerk JWT inside the function.
+[functions.create-razorpay-order]
+verify_jwt = false

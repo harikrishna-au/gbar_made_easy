@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useUser, useAuth } from "@clerk/clerk-react";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 import { trackMetaInitiateCheckout, trackMetaPurchase } from "@/lib/meta-pixel";
 
 export function useRazorpay() {
@@ -38,13 +39,14 @@ export function useRazorpay() {
         try {
             setIsLoading(true);
 
+            const orderToken = await getToken().catch(() => null);
             const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/create-razorpay-order`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+                    'Authorization': `Bearer ${orderToken ?? import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
                 },
-                body: JSON.stringify({ amount, clerk_user_id: user.id })
+                body: JSON.stringify({ amount, clerk_user_id: user.id, coupon_code: couponCode })
             });
 
             if (!response.ok) {
@@ -66,8 +68,11 @@ export function useRazorpay() {
                 description: "Lifetime Premium",
                 order_id: order.id,
                 handler: async function (response: any) {
-                    try {
-                        const clerkToken = await getToken();
+                    // The user has ALREADY been charged here, so never give up quietly:
+                    // retry verification with a fresh token, then fall back to polling the
+                    // DB (the Razorpay webhook upgrades the account independently).
+                    const verifyOnce = async () => {
+                        const clerkToken = await getToken({ skipCache: true });
                         const verifyRes = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/verify-razorpay-payment`, {
                             method: 'POST',
                             headers: {
@@ -81,25 +86,42 @@ export function useRazorpay() {
                                 coupon_code: couponCode,
                             })
                         });
+                        return verifyRes.ok;
+                    };
 
-                        if (verifyRes.ok) {
-                            trackMetaPurchase({
-                                value: amount,
-                                contentName: "Lifetime Premium",
-                                contentIds: ["premium"],
-                                eventID: response.razorpay_payment_id,
-                            });
-                            toast.success("Payment verified! Full access unlocked.");
-                            localStorage.removeItem("referral_coupon");
-                            try { await user.reload(); } catch { window.location.reload(); }
-                        } else {
-                            toast.error("Payment successful but verification failed. Contact support.");
-                            try { await user.reload(); } catch { window.location.reload(); }
-                        }
-                    } catch (e) {
-                        console.error("Verification error", e);
-                        try { await user.reload(); } catch { window.location.reload(); }
+                    let verified = false;
+                    for (let attempt = 0; attempt < 4 && !verified; attempt++) {
+                        try { verified = await verifyOnce(); } catch (e) { console.error("Verification error", e); }
+                        if (!verified) await new Promise((r) => setTimeout(r, 1000 * (attempt + 1)));
                     }
+
+                    if (!verified) {
+                        toast.loading("Confirming your payment…", { id: "premium-confirm" });
+                        for (let i = 0; i < 10 && !verified; i++) {
+                            await new Promise((r) => setTimeout(r, 2000));
+                            const { data } = await supabase
+                                .from('profiles')
+                                .select('is_premium')
+                                .eq('user_id', user.id)
+                                .maybeSingle();
+                            verified = !!data?.is_premium;
+                        }
+                        toast.dismiss("premium-confirm");
+                    }
+
+                    if (verified) {
+                        trackMetaPurchase({
+                            value: amount,
+                            contentName: "Lifetime Premium",
+                            contentIds: ["premium"],
+                            eventID: response.razorpay_payment_id,
+                        });
+                        toast.success("Payment verified! Full access unlocked.");
+                        localStorage.removeItem("referral_coupon");
+                    } else {
+                        toast.error(`Payment received but activation is delayed. Your payment ID is ${response.razorpay_payment_id} — contact support and we'll unlock it right away.`, { duration: 15000 });
+                    }
+                    try { await user.reload(); } catch { window.location.reload(); }
                 },
                 prefill: {
                     name: user.fullName || "",

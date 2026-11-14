@@ -193,19 +193,66 @@ serve(async (req: Request) => {
                 });
             }
 
-            await supabaseAdmin.from('payment_transactions').update({
-                status: 'success',
-                provider_reference_id: payment.id,
-                raw_response: payment
-            }).eq('txnid', orderId);
+            // ── Lifetime premium purchase ─────────────────────────────────
+            // Resolve the buyer from the order we created (payment_transactions),
+            // not from payment.notes — Razorpay doesn't always copy order notes
+            // onto the payment entity, which used to leave paid users un-upgraded.
+            let premiumUserId: string | undefined = undefined;
+            let isLifetimeOrder = false;
+            if (orderId) {
+                const { data: txn } = await supabaseAdmin
+                    .from('payment_transactions')
+                    .select('user_id')
+                    .eq('txnid', orderId)
+                    .maybeSingle();
+                if (txn?.user_id) {
+                    premiumUserId = txn.user_id;
+                    isLifetimeOrder = true;
+                }
+            }
+            if (!premiumUserId) premiumUserId = userId;
 
-            if (userId) {
-                await supabaseAdmin.from('profiles').upsert({
-                    user_id: userId,
-                    email: email,
+            if (orderId) {
+                await supabaseAdmin.from('payment_transactions').update({
+                    status: 'success',
+                    provider_reference_id: payment.id,
+                    raw_response: payment
+                }).eq('txnid', orderId);
+            }
+
+            if (premiumUserId) {
+                const profile: Record<string, unknown> = {
+                    user_id: premiumUserId,
                     is_premium: true,
                     updated_at: new Date().toISOString()
-                }, { onConflict: 'user_id' });
+                };
+                if (email) profile.email = email;
+                if (isLifetimeOrder) {
+                    profile.plan_type = 'lifetime';
+                    profile.premium_expires_at = null;
+                }
+                const { error: profileError } = await supabaseAdmin
+                    .from('profiles')
+                    .upsert(profile, { onConflict: 'user_id' });
+                // Throw so Razorpay retries the webhook instead of dropping the payment.
+                if (profileError) throw profileError;
+
+                if (isLifetimeOrder && clerkSecret) {
+                    const clerkRes = await fetch(`https://api.clerk.com/v1/users/${premiumUserId}/metadata`, {
+                        method: 'PATCH',
+                        headers: {
+                            'Authorization': `Bearer ${clerkSecret}`,
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ public_metadata: { isPremium: true, planType: 'lifetime', premiumExpiry: null } }),
+                    });
+                    if (!clerkRes.ok) {
+                        // Throw → Razorpay retries; the DB is already updated so the client fallback works meanwhile.
+                        throw new Error(`Clerk metadata update failed (${clerkRes.status}): ${await clerkRes.text()}`);
+                    }
+                }
+            } else {
+                console.error('payment.captured: could not resolve user for order', orderId, payment.id);
             }
         }
 

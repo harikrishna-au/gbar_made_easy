@@ -2,40 +2,12 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { crypto } from "https://deno.land/std@0.168.0/crypto/mod.ts";
+import { verifyClerkToken } from "../_shared/clerk.ts";
 
 const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
-
-/** Verify a Clerk session JWT and return the user's sub (clerk user id), or null if invalid. */
-async function verifyClerkToken(token: string): Promise<string | null> {
-    try {
-        const clerkSecret = Deno.env.get('CLERK_SECRET_KEY');
-        if (!clerkSecret) return null;
-
-        // Decode the JWT payload (middle segment) to extract claims.
-        // We then confirm the identity with Clerk's REST API to ensure the
-        // token is genuinely issued by Clerk and not forged.
-        const parts = token.split('.');
-        if (parts.length !== 3) return null;
-
-        const payloadJson = JSON.parse(atob(parts[1].replace(/-/g, '+').replace(/_/g, '/')));
-        const userId: string | undefined = payloadJson.sub;
-        if (!userId) return null;
-
-        // Confirm the token against Clerk's user endpoint — this validates
-        // that the session is active and the token is authentic.
-        const res = await fetch(`https://api.clerk.com/v1/users/${userId}`, {
-            headers: { 'Authorization': `Bearer ${clerkSecret}` },
-        });
-        if (!res.ok) return null;
-
-        return userId;
-    } catch {
-        return null;
-    }
-}
 
 serve(async (req: Request) => {
     if (req.method === 'OPTIONS') {
@@ -82,7 +54,21 @@ serve(async (req: Request) => {
             Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
         );
 
-        // Update User Profile — mark as lifetime plan (one-time payment)
+        // The order must belong to the caller (when we recorded who created it).
+        const { data: txn } = await supabaseAdmin
+            .from('payment_transactions')
+            .select('user_id')
+            .eq('txnid', order_id)
+            .maybeSingle();
+        if (txn?.user_id && txn.user_id !== verified_clerk_user_id) {
+            return new Response(JSON.stringify({ error: "Order does not belong to this user" }), {
+                status: 403,
+                headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+            });
+        }
+
+        // Grant premium in the DB. This is the source of truth; the client falls
+        // back to it if the Clerk metadata sync below ever fails.
         const { error: profileError } = await supabaseAdmin.from('profiles').upsert({
             user_id: verified_clerk_user_id,
             is_premium: true,
@@ -93,27 +79,37 @@ serve(async (req: Request) => {
 
         if (profileError) throw profileError;
 
-        // Sync premium status to Clerk publicMetadata — frontend reads from here
-        const clerkSecret = Deno.env.get('CLERK_SECRET_KEY');
-        if (!clerkSecret) throw new Error("Server Misconfiguration: Clerk secret missing");
-        const clerkRes = await fetch(`https://api.clerk.com/v1/users/${verified_clerk_user_id}`, {
-            method: 'PATCH',
-            headers: {
-                'Authorization': `Bearer ${clerkSecret}`,
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ public_metadata: { isPremium: true, planType: 'lifetime', premiumExpiry: null } }),
-        });
-        if (!clerkRes.ok) {
-            const body = await clerkRes.text();
-            throw new Error(`Clerk metadata update failed (${clerkRes.status}): ${body}`);
-        }
-
-        // Log transaction (Optional update to existing transaction)
+        // Log transaction first so the webhook/audit trail is right even if Clerk sync fails.
         await supabaseAdmin.from('payment_transactions').update({
-            status: 'verified_client_side',
+            status: 'success',
             provider_reference_id: payment_id
         }).eq('txnid', order_id);
+
+        // Sync to Clerk publicMetadata (best effort — payment is already recorded).
+        // Do NOT fail the request if this errors: the user has paid and the DB says premium.
+        let clerkSynced = false;
+        const clerkSecret = Deno.env.get('CLERK_SECRET_KEY');
+        if (clerkSecret) {
+            for (let attempt = 0; attempt < 3 && !clerkSynced; attempt++) {
+                try {
+                    const clerkRes = await fetch(`https://api.clerk.com/v1/users/${verified_clerk_user_id}/metadata`, {
+                        method: 'PATCH',
+                        headers: {
+                            'Authorization': `Bearer ${clerkSecret}`,
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ public_metadata: { isPremium: true, planType: 'lifetime', premiumExpiry: null } }),
+                    });
+                    if (clerkRes.ok) clerkSynced = true;
+                    else console.error(`Clerk metadata update failed (${clerkRes.status}): ${await clerkRes.text()}`);
+                } catch (e) {
+                    console.error('Clerk metadata update error', e);
+                }
+                if (!clerkSynced) await new Promise((r) => setTimeout(r, 300 * (attempt + 1)));
+            }
+        } else {
+            console.error('CLERK_SECRET_KEY missing; premium granted in DB only');
+        }
 
         // Track Coupon Usage if provided
         if (coupon_code) {
@@ -127,7 +123,7 @@ serve(async (req: Request) => {
             }
         }
 
-        return new Response(JSON.stringify({ success: true }), {
+        return new Response(JSON.stringify({ success: true, clerk_synced: clerkSynced }), {
             headers: { ...corsHeaders, 'Content-Type': 'application/json' }
         });
 
