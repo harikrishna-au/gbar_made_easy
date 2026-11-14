@@ -3,6 +3,7 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { crypto } from "https://deno.land/std@0.168.0/crypto/mod.ts";
 import { verifyClerkToken } from "../_shared/clerk.ts";
+import { normalizeCoupon } from "../_shared/coupon.ts";
 
 const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
@@ -122,10 +123,12 @@ serve(async (req: Request) => {
         }
 
         // Track Coupon Usage if provided
-        if (coupon_code) {
+        // Always record one spelling (UPPERCASE, trimmed) so reports never split one coupon in two.
+        const couponCodeNormalized = normalizeCoupon(coupon_code);
+        if (couponCodeNormalized) {
             try {
                 await supabaseAdmin.from('coupon_usages').insert({
-                    coupon_code: coupon_code,
+                    coupon_code: couponCodeNormalized,
                     amount: null // We default to tracking just the usage count for now
                 });
             } catch (couponError) {

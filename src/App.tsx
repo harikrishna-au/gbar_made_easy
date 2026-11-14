@@ -20,7 +20,6 @@ import { CommunicationPatternsPage } from "@/components/dashboard/CommunicationP
 import TermsOfService from "./pages/TermsOfService";
 import RefundPolicy from "./pages/RefundPolicy";
 import AboutUs from "./pages/AboutUs";
-import CouponDashboard from "./pages/CouponDashboard";
 import AIInterviewSelection from "./pages/AIInterviewSelection";
 import PremiumRoute from "@/components/PremiumRoute";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
@@ -124,7 +123,7 @@ const App = () => {
               <Route path="/terms" element={<TermsOfService />} />
               <Route path="/refund" element={<RefundPolicy />} />
               <Route path="/about" element={<AboutUs />} />
-              <Route path="/coupon-stats" element={<PrivateRoute><CouponDashboard /></PrivateRoute>} />
+              <Route path="/coupon-stats" element={<Navigate to="/admin?tab=payments" replace />} />
               <Route path="/ai-interview" element={<PremiumRoute><AIInterviewSelection /></PremiumRoute>} />
               <Route
                 path="/ai-interview/:type"

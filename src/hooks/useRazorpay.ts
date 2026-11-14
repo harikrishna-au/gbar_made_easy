@@ -3,6 +3,7 @@ import { useUser, useAuth } from "@clerk/clerk-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { track } from "@/lib/analytics";
+import { normalizeCoupon } from "@/lib/coupon";
 import { trackMetaInitiateCheckout, trackMetaPurchase } from "@/lib/meta-pixel";
 
 export function useRazorpay() {
@@ -25,7 +26,8 @@ export function useRazorpay() {
     };
 
     /** One-time payment (₹299 full access). */
-    const initiatePayment = async (amount: number = 299, couponCode?: string) => {
+    const initiatePayment = async (amount: number = 299, rawCouponCode?: string) => {
+        const couponCode = normalizeCoupon(rawCouponCode) || undefined;
         if (!user) {
             toast.error("Please sign in to proceed");
             return false;

@@ -3,7 +3,7 @@ import {
   Shield, LogOut, RefreshCw, Eye, EyeOff, Hourglass, BookOpen,
   XCircle, LayoutList, Users, Check, Trash2, ExternalLink, UserCheck, UserX,
   Briefcase, Plus, X, MapPin, Package, Link, ToggleLeft, ToggleRight,
-  Sparkles, ClipboardPaste, PenLine, Loader2, CalendarDays, BarChart3
+  Sparkles, ClipboardPaste, PenLine, Loader2, CalendarDays, BarChart3, IndianRupee
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
@@ -13,9 +13,10 @@ import { getAdminSecret, isAdminAuthenticated, loginAdmin, logoutAdmin } from '@
 import type { BlogStatus } from '@/lib/blog-utils';
 import ConnectAdmin from './ConnectAdmin';
 import AnalyticsSection from './analytics-admin/AnalyticsSection';
+import PaymentsSection from './analytics-admin/PaymentsSection';
 
 type BlogTabFilter = BlogStatus | 'all';
-type MainTab = 'blog' | 'experts' | 'jobs' | 'connect' | 'analytics';
+type MainTab = 'blog' | 'experts' | 'jobs' | 'connect' | 'analytics' | 'payments';
 
 async function connectAdminRequest(body: Record<string, unknown>) {
   const response = await fetch(
@@ -804,7 +805,7 @@ function AdminDashboard() {
   const [authed, setAuthed] = useState(true);
   const [mainTab, setMainTab] = useState<MainTab>(() => {
     const t = new URLSearchParams(window.location.search).get('tab');
-    return t === 'connect' || t === 'analytics' ? t : 'blog';
+    return t === 'connect' || t === 'analytics' || t === 'payments' ? t : 'blog';
   });
 
   if (!authed) return <AdminLogin onLogin={() => setAuthed(true)} />;
@@ -856,6 +857,10 @@ function AdminDashboard() {
               className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-[12px] font-semibold font-['Inter'] transition-all whitespace-nowrap ${mainTab === 'analytics' ? 'bg-white text-stone-900 shadow-sm' : 'text-stone-500 hover:text-stone-700'}`}>
               <BarChart3 className="w-3.5 h-3.5" /> Analytics
             </button>
+            <button onClick={() => setMainTab('payments')}
+              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-[12px] font-semibold font-['Inter'] transition-all whitespace-nowrap ${mainTab === 'payments' ? 'bg-white text-stone-900 shadow-sm' : 'text-stone-500 hover:text-stone-700'}`}>
+              <IndianRupee className="w-3.5 h-3.5" /> Payments
+            </button>
           </div>
 
           <button onClick={() => { logoutAdmin(); setAuthed(false); }}
@@ -871,6 +876,7 @@ function AdminDashboard() {
         {mainTab === 'jobs'    && <JobsSection />}
         {mainTab === 'connect' && <ConnectAdmin embedded />}
         {mainTab === 'analytics' && <AnalyticsSection />}
+        {mainTab === 'payments' && <PaymentsSection />}
       </main>
     </div>
   );

@@ -67,3 +67,6 @@ verify_jwt = false
 
 [functions.admin-feedback]
 verify_jwt = false
+
+[functions.admin-coupons]
+verify_jwt = false
