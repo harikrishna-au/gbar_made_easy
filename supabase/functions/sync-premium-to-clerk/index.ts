@@ -41,7 +41,7 @@ serve(async (req: Request) => {
         if (error) throw error;
         if (!profile?.is_premium) return json({ error: 'No premium purchase found' }, 403);
 
-        const res = await fetch(`https://api.clerk.com/v1/users/${userId}/metadata`, {
+        const res = await fetch(`https://api.clerk.com/v1/users/${encodeURIComponent(userId)}/metadata`, {
             method: 'PATCH',
             headers: {
                 'Authorization': `Bearer ${clerkSecret}`,

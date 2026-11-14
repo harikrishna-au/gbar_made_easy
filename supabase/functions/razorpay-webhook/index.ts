@@ -238,7 +238,7 @@ serve(async (req: Request) => {
                 if (profileError) throw profileError;
 
                 if (isLifetimeOrder && clerkSecret) {
-                    const clerkRes = await fetch(`https://api.clerk.com/v1/users/${premiumUserId}/metadata`, {
+                    const clerkRes = await fetch(`https://api.clerk.com/v1/users/${encodeURIComponent(premiumUserId)}/metadata`, {
                         method: 'PATCH',
                         headers: {
                             'Authorization': `Bearer ${clerkSecret}`,
@@ -282,7 +282,7 @@ serve(async (req: Request) => {
             }).eq('subscription_id', subscription.id);
 
             if (clerkSecret) {
-                await fetch(`https://api.clerk.com/v1/users/${clerkUserId}`, {
+                await fetch(`https://api.clerk.com/v1/users/${encodeURIComponent(clerkUserId)}`, {
                     method: 'PATCH',
                     headers: {
                         'Authorization': `Bearer ${clerkSecret}`,

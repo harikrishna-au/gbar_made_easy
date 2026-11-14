@@ -15,13 +15,16 @@ serve(async (req: Request) => {
     }
 
     try {
-        // Prefer the verified Clerk session; fall back to the body id for older cached clients.
+        // Require a verified Clerk session. The user id is never taken from the body.
         const token = (req.headers.get('Authorization') ?? '').replace(/^Bearer\s+/i, '');
-        const verifiedId = token ? await verifyClerkToken(token) : null;
-        const { amount, clerk_user_id, coupon_code } = await req.json();
-        const userId = verifiedId || clerk_user_id;
-
-        if (!userId) throw new Error('User ID is required');
+        const userId = token ? await verifyClerkToken(token) : null;
+        if (!userId) {
+            return new Response(JSON.stringify({ error: 'Please sign in again to continue.' }), {
+                status: 401,
+                headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+            });
+        }
+        const { amount, coupon_code } = await req.json();
 
         // ── Server-side price enforcement ─────────────────────────────────────
         // Never trust the client's amount: it must equal either the price of a valid
@@ -72,7 +75,11 @@ serve(async (req: Request) => {
             raw_response: order
         });
         // The webhook/verify steps look the buyer up by this row, so don't swallow a failure.
-        if (txnError) console.error('Failed to record payment_transactions row', order.id, txnError);
+        // verify/webhook only honour orders that have this row, so don't hand out an order without it.
+        if (txnError) {
+            console.error('Failed to record payment_transactions row', order.id, txnError);
+            throw new Error('Could not start payment. Please try again.');
+        }
 
         return new Response(
             JSON.stringify(order),

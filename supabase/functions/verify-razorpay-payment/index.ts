@@ -54,13 +54,23 @@ serve(async (req: Request) => {
             Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
         );
 
-        // The order must belong to the caller (when we recorded who created it).
-        const { data: txn } = await supabaseAdmin
+        // FAIL CLOSED: only orders we created through create-razorpay-order (which
+        // enforces the premium price) may grant premium. Other Razorpay orders in the
+        // same account (e.g. Connect expert-session bookings) have no row here, so a
+        // valid signature for one of those must NOT upgrade the account.
+        const { data: txn, error: txnError } = await supabaseAdmin
             .from('payment_transactions')
             .select('user_id')
             .eq('txnid', order_id)
             .maybeSingle();
-        if (txn?.user_id && txn.user_id !== verified_clerk_user_id) {
+        if (txnError) throw txnError;
+        if (!txn) {
+            return new Response(JSON.stringify({ error: "Unknown order" }), {
+                status: 404,
+                headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+            });
+        }
+        if (txn.user_id !== verified_clerk_user_id) {
             return new Response(JSON.stringify({ error: "Order does not belong to this user" }), {
                 status: 403,
                 headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -92,7 +102,7 @@ serve(async (req: Request) => {
         if (clerkSecret) {
             for (let attempt = 0; attempt < 3 && !clerkSynced; attempt++) {
                 try {
-                    const clerkRes = await fetch(`https://api.clerk.com/v1/users/${verified_clerk_user_id}/metadata`, {
+                    const clerkRes = await fetch(`https://api.clerk.com/v1/users/${encodeURIComponent(verified_clerk_user_id)}/metadata`, {
                         method: 'PATCH',
                         headers: {
                             'Authorization': `Bearer ${clerkSecret}`,

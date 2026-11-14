@@ -47,7 +47,7 @@ export function useRazorpay() {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${orderToken ?? import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
                 },
-                body: JSON.stringify({ amount, clerk_user_id: user.id, coupon_code: couponCode })
+                body: JSON.stringify({ amount, coupon_code: couponCode })
             });
 
             if (!response.ok) {

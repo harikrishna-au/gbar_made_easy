@@ -67,7 +67,7 @@ for (const row of rows) {
     body: JSON.stringify({ status: "success", provider_reference_id: payment.id, raw_response: payment }),
   });
   if (clerkSecret) {
-    const c = await fetch(`https://api.clerk.com/v1/users/${row.user_id}/metadata`, {
+    const c = await fetch(`https://api.clerk.com/v1/users/${encodeURIComponent(row.user_id)}/metadata`, {
       method: "PATCH",
       headers: { Authorization: `Bearer ${clerkSecret}`, "Content-Type": "application/json" },
       body: JSON.stringify({ public_metadata: { isPremium: true, planType: "lifetime", premiumExpiry: null } }),
