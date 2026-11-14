@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { X, MessageSquare, Send, HeartHandshake, Check } from "lucide-react";
+import { X, MessageSquare, Send, Lightbulb, Check } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -18,6 +18,22 @@ interface FeedbackPopupProps {
 
 const COMPANY_SUGGESTIONS = ["Accenture", "TCS", "Infosys", "Wipro", "Cognizant", "Capgemini", "Deloitte", "Other"];
 const ROUND_OPTIONS = ["Aptitude / cognitive games", "Communication", "Technical", "HR / interview", "Not sure yet"];
+
+// What students can ask for. Keep these short: they are tap targets, and the wording is
+// what we read back later when deciding what to build.
+const FEATURE_OPTIONS = [
+    "More company-specific practice",
+    "Aptitude: quant and verbal",
+    "Coding / technical round practice",
+    "Full-length mock tests with scores",
+    "Better AI mock interview",
+    "HR interview question bank",
+    "Resume review",
+    "Progress tracking and streaks",
+    "More 1:1 mentors",
+    "Study notes and material",
+    "A mobile app",
+];
 
 const DISPLAY = "font-display font-normal uppercase leading-[0.95] tracking-[0.005em] [text-wrap:balance]";
 const fieldLabel = "text-xs font-semibold text-[var(--color-muted)] uppercase tracking-[0.12em]";
@@ -62,13 +78,19 @@ const FeedbackPopup = ({ isOpen, onClose, feedbackType = 'recruitment' }: Feedba
     const [rounds, setRounds] = useState<string[]>([]);
     const [helpNeeded, setHelpNeeded] = useState("");
 
-    // Platform feedback
+    // Platform feedback / feature requests
     const [platformFeedback, setPlatformFeedback] = useState("");
+    const [wantedFeatures, setWantedFeatures] = useState<string[]>([]);
+    const [otherFeature, setOtherFeature] = useState("");
+    const [notifyMe, setNotifyMe] = useState(true);
 
     if (!isOpen) return null;
 
     const toggleRound = (r: string) =>
         setRounds((prev) => (prev.includes(r) ? prev.filter((x) => x !== r) : [...prev, r]));
+
+    const toggleFeature = (f: string) =>
+        setWantedFeatures((prev) => (prev.includes(f) ? prev.filter((x) => x !== f) : [...prev, f]));
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -86,8 +108,8 @@ const FeedbackPopup = ({ isOpen, onClose, feedbackType = 'recruitment' }: Feedba
                 toast.error("Please select your placement type.");
                 return;
             }
-        } else if (!platformFeedback.trim()) {
-            toast.error("Please provide some feedback.");
+        } else if (!wantedFeatures.length && !otherFeature.trim() && !platformFeedback.trim()) {
+            toast.error("Pick a feature you want, or tell us in your own words.");
             return;
         }
 
@@ -95,18 +117,27 @@ const FeedbackPopup = ({ isOpen, onClose, feedbackType = 'recruitment' }: Feedba
 
         try {
             const isPrep = feedbackType === 'recruitment';
+            const email = user?.primaryEmailAddress?.emailAddress;
+            // One readable record per submission, so it can be read straight from the table.
+            const platformRecord = [
+                wantedFeatures.length ? `Features wanted: ${wantedFeatures.join("; ")}` : null,
+                otherFeature.trim() ? `Other feature: ${otherFeature.trim()}` : null,
+                platformFeedback.trim() ? `Feedback: ${platformFeedback.trim()}` : null,
+                notifyMe && email ? `Notify me when it ships: ${email}` : null,
+            ].filter(Boolean).join("\n");
             const { error } = await supabase.from('feedback').insert({
                 user_id: user?.id || null,
                 name: name.trim() || user?.fullName || 'Anonymous',
-                college: isPrep ? college.trim() : null,
+                // `college` was created NOT NULL, so send a value rather than null for platform feedback
+                college: isPrep ? college.trim() : 'N/A',
                 mobile_number: isPrep ? mobileNumber.trim() : null,
                 graduating_year: isPrep ? graduatingYear.trim() : null,
-                placement_type: isPrep ? placementType : 'Platform Feedback',
+                placement_type: isPrep ? placementType : (wantedFeatures.length || otherFeature.trim() ? 'Feature Request' : 'Platform Feedback'),
                 target_company: isPrep ? targetCompany.trim() : null,
                 preparing_for: isPrep ? rounds.join(", ") : null,
                 help_needed: isPrep ? helpNeeded.trim() : null,
                 // Platform feedback keeps using this existing text column
-                technical_round_exp: isPrep ? null : platformFeedback.trim(),
+                technical_round_exp: isPrep ? null : platformRecord,
             } as any);
 
             if (error) throw error;
@@ -117,8 +148,11 @@ const FeedbackPopup = ({ isOpen, onClose, feedbackType = 'recruitment' }: Feedba
 
             setTimeout(() => {
                 setIsSent(false);
+                setWantedFeatures([]);
+                setOtherFeature("");
+                setPlatformFeedback("");
                 onClose();
-            }, 2500);
+            }, isPrep ? 2500 : 4000);
         } catch (error: any) {
             console.error("Error sending feedback:", error);
             toast.error("Failed to send. Please try again.");
@@ -145,16 +179,16 @@ const FeedbackPopup = ({ isOpen, onClose, feedbackType = 'recruitment' }: Feedba
                             {isPrep ? (
                                 <MessageSquare className="w-5 h-5 text-[var(--color-ink)]" />
                             ) : (
-                                <HeartHandshake className="w-5 h-5 text-[var(--color-ink)]" />
+                                <Lightbulb className="w-5 h-5 text-[var(--color-ink)]" />
                             )}
                         </div>
                         <h2 className={`${DISPLAY} text-4xl`}>
-                            {isPrep ? "Tell us about your prep" : "We value your thoughts"}
+                            {isPrep ? "Tell us about your prep" : "Tell us what to build next"}
                         </h2>
                         <p className="text-[var(--color-muted)] text-sm">
                             {isPrep
                                 ? "A minute of your time helps us build practice for the round you are actually facing."
-                                : "Have a suggestion or found a bug? Let us know."}
+                                : "Your feedback decides what we build. Tell us what you are looking for, and if it helps students like you, we will work on it and bring it to you."}
                         </p>
                     </div>
 
@@ -238,16 +272,54 @@ const FeedbackPopup = ({ isOpen, onClose, feedbackType = 'recruitment' }: Feedba
                                     </div>
                                 </>
                             ) : (
-                                <div className="space-y-1.5">
-                                    <Label htmlFor="platform-msg" className={fieldLabel}>Your message</Label>
-                                    <Textarea
-                                        id="platform-msg"
-                                        placeholder="Tell us what you like or what we can improve..."
-                                        className={`min-h-[120px] ${areaClass}`}
-                                        value={platformFeedback}
-                                        onChange={(e) => setPlatformFeedback(e.target.value)}
-                                    />
-                                </div>
+                                <>
+                                    <div className="space-y-2">
+                                        <Label className="text-sm font-semibold text-[var(--color-ink)]">
+                                            Which features would you like to see?
+                                        </Label>
+                                        <div className="flex flex-wrap gap-2">
+                                            {FEATURE_OPTIONS.map((f) => (
+                                                <Chip key={f} active={wantedFeatures.includes(f)} onClick={() => toggleFeature(f)}>
+                                                    {f}
+                                                </Chip>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-1.5">
+                                        <Label htmlFor="other-feature" className={fieldLabel}>Something else you want? (optional)</Label>
+                                        <Textarea
+                                            id="other-feature"
+                                            placeholder="Describe the feature you wish this site had..."
+                                            className={`min-h-[80px] ${areaClass}`}
+                                            value={otherFeature}
+                                            onChange={(e) => setOtherFeature(e.target.value)}
+                                        />
+                                    </div>
+
+                                    <div className="space-y-1.5">
+                                        <Label htmlFor="platform-msg" className={fieldLabel}>What should we improve? (optional)</Label>
+                                        <Textarea
+                                            id="platform-msg"
+                                            placeholder="Something confusing, slow or broken? What do you like?"
+                                            className={`min-h-[80px] ${areaClass}`}
+                                            value={platformFeedback}
+                                            onChange={(e) => setPlatformFeedback(e.target.value)}
+                                        />
+                                    </div>
+
+                                    {user?.primaryEmailAddress?.emailAddress && (
+                                        <label className={`${optionBox} text-sm`}>
+                                            <input
+                                                type="checkbox"
+                                                checked={notifyMe}
+                                                onChange={(e) => setNotifyMe(e.target.checked)}
+                                                className="h-4 w-4 accent-[var(--color-ink)]"
+                                            />
+                                            <span className="font-medium">Let me know when it is live</span>
+                                        </label>
+                                    )}
+                                </>
                             )}
 
                             <button type="submit" disabled={isSubmitting} className={SUBMIT}>
@@ -260,7 +332,11 @@ const FeedbackPopup = ({ isOpen, onClose, feedbackType = 'recruitment' }: Feedba
                                 <Check className="w-6 h-6" />
                             </div>
                             <h3 className={`${DISPLAY} text-3xl`}>Thank you</h3>
-                            <p className="text-[var(--color-ink)]">Your answers help us build better practice for you.</p>
+                            <p className="text-[var(--color-ink)]">
+                                {isPrep
+                                    ? "Your answers help us build better practice for you."
+                                    : "We read every suggestion. We will work on what students ask for most and bring it to you."}
+                            </p>
                         </div>
                     )}
                 </div>

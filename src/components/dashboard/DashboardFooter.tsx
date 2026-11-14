@@ -22,14 +22,14 @@ export const DashboardFooter = ({ onFeedbackClick, onSupportClick }: DashboardFo
 
       <div className="flex flex-col gap-8 md:flex-row md:items-start md:justify-between">
         <div className="max-w-md">
-          <h2 className="text-xl font-semibold text-foreground">Something broken or missing?</h2>
+          <h2 className="text-xl font-semibold text-foreground">What should we build next?</h2>
           <p className="mt-2 text-[15px] leading-relaxed text-foreground/80">
-            Tell us. Every message is read by Hari, who builds this. If it saved you time, you can also buy him a chai.
+            Tell us the features you are looking for. Share your valuable feedback and we will work on it and bring it to you. Every message is read by Hari, who builds this. If it saved you time, you can also buy him a chai.
           </p>
           <div className="mt-4 flex flex-wrap gap-3">
             <Button variant="outline" className="h-11 gap-2 font-semibold" onClick={onFeedbackClick}>
               <MessageSquare aria-hidden />
-              Share feedback
+              Request a feature
             </Button>
             <Button variant="secondary" className="h-11 gap-2 font-semibold" onClick={onSupportClick}>
               <Coffee aria-hidden />
